@@ -7,121 +7,93 @@
   var ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  var SPEED   = 0.016;
-  var STEP    = 4.6;
-  var GLOW    = 46;
-  var BASE_Y  = 0.54;
+  var SPEED   = 0.008; 
+  var STEP    = 6;     // Paso más grande para mejor performance
+  var BASE_Y  = 0.60;
 
   var W = 0, H = 0, t = 0;
-  var mx = 0, my = 0, tmx = 0, tmy = 0;
 
   function onResize() {
     var p = canvas.parentElement;
-    W = canvas.width  = p ? p.clientWidth  : window.innerWidth;
-    H = canvas.height = p ? p.clientHeight : window.innerHeight;
+    W = canvas.width  = (p ? p.clientWidth  : window.innerWidth);
+    H = canvas.height = (p ? p.clientHeight : window.innerHeight);
   }
 
   function waveY(x, phase) {
-    var n    = x / Math.max(W, 1);
-    var auto = Math.sin(t * 0.55) * 0.22 + Math.cos(t * 0.18) * 0.12; // mezcla para drift continuo
-    var mi   = (my / Math.max(H, 1)) - 0.5 + auto; // parallax vertical
+    var n = x / Math.max(W, 1);
+    var v = t * 1.5;
     return H * (
       BASE_Y
-      + Math.sin(n * 5.0  + t * 0.78 + phase + mi * 1.6)  * 0.095
-      + Math.sin(n * 3.1  - t * 0.50 + phase * 0.55)      * 0.055
-      + Math.sin(n * 9.8  + t * 0.95 + phase * 1.5)       * 0.024
+      + Math.sin(n * 3.2 + v + phase) * 0.06
+      + Math.sin(n * 1.8 - v * 0.6 + phase * 0.5) * 0.03
     );
   }
 
-  function strokeWave(opts) {
-    ctx.save();
-    ctx.lineWidth   = opts.width;
-    ctx.strokeStyle = opts.color;
-    ctx.shadowColor = opts.shadowColor || 'transparent';
-    ctx.shadowBlur  = opts.shadowBlur || 0;
-    ctx.beginPath();
-    for (var x = 0; x <= W + STEP; x += STEP) {
-      var y = waveY(x, opts.phase || 0);
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    ctx.restore();
-  }
-
   function draw() {
-    ctx.imageSmoothingEnabled = true;
     ctx.clearRect(0, 0, W, H);
 
+    // Fondo degradado suave (Muy rápido)
     var bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#d9e5ff');
-    bg.addColorStop(1, '#f7faff');
+    bg.addColorStop(0, '#f5f9ff');
+    bg.addColorStop(1, '#ffffff');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    var glowGrad = ctx.createLinearGradient(0, H * 0.2, 0, H * 0.9);
-    glowGrad.addColorStop(0, 'rgba(12,82,255,0.72)');
-    glowGrad.addColorStop(1, 'rgba(46,145,255,0.45)');
+    // 1. DIBUJAR CAPAS DE OLAS (STROKES SIN SOMBRAS = MUY RÁPIDO)
+    function drawLayer(width, color, phase, alpha) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth = width;
+        ctx.strokeStyle = color;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        for (var x = 0; x <= W + STEP; x += STEP) {
+            var y = waveY(x, phase);
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
 
-    strokeWave({
-      width: 30,
-      phase: 0,
-      color: glowGrad,
-      shadowColor: 'rgba(12,72,255,0.32)',
-      shadowBlur: GLOW
-    });
+    // Capas glassy optimizadas
+    drawLayer(60, 'rgba(0,100,255,0.1)', 0, 0.4);
+    drawLayer(15, 'rgba(0,74,172,0.2)', 0.5, 0.6);
+    drawLayer(4,  'rgba(0,100,255,0.7)', 0.8, 0.8);
+    drawLayer(2,  'rgba(255,255,255,0.9)', 0.82, 1.0);
 
-    var mainGrad = ctx.createLinearGradient(0, H * 0.3, 0, H * 0.8);
-    mainGrad.addColorStop(0, '#0b3be0');
-    mainGrad.addColorStop(1, '#1aa3ff');
-
-    strokeWave({
-      width: 5.2,
-      phase: 0.6,
-      color: mainGrad,
-      shadowColor: 'rgba(12,72,255,0.52)',
-      shadowBlur: GLOW * 1.0
-    });
-
-    strokeWave({
-      width: 3.2,
-      phase: -0.35,
-      color: 'rgba(255,255,255,0.98)',
-      shadowColor: 'rgba(46,145,255,0.38)',
-      shadowBlur: GLOW * 0.8
-    });
-
-    strokeWave({
-      width: 1.6,
-      phase: 0.15,
-      color: 'rgba(6,42,140,0.55)',
-      shadowColor: 'rgba(6,42,140,0.35)',
-      shadowBlur: GLOW * 0.5
-    });
+    // 2. EFECTO HALFTONE (PUNTOS) — Optimizado al máximo
+    // Dibujamos una rejilla de puntos que se desplazan levemente con la onda
+    var dotSpacing = 24;
+    ctx.fillStyle = 'rgba(0,74,172,0.15)';
+    for (var ix = 0; ix <= W; ix += dotSpacing) {
+        var wy = waveY(ix, 0.5);
+        for (var iy = Math.floor(wy); iy < H; iy += dotSpacing) {
+            // Factor de opacidad basado en cercanía a la superficie
+            var opacity = 1 - Math.min((iy - wy) / (H * 0.3), 1);
+            if (opacity <= 0) continue;
+            
+            ctx.globalAlpha = opacity * 0.6;
+            // Usar fillRect es X10 veces más rápido que arc para miles de puntos
+            ctx.fillRect(ix, iy, 1.5, 1.5);
+        }
+    }
+    ctx.globalAlpha = 1;
   }
 
   function tick() {
-    requestAnimationFrame(tick);
-    t  += SPEED;
-    mx += (tmx - mx) * 0.08;
-    my += (tmy - my) * 0.08;
+    t += SPEED;
     draw();
+    requestAnimationFrame(tick);
   }
 
   onResize();
-
   var ro = new ResizeObserver(onResize);
   ro.observe(canvas.parentElement || document.body);
-
-  window.addEventListener('mousemove', function (e) {
-    tmx = e.clientX; tmy = e.clientY;
-  }, { passive: true });
-
   requestAnimationFrame(tick);
 
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      canvas.style.opacity = '1';
-    });
-  });
+  // Fade in
+  canvas.style.transition = 'opacity 1.5s ease-out';
+  requestAnimationFrame(function() { canvas.style.opacity = '1'; });
 }());
+

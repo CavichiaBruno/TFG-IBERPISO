@@ -65,78 +65,6 @@
             </div>
         </div>
 
-        {{-- RIGHT: testimonials carousel --}}
-        <div class="hero-right">
-            <div class="hero-testimonials" id="hero-testimonials">
-                <p class="t-label">Lo que dicen nuestros clientes</p>
-                <div class="t-track">
-
-                    <div class="t-card active">
-                        <div class="t-avatar" style="background:#e8f0fb">
-                            <svg viewBox="0 0 40 40" width="36" height="36" fill="none">
-                                <circle cx="20" cy="15" r="7" fill="#004AAD" opacity=".85"/>
-                                <path d="M6 36c0-7.732 6.268-14 14-14s14 6.268 14 14" fill="#004AAD" opacity=".55"/>
-                            </svg>
-                        </div>
-                        <div class="t-body">
-                            <div class="t-stars">★★★★★</div>
-                            <p class="t-quote">"Encontré mi piso ideal en menos de una semana. ¡Atención inmejorable!"</p>
-                            <span class="t-name">María G. · Madrid</span>
-                        </div>
-                    </div>
-
-                    <div class="t-card">
-                        <div class="t-avatar" style="background:#e6f4ed">
-                            <svg viewBox="0 0 40 40" width="36" height="36" fill="none">
-                                <circle cx="20" cy="15" r="7" fill="#00875a" opacity=".85"/>
-                                <path d="M6 36c0-7.732 6.268-14 14-14s14 6.268 14 14" fill="#00875a" opacity=".55"/>
-                            </svg>
-                        </div>
-                        <div class="t-body">
-                            <div class="t-stars">★★★★★</div>
-                            <p class="t-quote">"Todo el proceso fue transparente y sin sorpresas. Muy recomendable."</p>
-                            <span class="t-name">Carlos R. · Barcelona</span>
-                        </div>
-                    </div>
-
-                    <div class="t-card">
-                        <div class="t-avatar" style="background:#fff3e8">
-                            <svg viewBox="0 0 40 40" width="36" height="36" fill="none">
-                                <circle cx="20" cy="15" r="7" fill="#d4620a" opacity=".85"/>
-                                <path d="M6 36c0-7.732 6.268-14 14-14s14 6.268 14 14" fill="#d4620a" opacity=".55"/>
-                            </svg>
-                        </div>
-                        <div class="t-body">
-                            <div class="t-stars">★★★★★</div>
-                            <p class="t-quote">"Agentes super profesionales. Mi casa nueva superó todas las expectativas."</p>
-                            <span class="t-name">Laura M. · Valencia</span>
-                        </div>
-                    </div>
-
-                    <div class="t-card">
-                        <div class="t-avatar" style="background:#f0eaf9">
-                            <svg viewBox="0 0 40 40" width="36" height="36" fill="none">
-                                <circle cx="20" cy="15" r="7" fill="#6b3fb5" opacity=".85"/>
-                                <path d="M6 36c0-7.732 6.268-14 14-14s14 6.268 14 14" fill="#6b3fb5" opacity=".55"/>
-                            </svg>
-                        </div>
-                        <div class="t-body">
-                            <div class="t-stars">★★★★★</div>
-                            <p class="t-quote">"Plataforma muy intuitiva y equipo siempre disponible. ¡10 de 10!"</p>
-                            <span class="t-name">Javier S. · Sevilla</span>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="t-dots" id="t-dots">
-                    <button class="t-dot active" aria-label="Testimonio 1"></button>
-                    <button class="t-dot" aria-label="Testimonio 2"></button>
-                    <button class="t-dot" aria-label="Testimonio 3"></button>
-                    <button class="t-dot" aria-label="Testimonio 4"></button>
-                </div>
-            </div>
-        </div>
-
     </div>
 </section>
 
@@ -190,26 +118,4 @@
 @push('scripts')
 <script src="{{ asset('js/hero-canvas.js') }}"></script>
 <script src="{{ asset('js/home.js') }}"></script>
-<script>
-(function () {
-  var cards   = document.querySelectorAll('.t-card');
-  var dots    = document.querySelectorAll('.t-dot');
-  var current = 0;
-  if (!cards.length) return;
-
-  function go(n) {
-    cards[current].classList.remove('active');
-    dots[current].classList.remove('active');
-    current = (n + cards.length) % cards.length;
-    cards[current].classList.add('active');
-    dots[current].classList.add('active');
-  }
-
-  dots.forEach(function (dot, i) {
-    dot.addEventListener('click', function () { go(i); });
-  });
-
-  setInterval(function () { go(current + 1); }, 4000);
-}());
-</script>
 @endpush
