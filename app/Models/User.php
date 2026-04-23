@@ -11,19 +11,26 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'phone', 'avatar', 'is_active',
+        'name',
+        'email',
+        'password',
+        'role',
+        'phone',
+        'avatar',
+        'is_active',
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
-            'is_active'         => 'boolean',
+            'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -50,5 +57,17 @@ class User extends Authenticatable
     public function inquiries()
     {
         return $this->hasMany(Inquiry::class);
+    }
+
+    public function interactions()
+    {
+        return $this->hasMany(PropertyInteraction::class);
+    }
+
+    public function favoriteProperties()
+    {
+        return $this->belongsToMany(Property::class, 'property_interactions')
+            ->wherePivot('type', '=', 'like')
+            ->withTimestamps();
     }
 }

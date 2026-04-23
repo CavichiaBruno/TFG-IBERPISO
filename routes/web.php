@@ -58,3 +58,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin,agent'])
         Route::patch('/usuarios/{id}/toggle-active', [AdminUserController::class, 'toggleActive'])->name('users.toggleActive');
     });
 });
+
+// --- Scroll & Favorites Routes (Auth required) ---
+Route::middleware('auth')->group(function () {
+    Route::get('/scroll', [\App\Http\Controllers\ScrollController::class, 'index'])->name('scroll');
+    Route::post('/scroll/interact', [\App\Http\Controllers\ScrollController::class, 'interact'])->name('scroll.interact');
+    Route::get('/guardados', [\App\Http\Controllers\ScrollController::class, 'saved'])->name('saved');
+    Route::delete('/guardados/{property_id}', [\App\Http\Controllers\ScrollController::class, 'removeFavorite'])->name('favorites.remove');
+});

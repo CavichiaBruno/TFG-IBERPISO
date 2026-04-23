@@ -39,5 +39,10 @@
             @if($property->has_pool) <span class="amenity-tag">Piscina</span> @endif
             @if($property->has_parking) <span class="amenity-tag">Parking</span> @endif
         </div>
+        @if(isset($footer))
+            <div class="card-footer" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.05)">
+                {{ $footer }}
+            </div>
+        @endif
     </div>
 </article>

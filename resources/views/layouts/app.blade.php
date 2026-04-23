@@ -31,7 +31,14 @@
         <nav class="main-nav" id="main-nav">
             <a href="{{ route('properties.index', ['operacion'=>'venta']) }}" class="nav-link">Comprar</a>
             <a href="{{ route('properties.index', ['operacion'=>'alquiler']) }}" class="nav-link">Alquilar</a>
-            <a href="{{ route('properties.index', ['is_featured'=>1]) }}" class="nav-link">Destacados</a>
+            <a href="{{ route('scroll') }}" class="nav-link" title="IberScroll (Modo Swipe)">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                IberScroll
+            </a>
+            <a href="{{ route('saved') }}" class="nav-link" title="Mis Guardados">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                Guardados
+            </a>
             <a href="#sobre-nosotros" class="nav-link">Sobre nosotros</a>
         </nav>
 
@@ -61,7 +68,8 @@
     <nav>
         <a href="{{ route('properties.index', ['operacion'=>'venta']) }}">Comprar</a>
         <a href="{{ route('properties.index', ['operacion'=>'alquiler']) }}">Alquilar</a>
-        <a href="{{ route('properties.index', ['is_featured'=>1]) }}">Destacados</a>
+        <a href="{{ route('scroll') }}">IberScroll</a>
+        <a href="{{ route('saved') }}">Mis Guardados</a>
         @auth
             <a href="{{ route('admin.dashboard') }}">Panel Admin</a>
         @else

@@ -6,32 +6,58 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * Modelo que representa una Propiedad Inmobiliaria en el sistema.
+ * Un inmueble tiene diversos atributos (precio, superficie, etc.) 
+ * y puede tener varias imágenes asociadas.
+ */
 class Property extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes; // Permite el borrado lógico (no elimina de la BD inmediatamente)
 
+    // Campos que se pueden rellenar de forma masiva
     protected $fillable = [
-        'user_id', 'title', 'description', 'price', 'surface_m2',
-        'rooms', 'bathrooms', 'floor', 'property_type', 'operation_type',
-        'address', 'city', 'province', 'postal_code', 'latitude', 'longitude',
-        'has_elevator', 'has_parking', 'has_terrace', 'has_garden', 'has_pool',
-        'air_conditioning', 'is_featured', 'is_active', 'energy_certificate',
-        'virtual_tour_url',
+        'user_id',          // ID del usuario/agente que creó el anuncio
+        'title',            // Título descriptivo (ej: Piso céntrico)
+        'description',      // Descripción detallada
+        'price',            // Precio en euros
+        'surface_m2',       // Metros cuadrados útiles
+        'rooms',            // Número de habitaciones
+        'bathrooms',        // Número de baños
+        'floor',            // Planta (ej: 1º, Bajo, Ático)
+        'property_type',    // Tipo: piso, casa, local, etc.
+        'operation_type',   // Operación: venta o alquiler
+        'address',          // Dirección completa
+        'city',             // Localidad
+        'province',         // Provincia
+        'postal_code',      // Código Postal
+        'latitude',         // Coordenada para el mapa
+        'longitude',        // Coordenada para el mapa
+        'has_elevator',     // ¿Tiene ascensor?
+        'has_parking',      // ¿Tiene plaza de garaje?
+        'has_terrace',      // ¿Tiene terraza?
+        'has_garden',       // ¿Tiene jardín?
+        'has_pool',         // ¿Tiene piscina?
+        'air_conditioning', // ¿Tiene aire acondicionado?
+        'is_featured',      // Si aparece en la sección de destacados
+        'is_active',        // Si el anuncio está visible públicamente
+        'energy_certificate', // Calificación energética (A, B, C...)
+        'virtual_tour_url',   // Enlace opcional a tour 360
     ];
 
     protected $casts = [
-        'price'           => 'decimal:2',
-        'surface_m2'      => 'decimal:2',
-        'latitude'        => 'decimal:7',
-        'longitude'       => 'decimal:7',
-        'has_elevator'    => 'boolean',
-        'has_parking'     => 'boolean',
-        'has_terrace'     => 'boolean',
-        'has_garden'      => 'boolean',
-        'has_pool'        => 'boolean',
-        'air_conditioning'=> 'boolean',
-        'is_featured'     => 'boolean',
-        'is_active'       => 'boolean',
+        'price' => 'decimal:2',
+        'surface_m2' => 'decimal:2',
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
+        'has_elevator' => 'boolean',
+        'has_parking' => 'boolean',
+        'has_terrace' => 'boolean',
+        'has_garden' => 'boolean',
+        'has_pool' => 'boolean',
+        'air_conditioning' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     // --- Relationships ---
@@ -66,6 +92,11 @@ class Property extends Model
         return $this->hasMany(Inquiry::class);
     }
 
+    public function interactions()
+    {
+        return $this->hasMany(PropertyInteraction::class);
+    }
+
     // --- Scopes ---
 
     public function scopeActive($query)
@@ -97,7 +128,7 @@ class Property extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return number_format($this->price, 0, ',', '.');
+        return number_format((float) $this->price, 0, ',', '.');
     }
 
     public function getCoverUrlAttribute(): ?string
