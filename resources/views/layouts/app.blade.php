@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'IberPiso') — Encuentra tu hogar ideal</title>
-    <meta name="description" content="@yield('meta_description', 'IberPiso - Portal inmobiliario líder en España. Compra, alquila o vende propiedades.')">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components.css') }}">
@@ -18,71 +13,60 @@
 </head>
 <body>
 
-{{-- HEADER --}}
 <header class="site-header" id="site-header">
-    <div class="header-inner container">
+    <div class="header-inner">
         <a href="{{ route('home') }}" class="logo">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-                <path d="M14 3L2 12h3v13h7v-8h4v8h7V12h3L14 3z" fill="var(--primary)"/>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
             <span>Iber<strong>Piso</strong></span>
         </a>
 
-        <nav class="main-nav" id="main-nav">
+        <nav class="main-nav">
             <a href="{{ route('properties.index', ['operacion'=>'venta']) }}" class="nav-link">Comprar</a>
             <a href="{{ route('properties.index', ['operacion'=>'alquiler']) }}" class="nav-link">Alquilar</a>
-            <a href="{{ route('scroll') }}" class="nav-link">
-                IberScroll
-            </a>
-            <a href="{{ route('saved') }}" class="nav-link">
-                Guardados
-            </a>
+            <a href="{{ route('properties.index', ['is_featured'=>1]) }}" class="nav-link">Destacados</a>
+            <a href="{{ route('scroll') }}" class="nav-link">IberScroll</a>
+            <a href="{{ route('saved') }}" class="nav-link">Guardados</a>
         </nav>
 
         <div class="header-actions">
             @auth
-                @if(auth()->user()->hasAdminAccess())
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline">Panel</a>
-                @endif
                 <form method="POST" action="{{ route('logout') }}" style="display:inline">
                     @csrf
-                    <button type="submit" class="btn btn-outline">Salir</button>
+                    <button type="submit" class="btn-login-nav" style="border:none; background:none; cursor:pointer;">Salir</button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="btn btn-outline">Iniciar sesión</a>
-                <a href="{{ route('register') }}" class="btn btn-primary">Registrarse</a>
+                <a href="{{ route('login') }}" class="btn-login-nav">Entrar</a>
+                <a href="{{ route('register') }}" class="btn-register-nav">Registro</a>
             @endauth
         </div>
 
-        <button class="hamburger" id="hamburger" aria-label="Menú" aria-expanded="false">
-            <span></span><span></span><span></span>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
+            <span></span>
+            <span></span>
         </button>
     </div>
 </header>
 
-{{-- MOBILE DRAWER --}}
-<div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+<div class="mobile-drawer" id="mobile-drawer">
     <nav>
         <a href="{{ route('properties.index', ['operacion'=>'venta']) }}">Comprar</a>
         <a href="{{ route('properties.index', ['operacion'=>'alquiler']) }}">Alquilar</a>
+        <a href="{{ route('properties.index', ['is_featured'=>1]) }}">Destacados</a>
         <a href="{{ route('scroll') }}">IberScroll</a>
         <a href="{{ route('saved') }}">Mis Guardados</a>
         @auth
-            <a href="{{ route('admin.dashboard') }}">Panel Admin</a>
+            <a href="{{ route('logout') }}" class="nav-link">Salir</a>
         @else
-            <a href="{{ route('login') }}">Iniciar sesión</a>
-            <a href="{{ route('register') }}">Registrarse</a>
+            <a href="{{ route('login') }}" class="nav-link">Entrar</a>
+            <a href="{{ route('register') }}" class="nav-link">Registro</a>
         @endauth
     </nav>
 </div>
-<div class="drawer-overlay" id="drawer-overlay"></div>
 
 <main>
-    @if(session('success'))
-        <div class="container" style="padding-top:1rem">
-            <x-alert type="success" :message="session('success')" />
-        </div>
-    @endif
     @yield('content')
 </main>
 
@@ -127,11 +111,23 @@
             </ul>
         </div>
     </div>
-    <div class="footer-bottom">
+    <div class="footer-bottom container">
         <p>© {{ date('Y') }} IberPiso. Todos los derechos reservados.</p>
     </div>
 </footer>
 
+<script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+
+    if (menuToggle && mobileDrawer) {
+        menuToggle.addEventListener('click', () => {
+            mobileDrawer.classList.toggle('open');
+            menuToggle.classList.toggle('active');
+            document.body.style.overflow = mobileDrawer.classList.contains('open') ? 'hidden' : '';
+        });
+    }
+</script>
 <script src="{{ asset('js/app.js') }}"></script>
 @stack('scripts')
 </body>

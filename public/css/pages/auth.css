@@ -1,0 +1,123 @@
+/* ─── IberPiso — Auth Pages (Apple-Inspired) ────────────────────────────── */
+
+.auth-page {
+  min-height: calc(100vh - 48px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  padding: var(--sp-7);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 360px; /* Thinner card for Apple feel */
+  text-align: center;
+}
+
+.auth-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
+  color: var(--near-black);
+}
+
+.auth-logo svg { width: 32px; height: 32px; }
+
+.auth-brand {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--near-black);
+  margin-bottom: var(--sp-8);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  text-align: left;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--white);
+  border: 1px solid var(--gray-subtle);
+  border-radius: var(--r-std);
+  padding: 12px 16px;
+  font-size: 17px;
+  outline: none;
+  transition: border-color var(--t-base);
+}
+
+.form-input:focus { border-color: var(--blue); }
+
+.password-wrap { position: relative; }
+.password-wrap .form-input { padding-right: 48px; }
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--gray-mid);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.link-muted { color: var(--blue-link); }
+
+.auth-footer {
+  margin-top: var(--sp-10);
+  font-size: 14px;
+  color: var(--gray-mid);
+}
+
+.link-primary {
+  color: var(--blue-link);
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .auth-page { padding: var(--sp-10) var(--sp-6); align-items: flex-start; }
+}

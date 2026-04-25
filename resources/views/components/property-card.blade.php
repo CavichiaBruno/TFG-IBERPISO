@@ -1,23 +1,29 @@
 @props(['property'])
-<article class="property-card">
-    <a href="{{ route('properties.show', [$property->id, $property->slug]) }}" class="card-image-link">
-        <div class="card-image" style="background-image: url('{{ $property->cover_url }}')">
-            @if($property->is_featured)
-                <span class="badge badge-featured">Destacado</span>
-            @endif
-            <span class="badge badge-operation {{ $property->operation_type === 'venta' ? 'badge-venta' : 'badge-alquiler' }}">
-                {{ strtoupper($property->operation_type) }}
-            </span>
-        </div>
+@php
+    $fallbackImage = asset('brain/4b87a6df-5eeb-4d4e-beb3-de1cab4408bc/property_interior_luxury_1777112515796.png');
+    $displayImage = $property->cover_url ?: $fallbackImage;
+@endphp
+<article class="property-card" itemscope itemtype="https://schema.org/Residence">
+    @if($property->is_featured)
+        <span class="badge badge-featured">DESTACADO</span>
+    @endif
+    <span class="badge badge-operation">
+        {{ strtoupper($property->operation_type) }}
+    </span>
+
+    <a href="{{ route('properties.show', [$property->id, $property->slug]) }}" class="card-image-link" tabindex="-1" aria-hidden="true">
+        <div class="card-image" style="background-image: url('{{ $displayImage }}')"></div>
     </a>
+
     <div class="card-body">
-        <div class="card-price">€{{ $property->formatted_price }}{{ $property->operation_type === 'alquiler' ? '/mes' : '' }}</div>
-        <h3 class="card-title">
+        <div class="card-price" itemprop="price">
+            €{{ $property->formatted_price }}{{ $property->operation_type === 'alquiler' ? '/mes' : '' }}
+        </div>
+        <h3 class="card-title" itemprop="name">
             <a href="{{ route('properties.show', [$property->id, $property->slug]) }}">{{ $property->title }}</a>
         </h3>
-        <p class="card-address">
-            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" fill="none" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" fill="none" stroke-width="2"/></svg>
-            {{ $property->address }}, {{ $property->city }}
+        <p class="card-address" itemprop="address">
+            {{ $property->city }}
         </p>
         <div class="card-features">
             <span title="Habitaciones">
