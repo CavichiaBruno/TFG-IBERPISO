@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-<div class="detail-layout container">
+<div class="detail-layout">
 
     {{-- LEFT COLUMN --}}
     <div class="detail-main">
@@ -42,16 +42,16 @@
         <div class="detail-header">
             <div class="detail-price">€{{ $property->formatted_price }}{{ $property->operation_type === 'alquiler' ? '/mes' : '' }}</div>
             <div class="detail-badges">
-                <span class="badge badge-operation {{ $property->operation_type === 'venta' ? 'badge-venta' : 'badge-alquiler' }}">{{ strtoupper($property->operation_type) }}</span>
-                <span class="badge badge-type">{{ ucfirst($property->property_type) }}</span>
-                @if($property->is_featured)<span class="badge badge-featured">Destacado</span>@endif
+                <span class="badge badge-operation">{{ strtoupper($property->operation_type) }}</span>
+                <span class="badge badge-type" style="background: var(--gray-light); color: var(--near-black);">{{ strtoupper($property->property_type) }}</span>
+                @if($property->is_featured)<span class="badge badge-featured">DESTACADO</span>@endif
             </div>
         </div>
 
         <h1 class="detail-title">{{ $property->title }}</h1>
         <p class="detail-address">
-            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" fill="none" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="currentColor" fill="none" stroke-width="2"/></svg>
-            {{ $property->address }}, {{ $property->city }}, {{ $property->province }} — CP {{ $property->postal_code }}
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ $property->address }}, {{ $property->city }}, {{ $property->province }}
         </p>
 
         {{-- KEY FEATURES --}}
@@ -165,8 +165,14 @@
             </form>
 
             <div class="contact-info">
-                <p>📞 +34 900 000 000</p>
-                <p>🕐 Lun–Vie 9:00–19:00</p>
+                <p>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 9.81 19.79 19.79 0 0 1 1 1.18 2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    +34 900 000 000
+                </p>
+                <p>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Lun–Vie 9:00–19:00
+                </p>
             </div>
         </div>
     </aside>
@@ -185,8 +191,8 @@
 
 {{-- MOBILE STICKY CONTACT --}}
 <div class="mobile-contact-bar">
-    <a href="tel:+34900000000" class="btn btn-primary">📞 Llamar</a>
-    <button id="mobile-contact-btn" class="btn btn-outline">✉ Contactar</button>
+    <a href="tel:+34900000000" class="btn btn-primary">Llamar</a>
+    <button id="mobile-contact-btn" class="btn btn-outline">Contactar</button>
 </div>
 @endsection
 

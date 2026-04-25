@@ -6,7 +6,7 @@
 @endpush
 
 @section('content')
-<div class="listing-layout container">
+<div class="listing-layout">
 
     {{-- SIDEBAR FILTERS --}}
     <aside class="filters-sidebar" id="filters-sidebar">
