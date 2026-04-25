@@ -9,6 +9,7 @@
 @section('content')
 
 <section class="hero-parallax" id="hero-parallax">
+    <canvas id="hero-canvas"></canvas>
 
     <div class="hero-parallax-content container">
         <div class="hero-text-wrap">
@@ -83,3 +84,8 @@
 </section>
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/home.js') }}"></script>
+<script src="{{ asset('js/hero-canvas.js') }}"></script>
+@endpush

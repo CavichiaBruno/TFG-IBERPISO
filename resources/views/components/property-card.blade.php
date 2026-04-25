@@ -1,6 +1,6 @@
 @props(['property'])
 @php
-    $fallbackImage = asset('brain/4b87a6df-5eeb-4d4e-beb3-de1cab4408bc/property_interior_luxury_1777112515796.png');
+    $fallbackImage = 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
     $displayImage = $property->cover_url ?: $fallbackImage;
 @endphp
 <article class="property-card" itemscope itemtype="https://schema.org/Residence">
