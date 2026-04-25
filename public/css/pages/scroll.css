@@ -6,6 +6,19 @@
     position: relative;
     height: 70vh;
     perspective: 1000px;
+    overflow: visible; /* Let cards swipe out */
+}
+
+/* Wrapper to contain the overflow of cards swiping out */
+.swipe-card-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+body.page-scroll {
+    overflow-x: hidden;
 }
 
 .scroll-instructions {

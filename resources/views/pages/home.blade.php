@@ -28,7 +28,7 @@
                     <div class="search-fields">
                         <div class="search-field search-field-lg">
                             <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" fill="none" stroke-width="2"/></svg>
-                            <input type="text" name="q" placeholder="Ciudad, provincia o código postal…" autocomplete="off">
+                            <input type="text" name="q" placeholder="Introducir ciudad" autocomplete="off">
                         </div>
                         <div class="search-field">
                             <select name="tipo">

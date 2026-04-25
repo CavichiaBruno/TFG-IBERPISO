@@ -7,6 +7,7 @@
 @endpush
 
 @section('content')
+<div class="page-scroll-wrapper" style="overflow-x: hidden;">
 <div class="container section-pad">
     <div class="section-header text-center">
         <h1 class="section-title"><span class="text-primary">Iber</span>Scroll</h1>
@@ -68,6 +69,7 @@
             </div>
         @endif
     </div>
+</div>
 </div>
 @endsection
 

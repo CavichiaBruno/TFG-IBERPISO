@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const stack = document.querySelector('.swipe-card-stack');
     const cards = Array.from(document.querySelectorAll('.swipe-card'));
-    let currentIndex = cards.length - 1;
+    let currentIndex = 0; // Start from the top card (z-index 100)
 
     if (cards.length === 0) return;
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function swipe(direction) {
-        if (currentIndex < 0) return;
+        if (currentIndex >= cards.length) return;
 
         const card = cards[currentIndex];
         const propertyId = card.dataset.id;
@@ -38,20 +38,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Send to server
         sendInteraction(propertyId, type);
 
-        currentIndex--;
+        currentIndex++;
 
         // Check if empty
-        if (currentIndex < 0) {
+        if (currentIndex >= cards.length) {
             setTimeout(() => {
-                document.querySelector('.scroll-container').innerHTML = `
-                    <div class="scroll-empty">
-                        <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11H3V9z"/></svg>
-                        <h2>¡Eso es todo por ahora en IberScroll!</h2>
-                        <p class="text-secondary">No hay más propiedades disponibles para swipear en este momento.</p>
-                        <a href="/guardados" class="btn btn-primary" style="margin-top: 1.5rem">Ver mis guardados</a>
-                    </div>
-                `;
-                document.querySelector('.swipe-actions').style.display = 'none';
+                const container = document.querySelector('.scroll-container');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="scroll-empty">
+                            <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11H3V9z"/></svg>
+                            <h2>¡Eso es todo por ahora en IberScroll!</h2>
+                            <p class="text-secondary">No hay más propiedades disponibles para swipear en este momento.</p>
+                            <a href="/guardados" class="btn btn-primary" style="margin-top: 1.5rem">Ver mis guardados</a>
+                        </div>
+                    `;
+                }
+                const actions = document.querySelector('.swipe-actions');
+                if (actions) actions.style.display = 'none';
             }, 500);
         }
     }
@@ -86,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('touchend', endDrag);
 
     function startDrag(e) {
-        if (currentIndex < 0) return;
+        if (currentIndex >= cards.length) return;
         isDragging = true;
         startX = e.clientX;
         cards[currentIndex].style.transition = 'none';

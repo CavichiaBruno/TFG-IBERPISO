@@ -31,15 +31,12 @@
         <nav class="main-nav" id="main-nav">
             <a href="{{ route('properties.index', ['operacion'=>'venta']) }}" class="nav-link">Comprar</a>
             <a href="{{ route('properties.index', ['operacion'=>'alquiler']) }}" class="nav-link">Alquilar</a>
-            <a href="{{ route('scroll') }}" class="nav-link" title="IberScroll (Modo Swipe)">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <a href="{{ route('scroll') }}" class="nav-link">
                 IberScroll
             </a>
-            <a href="{{ route('saved') }}" class="nav-link" title="Mis Guardados">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <a href="{{ route('saved') }}" class="nav-link">
                 Guardados
             </a>
-            <a href="#sobre-nosotros" class="nav-link">Sobre nosotros</a>
         </nav>
 
         <div class="header-actions">
@@ -99,11 +96,6 @@
                 IberPiso
             </div>
             <p class="footer-tagline">Tu portal inmobiliario de confianza en España.</p>
-            <div class="social-icons">
-                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" fill="none" stroke-width="2"/></svg></a>
-                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" fill="none" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" fill="none" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-                <a href="#" aria-label="Twitter/X"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2"/></svg></a>
-            </div>
         </div>
         <div class="footer-col">
             <h4>Inmuebles</h4>
@@ -126,9 +118,6 @@
         <div class="footer-col">
             <h4>Contacto</h4>
             <ul>
-                <li>
-                    <svg viewBox="0 0 24 24" width="14" height="14" style="display:inline;vertical-align:middle;margin-right:6px;opacity:.7" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 011 1.18 2 2 0 013 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>+34 900 000 000
-                </li>
                 <li>
                     <svg viewBox="0 0 24 24" width="14" height="14" style="display:inline;vertical-align:middle;margin-right:6px;opacity:.7" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>hola@iberpiso.es
                 </li>

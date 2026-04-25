@@ -183,11 +183,6 @@
     </div>
 </div>
 
-{{-- MOBILE STICKY CONTACT --}}
-<div class="mobile-contact-bar">
-    <a href="tel:+34900000000" class="btn btn-primary">📞 Llamar</a>
-    <button id="mobile-contact-btn" class="btn btn-outline">✉ Contactar</button>
-</div>
 @endsection
 
 @push('scripts')
