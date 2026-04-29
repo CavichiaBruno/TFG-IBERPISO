@@ -1,20 +1,19 @@
 /**
- * IberPiso — Admin Panel Logic
+ * IberPiso — Lógica del Panel de Administración
+ * Gestiona el menú lateral móvil y los modales de gestión de usuarios.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
     
-    // ─── Sidebar Toggle (Mobile) ──────────────────────────────────────
+    // ─── Toggle del Menú Lateral (Mobile) ──────────────────────────────────────
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebar = document.getElementById('admin-sidebar');
     
     if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener('click', function () {
-            sidebar.classList.toggle('active');
-        });
+        sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
     }
 
-    // ─── User Management Modal ────────────────────────────────────────
+    // ─── Gestión de Modales de Usuario ────────────────────────────────────────
     const userModal = document.getElementById('user-modal');
     const openCreateBtn = document.getElementById('open-create-user');
     const editBtns = document.querySelectorAll('.edit-user-btn');
@@ -27,13 +26,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalTitle = document.getElementById('modal-title');
     const pwdHint = document.getElementById('pwd-hint');
 
+    /**
+     * Abre el modal configurado para crear o editar
+     */
     function openModal(isEdit = false, data = {}) {
         if (!userModal) return;
         
         modalTitle.textContent = isEdit ? 'Editar Usuario' : 'Nuevo Usuario';
         pwdHint.textContent = isEdit ? '(dejar vacío para mantener)' : '(obligatoria)';
         
-        // Fill form fields
+        // Rellenamos los campos del formulario con los datos recibidos
         document.getElementById('user-id').value = data.id || '';
         document.getElementById('u-name').value = data.name || '';
         document.getElementById('u-email').value = data.email || '';
@@ -49,46 +51,35 @@ document.addEventListener('DOMContentLoaded', function () {
         if (userModal) userModal.classList.remove('active');
     }
 
-    if (openCreateBtn) {
-        openCreateBtn.addEventListener('click', () => openModal(false));
-    }
+    // Eventos para abrir el modal
+    if (openCreateBtn) openCreateBtn.addEventListener('click', () => openModal(false));
 
     editBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            const data = {
+            openModal(true, {
                 id: this.dataset.id,
                 name: this.dataset.name,
                 email: this.dataset.email,
                 phone: this.dataset.phone,
                 role: this.dataset.role
-            };
-            openModal(true, data);
+            });
         });
     });
 
-    closeBtns.forEach(btn => {
-        if (btn) btn.addEventListener('click', closeModal);
-    });
-
-    // Close modal on overlay click
+    // Eventos para cerrar el modal
+    closeBtns.forEach(btn => { if (btn) btn.addEventListener('click', closeModal); });
     const overlay = document.querySelector('.modal-overlay');
     if (overlay) overlay.addEventListener('click', closeModal);
 
-    // ─── Form Submission (Placeholder for actual implementation) ──────────
+    // ─── Envío del Formulario (Simulación o Real) ──────────────────────────
     if (userForm) {
         userForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(userForm);
             const userId = document.getElementById('user-id').value;
-            const url = userId ? `/admin/users/${userId}` : '/admin/users';
-            const method = userId ? 'PUT' : 'POST';
-
-            // Convert FormData to JSON for API if needed, or send as FormData
-            // For now, we'll assume a standard Laravel form submission or simple alert
-            console.log('Submitting to:', url, 'Method:', method);
-            alert('Lógica de guardado enviada (Simulación). ID: ' + (userId || 'Nuevo'));
+            
+            // Aquí iría la petición fetch real a Laravel
+            alert('Datos guardados correctamente (Simulación de TFG). ID: ' + (userId || 'Nuevo'));
             closeModal();
-            // window.location.reload(); // In real implementation
         });
     }
 });

@@ -1,63 +1,63 @@
 /**
- * IberScroll — Tinder-style discovery logic
- * Optimized with card stack animations and smooth transitions
+ * IberScroll — Lógica para el descubrimiento de viviendas tipo "swipe" (Tinder)
+ * Gestiona el arrastre de cartas, animaciones y guardado de datos.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     const stack = document.querySelector('.swipe-card-stack');
     if (!stack) return;
 
+    // Array con las cartas visibles en el DOM
     let cards = Array.from(stack.querySelectorAll('.swipe-card'));
     
-    // Initial setup for the stack is handled by CSS nth-child rules.
-    // We just need to handle the interactions.
-
-    // Handle button clicks
+    // Botones de acción inferior
     const btnDislike = document.querySelector('.btn-dislike');
     const btnLike = document.querySelector('.btn-like');
 
     if (btnDislike) btnDislike.addEventListener('click', () => swipe('left'));
     if (btnLike) btnLike.addEventListener('click', () => swipe('right'));
 
-    // Handle Keyboard
+    // Soporte para teclado (Flechas izq/der)
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') swipe('left');
         if (e.key === 'ArrowRight') swipe('right');
     });
 
+    /**
+     * Realiza la acción de deslizar hacia una dirección
+     */
     function swipe(direction) {
         if (cards.length === 0) return;
 
-        const card = cards[0]; // Always get the top card
+        const card = cards[0]; // La carta superior
         const propertyId = card.dataset.id;
         const type = direction === 'right' ? 'like' : 'dislike';
 
-        // Clear inline styles to let CSS animation take over
+        // Limpieza de estilos manuales para que la animación CSS actúe
         card.style.transform = '';
         card.style.transition = '';
         card.style.opacity = '';
         card.style.pointerEvents = 'none';
 
-        // Add animation class
+        // Clase de animación de salida
         card.classList.add(direction === 'right' ? 'swipe-out-right' : 'swipe-out-left');
 
-        // Send interaction to server
+        // Registro asíncrono en la base de datos
         sendInteraction(propertyId, type);
 
-        // Remove from our tracking array
+        // Eliminamos la carta del control actual
         cards.shift();
 
-        // Remove from DOM after animation completes
+        // Borramos el elemento del DOM tras terminar la animación
         setTimeout(() => {
             card.remove();
-            
-            // Check if stack is empty
-            if (cards.length === 0) {
-                showEmptyState();
-            }
+            if (cards.length === 0) showEmptyState();
         }, 500);
     }
 
+    /**
+     * Muestra el mensaje final cuando no quedan más casas
+     */
     function showEmptyState() {
         const container = document.querySelector('.scroll-container');
         if (container) {
@@ -73,13 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
-        const actions = document.querySelector('.swipe-actions');
-        if (actions) actions.style.display = 'none';
-        
-        const instructions = document.querySelector('.scroll-instructions');
-        if (instructions) instructions.style.display = 'none';
+        document.querySelector('.swipe-actions').style.display = 'none';
+        document.querySelector('.scroll-instructions').style.display = 'none';
     }
 
+    /**
+     * Envía la interacción (me gusta/no me gusta) al servidor vía AJAX
+     */
     async function sendInteraction(propertyId, type) {
         try {
             await fetch('/scroll/interact', {
@@ -91,22 +91,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ property_id: propertyId, type: type })
             });
         } catch (error) {
-            console.error('Error sending interaction:', error);
+            console.error('Error al guardar interacción:', error);
         }
     }
 
-    // ─── Touch & Drag Logic ───────────────────────────────────────────
+    // ─── Lógica de Arrastre (Touch & Drag) ───────────────────────────────────────────
     let startX = 0;
     let currentX = 0;
     let isDragging = false;
 
-    // We only attach listeners once, but they will always act on cards[0]
+    // Listeners para ratón y táctil
     stack.addEventListener('mousedown', startDrag);
     stack.addEventListener('touchstart', (e) => startDrag(e.touches[0]), { passive: true });
-
     window.addEventListener('mousemove', drag);
     window.addEventListener('touchmove', (e) => drag(e.touches[0]), { passive: false });
-
     window.addEventListener('mouseup', endDrag);
     window.addEventListener('touchend', endDrag);
 
@@ -114,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cards.length === 0) return;
         isDragging = true;
         startX = e.clientX;
-        cards[0].style.transition = 'none';
+        cards[0].style.transition = 'none'; // Quitamos transición mientras arrastramos
     }
 
     function drag(e) {
@@ -125,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rotate = currentX / 12;
         card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
 
-        // Visual feedback (Badges)
+        // Feedback visual (sellos de LIKE/DISLIKE)
         const likeBadge = card.querySelector('.badge-like');
         const dislikeBadge = card.querySelector('.badge-dislike');
 
@@ -143,17 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function endDrag() {
         if (!isDragging || cards.length === 0) return;
-        
         isDragging = false;
         const card = cards[0];
         card.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s';
 
-        if (currentX > 120) {
-            swipe('right');
-        } else if (currentX < -120) {
-            swipe('left');
-        } else {
-            // Snap back
+        // Si hemos arrastrado suficiente distancia, ejecutamos el swipe
+        if (currentX > 120) swipe('right');
+        else if (currentX < -120) swipe('left');
+        else {
+            // Si no, la carta vuelve al centro (efecto muelle)
             card.style.transform = 'translateX(0) rotate(0)';
             if (card.querySelector('.badge-like')) card.querySelector('.badge-like').style.opacity = 0;
             if (card.querySelector('.badge-dislike')) card.querySelector('.badge-dislike').style.opacity = 0;

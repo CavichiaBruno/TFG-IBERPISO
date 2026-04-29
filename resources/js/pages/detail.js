@@ -1,19 +1,22 @@
-/* ── IberPiso — Property Detail JS ── */
+/**
+ * IberPiso — Lógica para la ficha detallada de la propiedad
+ * Gestiona la galería, el lightbox y el formulario de contacto.
+ */
 document.addEventListener('DOMContentLoaded', function () {
     var csrfToken = document.querySelector('meta[name="csrf-token"]');
     var csrf = csrfToken ? csrfToken.getAttribute('content') : '';
 
-    // ─── Gallery thumbnails ───────────────────────────────────────────
+    // ─── Galería de imágenes (Miniaturas) ───────────────────────────────────────────
     var mainPhoto = document.getElementById('main-photo');
     document.querySelectorAll('.gallery-thumb').forEach(function (thumb) {
         thumb.addEventListener('click', function () {
             if (mainPhoto) mainPhoto.src = this.dataset.full;
-            document.querySelectorAll('.gallery-thumb').forEach(function (t) { t.classList.remove('active'); });
+            document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
         });
     });
 
-    // ─── Lightbox ─────────────────────────────────────────────────────
+    // ─── Lightbox (Visualizador de fotos a pantalla completa) ────────────────────────
     var lightbox   = document.getElementById('lightbox');
     var lbImg      = document.getElementById('lightbox-img');
     var openLbBtn  = document.getElementById('open-lightbox');
@@ -30,26 +33,29 @@ document.addEventListener('DOMContentLoaded', function () {
         lbImg.src = thumbs[idx].dataset.full;
         lightbox.classList.add('open');
         lightbox.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden'; // Bloquea scroll del body
     }
+    
     function closeLightbox() {
         if (!lightbox) return;
         lightbox.classList.remove('open');
         lightbox.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     }
+    
     function showLbImage(idx) {
         if (!thumbs.length) return;
-        currentIdx = (idx + thumbs.length) % thumbs.length;
+        currentIdx = (idx + thumbs.length) % thumbs.length; // Ciclo infinito
         lbImg.src = thumbs[currentIdx].dataset.full;
     }
 
-    if (openLbBtn) openLbBtn.addEventListener('click', function () { openLightbox(0); });
+    if (openLbBtn) openLbBtn.addEventListener('click', () => openLightbox(0));
     if (closeLbBtn) closeLbBtn.addEventListener('click', closeLightbox);
     if (closeOverlay) closeOverlay.addEventListener('click', closeLightbox);
-    if (lbPrev) lbPrev.addEventListener('click', function () { showLbImage(currentIdx - 1); });
-    if (lbNext) lbNext.addEventListener('click', function () { showLbImage(currentIdx + 1); });
+    if (lbPrev) lbPrev.addEventListener('click', () => showLbImage(currentIdx - 1));
+    if (lbNext) lbNext.addEventListener('click', () => showLbImage(currentIdx + 1));
 
+    // Soporte para teclado en el lightbox
     document.addEventListener('keydown', function (e) {
         if (!lightbox || !lightbox.classList.contains('open')) return;
         if (e.key === 'Escape') closeLightbox();
@@ -57,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'ArrowRight') showLbImage(currentIdx + 1);
     });
 
-    // ─── Contact form AJAX ────────────────────────────────────────────
+    // ─── Formulario de contacto AJAX ────────────────────────────────────────────
     var inquiryForm = document.getElementById('inquiry-form');
     if (inquiryForm) {
         inquiryForm.addEventListener('submit', function (e) {
@@ -69,8 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.disabled = true;
             btn.textContent = 'Enviando…';
 
-            var data = new FormData(inquiryForm);
-
             fetch('/propiedades/' + propertyId + '/contactar', {
                 method: 'POST',
                 headers: {
@@ -78,10 +82,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
                 },
-                body: data,
+                body: new FormData(inquiryForm),
             })
-            .then(function (r) { return r.json(); })
-            .then(function (res) {
+            .then(r => r.json())
+            .then(res => {
                 if (res.success) {
                     inquiryForm.reset();
                     response.innerHTML = '<div class="alert alert-success">' + res.message + '</div>';
@@ -90,20 +94,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     response.innerHTML = '<div class="alert alert-error">' + errors + '</div>';
                 }
             })
-            .catch(function () {
-                response.innerHTML = '<div class="alert alert-error">Error de conexión. Inténtalo de nuevo.</div>';
+            .catch(() => {
+                response.innerHTML = '<div class="alert alert-error">Error de conexión.</div>';
             })
-            .finally(function () {
+            .finally(() => {
                 btn.disabled = false;
                 btn.textContent = 'Enviar consulta';
             });
         });
     }
 
-    // ─── Mobile contact button ────────────────────────────────────────
+    // Botón flotante móvil para subir al formulario
     var mobileContactBtn = document.getElementById('mobile-contact-btn');
     if (mobileContactBtn) {
-        mobileContactBtn.addEventListener('click', function () {
+        mobileContactBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }

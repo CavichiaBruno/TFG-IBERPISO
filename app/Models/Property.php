@@ -7,42 +7,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 /**
- * Modelo que representa una Propiedad Inmobiliaria en el sistema.
- * Un inmueble tiene diversos atributos (precio, superficie, etc.) 
- * y puede tener varias imágenes asociadas.
+ * Modelo que representa una Propiedad Inmobiliaria.
  */
 class Property extends Model
 {
-    use SoftDeletes; // Permite el borrado lógico (no elimina de la BD inmediatamente)
+    use SoftDeletes; // Permite el borrado lógico (quedan en BD pero no se muestran)
 
-    // Campos que se pueden rellenar de forma masiva
     protected $fillable = [
-        'user_id',          // ID del usuario/agente que creó el anuncio
-        'title',            // Título descriptivo (ej: Piso céntrico)
-        'description',      // Descripción detallada
-        'price',            // Precio en euros
-        'surface_m2',       // Metros cuadrados útiles
-        'rooms',            // Número de habitaciones
-        'bathrooms',        // Número de baños
-        'floor',            // Planta (ej: 1º, Bajo, Ático)
-        'property_type',    // Tipo: piso, casa, local, etc.
-        'operation_type',   // Operación: venta o alquiler
-        'address',          // Dirección completa
-        'city',             // Localidad
-        'province',         // Provincia
-        'postal_code',      // Código Postal
-        'latitude',         // Coordenada para el mapa
-        'longitude',        // Coordenada para el mapa
-        'has_elevator',     // ¿Tiene ascensor?
-        'has_parking',      // ¿Tiene plaza de garaje?
-        'has_terrace',      // ¿Tiene terraza?
-        'has_garden',       // ¿Tiene jardín?
-        'has_pool',         // ¿Tiene piscina?
-        'air_conditioning', // ¿Tiene aire acondicionado?
-        'is_featured',      // Si aparece en la sección de destacados
-        'is_active',        // Si el anuncio está visible públicamente
-        'energy_certificate', // Calificación energética (A, B, C...)
-        'virtual_tour_url',   // Enlace opcional a tour 360
+        'user_id', 'title', 'description', 'price', 'surface_m2', 'rooms', 
+        'bathrooms', 'floor', 'property_type', 'operation_type', 'address', 
+        'city', 'province', 'postal_code', 'latitude', 'longitude', 
+        'has_elevator', 'has_parking', 'has_terrace', 'has_garden', 
+        'has_pool', 'air_conditioning', 'is_featured', 'is_active', 
+        'energy_certificate', 'virtual_tour_url',
     ];
 
     protected $casts = [
@@ -60,97 +37,38 @@ class Property extends Model
         'is_active' => 'boolean',
     ];
 
-    // --- Relationships ---
+    // --- Relaciones ---
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    public function user() { return $this->belongsTo(User::class); }
+    public function media() { return $this->hasMany(PropertyMedia::class)->orderBy('sort_order'); }
+    public function images() { return $this->hasMany(PropertyMedia::class)->where('file_type', 'image')->orderBy('sort_order'); }
+    public function inquiries() { return $this->hasMany(Inquiry::class); }
+    public function interactions() { return $this->hasMany(PropertyInteraction::class); }
 
-    public function media()
-    {
-        return $this->hasMany(PropertyMedia::class)->orderBy('sort_order');
-    }
+    // --- Scopes (Atajos para consultas comunes) ---
 
-    public function images()
-    {
-        return $this->hasMany(PropertyMedia::class)->where('file_type', 'image')->orderBy('sort_order');
-    }
+    public function scopeActive($query) { return $query->where('is_active', true); }
+    public function scopeFeatured($query) { return $query->where('is_featured', true); }
+    public function scopeFilterByOperation($query, string $op) { return $query->where('operation_type', $op); }
 
-    public function documents()
-    {
-        return $this->hasMany(PropertyMedia::class)->where('file_type', 'pdf')->orderBy('sort_order');
-    }
+    // --- Accessors (Campos calculados o formateados) ---
 
-    public function coverImage()
-    {
-        return $this->hasOne(PropertyMedia::class)->where('file_type', 'image')->where('is_cover', true);
-    }
+    // Genera el slug amigable para URLs basándose en el título
+    public function getSlugAttribute(): string { return Str::slug($this->title); }
 
-    public function inquiries()
-    {
-        return $this->hasMany(Inquiry::class);
-    }
+    // Formatea el precio con separador de miles
+    public function getFormattedPriceAttribute(): string { return number_format((float) $this->price, 0, ',', '.'); }
 
-    public function interactions()
-    {
-        return $this->hasMany(PropertyInteraction::class);
-    }
-
-    // --- Scopes ---
-
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
-    }
-
-    public function scopeFilterByType($query, string $type)
-    {
-        return $query->where('property_type', $type);
-    }
-
-    public function scopeFilterByOperation($query, string $operation)
-    {
-        return $query->where('operation_type', $operation);
-    }
-
-    // --- Accessors ---
-
-    public function getSlugAttribute(): string
-    {
-        return Str::slug($this->title);
-    }
-
-    public function getFormattedPriceAttribute(): string
-    {
-        return number_format((float) $this->price, 0, ',', '.');
-    }
-
+    // Obtiene la URL de la imagen de portada o un placeholder si no hay
     public function getCoverUrlAttribute(): ?string
     {
         $cover = $this->media->where('file_type', 'image')->where('is_cover', true)->first()
             ?? $this->media->where('file_type', 'image')->first();
-
         return $cover ? asset('storage/' . $cover->file_path) : asset('images/placeholder.jpg');
     }
 
-    public static function getPropertyTypes(): array
-    {
-        return ['piso', 'casa', 'chalet', 'local', 'garaje', 'oficina'];
-    }
-
-    public static function getOperationTypes(): array
-    {
-        return ['venta', 'alquiler'];
-    }
-
-    public static function getEnergyCertificates(): array
-    {
-        return ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-    }
+    // Listados de opciones fijas para el sistema
+    public static function getPropertyTypes(): array { return ['piso', 'casa', 'chalet', 'local', 'garaje', 'oficina']; }
+    public static function getOperationTypes(): array { return ['venta', 'alquiler']; }
+    public static function getEnergyCertificates(): array { return ['A', 'B', 'C', 'D', 'E', 'F', 'G']; }
 }

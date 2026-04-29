@@ -8,12 +8,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
+/**
+ * Controlador para la gestión de usuarios desde el panel administrativo
+ */
 class AdminUserController extends Controller
 {
+    /**
+     * Lista los usuarios con buscador y paginación
+     */
     public function index(Request $request)
     {
         $query = User::query();
 
+        // Buscador por nombre o email
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($sub) use ($q) {
@@ -22,12 +29,15 @@ class AdminUserController extends Controller
             });
         }
 
-        $users       = $query->latest()->paginate(20)->withQueryString();
+        $users = $query->latest()->paginate(20)->withQueryString();
         $unreadCount = \App\Models\Inquiry::unread()->count();
 
         return view('admin.users.index', compact('users', 'unreadCount'));
     }
 
+    /**
+     * Crea un nuevo usuario validando los datos recibidos
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -43,12 +53,15 @@ class AdminUserController extends Controller
             'email'    => $request->email,
             'phone'    => $request->phone,
             'role'     => $request->role,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password), // Encriptamos la clave
         ]);
 
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Actualiza un usuario existente permitiendo cambiar la clave si se proporciona
+     */
     public function update(Request $request, int $id)
     {
         $user = User::findOrFail($id);
@@ -71,14 +84,19 @@ class AdminUserController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Elimina un usuario con validaciones de seguridad
+     */
     public function destroy(int $id)
     {
         $user = User::findOrFail($id);
 
+        // Impedimos que un usuario se borre a sí mismo
         if ($user->id === auth()->id()) {
             return response()->json(['error' => 'No puedes eliminar tu propia cuenta.'], 403);
         }
 
+        // Evitamos dejar el sistema sin administradores activos
         $adminCount = User::where('role', 'admin')->where('is_active', true)->count();
         if ($user->role === 'admin' && $adminCount <= 1) {
             return response()->json(['error' => 'No puedes eliminar el último administrador.'], 403);
@@ -88,6 +106,9 @@ class AdminUserController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Cambia el estado de activación de un usuario
+     */
     public function toggleActive(int $id)
     {
         $user = User::findOrFail($id);

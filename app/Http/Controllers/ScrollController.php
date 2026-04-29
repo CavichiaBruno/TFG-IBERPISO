@@ -7,46 +7,45 @@ use App\Models\PropertyInteraction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Controlador para la funcionalidad de IberScroll (Swipe) y Favoritos
+ */
 class ScrollController extends Controller
 {
     /**
-     * Muestra la interfaz de "Scroll" tipo Tinder.
+     * Muestra la interfaz de descubrimiento tipo "swipe"
      */
     public function index()
     {
         $user = Auth::user();
 
-        // Obtener IDs de propiedades con las que ya interactuó el usuario
-        $interactedIds = PropertyInteraction::where('user_id', $user->id)
-            ->pluck('property_id');
+        // Evitamos mostrar propiedades con las que el usuario ya ha interactuado
+        $interactedIds = PropertyInteraction::where('user_id', $user->id)->pluck('property_id');
 
-        // Obtener propiedades activas con las que NO ha interactuado
+        // Obtenemos propiedades aleatorias que el usuario aún no ha visto
         $properties = Property::active()
             ->whereNotIn('id', $interactedIds)
-            ->with(['media', 'user'])
+            ->with(['media'])
             ->inRandomOrder()
-            ->limit(10) // Cargamos 10 inicialmente
+            ->limit(10) 
             ->get()
-            ->map(function ($p) {
-                return [
-                    'id' => $p->id,
-                    'title' => $p->title,
-                    'price' => $p->formatted_price,
-                    'location' => $p->city . ', ' . $p->province,
-                    'surface' => $p->surface_m2,
-                    'rooms' => $p->rooms,
-                    'bathrooms' => $p->bathrooms,
-                    'image' => $p->cover_url,
-                    'slug' => $p->slug,
-                    'url' => route('properties.show', [$p->id, $p->slug])
-                ];
-            });
+            ->map(fn($p) => [
+                'id' => $p->id,
+                'title' => $p->title,
+                'price' => $p->formatted_price,
+                'location' => $p->city . ', ' . $p->province,
+                'surface' => $p->surface_m2,
+                'rooms' => $p->rooms,
+                'bathrooms' => $p->bathrooms,
+                'image' => $p->cover_url,
+                'url' => route('properties.show', [$p->id, $p->slug])
+            ]);
 
         return view('pages.scroll', compact('properties'));
     }
 
     /**
-     * Guarda una interacción (like/dislike).
+     * Registra si al usuario le gusta (like) o no (dislike) una propiedad
      */
     public function interact(Request $request)
     {
@@ -55,21 +54,17 @@ class ScrollController extends Controller
             'type' => 'required|in:like,dislike'
         ]);
 
+        // Guardamos o actualizamos la interacción del usuario
         PropertyInteraction::updateOrCreate(
-            [
-                'user_id' => Auth::id(),
-                'property_id' => $request->property_id
-            ],
-            [
-                'type' => $request->type
-            ]
+            ['user_id' => Auth::id(), 'property_id' => $request->property_id],
+            ['type' => $request->type]
         );
 
         return response()->json(['success' => true]);
     }
 
     /**
-     * Muestra la lista de propiedades guardadas (favoritos).
+     * Muestra la colección de propiedades guardadas por el usuario
      */
     public function saved()
     {
@@ -82,7 +77,7 @@ class ScrollController extends Controller
     }
     
     /**
-     * Elimina una propiedad de la lista de guardados.
+     * Elimina una propiedad de la sección de favoritos
      */
     public function removeFavorite($propertyId)
     {
