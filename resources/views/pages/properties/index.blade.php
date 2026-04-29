@@ -2,7 +2,7 @@
 @section('title', 'Propiedades en España')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/pages/listing.css') }}">
+    @vite('resources/css/pages/listing.css')
 @endpush
 
 @section('content')
@@ -139,5 +139,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/listing.js') }}"></script>
+    @vite('resources/js/pages/listing.js')
 @endpush

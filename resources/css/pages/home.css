@@ -1,0 +1,201 @@
+/* ─── IberPiso — Home Page (Apple-Inspired) ─────────────────────────── */
+
+.hero-parallax {
+  position: relative;
+  height: 85vh;
+  min-height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-light);
+  overflow: hidden;
+}
+
+#hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-parallax-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 900px;
+  padding: 0 var(--sp-7);
+}
+
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 9vw, 84px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--near-black);
+  margin-bottom: var(--sp-4);
+}
+
+.hero-description {
+  font-size: clamp(19px, 3vw, 26px);
+  font-weight: 400;
+  color: var(--gray-mid);
+  margin-bottom: var(--sp-10);
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Refined Apple Search Container ── */
+.hero-search-container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.search-tabs {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+.search-tab {
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-mid);
+  background: rgba(0,0,0,0.05);
+  border: none;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.search-tab.active {
+  background: var(--white);
+  color: var(--near-black);
+  box-shadow: var(--shadow-sm);
+}
+
+.apple-search-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  transition: box-shadow var(--t-base), transform var(--t-base);
+}
+
+.apple-search-card:focus-within {
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.apple-search-fields {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.apple-search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 54px;
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 16px;
+  flex: 1;
+}
+
+.apple-search-field svg { color: var(--blue); flex-shrink: 0; }
+
+.apple-search-field input, .apple-search-field select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  outline: none;
+}
+
+.apple-search-field.field-main { flex: 2; }
+
+.apple-search-submit {
+  height: 54px;
+  padding: 0 28px;
+  background: var(--near-black);
+  color: var(--white);
+  border: none;
+  border-radius: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity var(--t-fast);
+}
+
+.apple-search-submit:hover { opacity: 0.85; }
+
+/* ── Trust Chips ── */
+.hero-trust {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-6);
+  margin-top: var(--sp-8);
+}
+
+.trust-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray-mid);
+  padding: 6px 12px;
+  background: rgba(0,0,0,0.03);
+  border-radius: var(--r-pill);
+}
+
+.trust-chip svg { color: var(--success); }
+
+@media (max-width: 834px) {
+  .apple-search-fields { flex-direction: column; align-items: stretch; }
+  .apple-search-submit { width: 100%; justify-content: center; }
+  .hero-trust { flex-wrap: wrap; gap: var(--sp-3); }
+}
+
+/* ── Featured Properties (Horizontal Scroll) ── */
+.property-grid {
+    display: flex;
+    gap: var(--sp-6);
+    overflow-x: auto;
+    padding: var(--sp-4) var(--sp-2) var(--sp-10);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Hide scrollbar for Chrome/Safari later */
+    -ms-overflow-style: none;
+}
+
+.property-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.property-grid > * {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
+}
+
+@media (min-width: 1024px) {
+    .property-grid {
+        justify-content: flex-start;
+        /* Allow some overflow peaking for the next item */
+        margin-right: calc(-1 * var(--sp-10));
+    }
+}

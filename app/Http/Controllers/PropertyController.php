@@ -84,7 +84,9 @@ class PropertyController extends Controller
 
     public function show(int $id, string $slug)
     {
-        $property = Property::with(['media', 'user'])->active()->findOrFail($id);
+        // We allow viewing the property even if it's not active if requested by ID
+        // (This helps with admin previews)
+        $property = Property::with(['media', 'user'])->findOrFail($id);
 
         $related = Property::with(['media'])
             ->active()

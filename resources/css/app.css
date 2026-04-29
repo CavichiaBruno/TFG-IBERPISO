@@ -1,19 +1,29 @@
 /* ─── IberPiso — Design System (Apple-Inspired) ─────────────────────────── */
 
+@import "./layout.css";
+@import "./components.css";
+
 :root {
   /* ── Color: Primary ─────────────────────────────────────────────────── */
-  --black:        #000000;
-  --white:        #ffffff;
-  --gray-light:   #f5f5f7;  /* Apple light section bg */
-  --near-black:   #1d1d1f;  /* Primary text / dark btn */
-  --gray-mid:     #86868b;  /* Secondary text */
-  --gray-subtle:  #d2d2d7;  /* Dividers */
+  --black: #000000;
+  --white: #ffffff;
+  --gray-light: #f5f5f7;
+  /* Apple light section bg */
+  --near-black: #1d1d1f;
+  /* Primary text / dark btn */
+  --gray-mid: #86868b;
+  /* Secondary text */
+  --gray-subtle: #d2d2d7;
+  /* Dividers */
 
   /* ── Color: Interactive (Apple Blue — THE ONLY accent) ──────────────── */
-  --blue:         #0071e3;  /* Primary CTA, focus rings */
-  --blue-dark:    #0066cc;  /* Links on light bg */
-  --blue-bright:  #2997ff;  /* Links on dark bg */
-  --blue-hover:   #0077ed;
+  --blue: #0071e3;
+  /* Primary CTA, focus rings */
+  --blue-dark: #0066cc;
+  /* Links on light bg */
+  --blue-bright: #2997ff;
+  /* Links on dark bg */
+  --blue-hover: #0077ed;
 
   /* ── Color: Dark surfaces ───────────────────────────────────────────── */
   --dark-1: #161617;
@@ -22,26 +32,26 @@
 
   /* ── Color: Semantic (kept minimal) ────────────────────────────────── */
   --success: #28cd41;
-  --danger:  #ff453a;
+  --danger: #ff453a;
   --warning: #ff9f0a;
 
   /* ── Typography ─────────────────────────────────────────────────────── */
   /* SF Pro Display (20px+) / SF Pro Text (<20px) with system fallbacks */
   --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont,
-                  'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-body:    'SF Pro Text', -apple-system, BlinkMacSystemFont,
-                  'Helvetica Neue', Helvetica, Arial, sans-serif;
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'SF Pro Text', -apple-system, BlinkMacSystemFont,
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* ── Spacing (8px base) — Apple uses generous whitespace ────────────── */
-  --sp-1:  2px;
-  --sp-2:  4px;
-  --sp-3:  8px;
-  --sp-4:  12px;
-  --sp-5:  16px;
-  --sp-6:  20px;
-  --sp-7:  24px;
-  --sp-8:  32px;
-  --sp-9:  40px;
+  --sp-1: 2px;
+  --sp-2: 4px;
+  --sp-3: 8px;
+  --sp-4: 12px;
+  --sp-5: 16px;
+  --sp-6: 20px;
+  --sp-7: 24px;
+  --sp-8: 32px;
+  --sp-9: 40px;
   --sp-10: 48px;
   --sp-11: 64px;
   --sp-12: 80px;
@@ -50,31 +60,37 @@
   --sp-15: 160px;
 
   /* ── Border Radius ──────────────────────────────────────────────────── */
-  --r-micro:    5px;
-  --r-std:      8px;
-  --r-comfy:    11px;
-  --r-large:    12px;
-  --r-pill:     980px;
-  --r-circle:   50%;
+  --r-micro: 5px;
+  --r-std: 8px;
+  --r-comfy: 11px;
+  --r-large: 12px;
+  --r-pill: 980px;
+  --r-circle: 50%;
 
   /* ── Shadows ────────────────────────────────────────────────────────── */
   --shadow-card: rgba(0, 0, 0, 0.12) 0px 4px 24px 0px;
-  --shadow-sm:   0 1px 4px rgba(0,0,0,0.08);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
 
   /* ── Transitions ────────────────────────────────────────────────────── */
-  --ease:  cubic-bezier(0.28, 0.11, 0.32, 1);
-  --t-fast:   150ms var(--ease);
-  --t-base:   200ms var(--ease);
-  --t-slow:   400ms var(--ease);
+  --ease: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --t-fast: 150ms var(--ease);
+  --t-base: 200ms var(--ease);
+  --t-slow: 400ms var(--ease);
 }
 
 /* ─── Reset ────────────────────────────────────────────────────────────── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-html { 
-  font-size: 16px; 
-  scroll-behavior: smooth; 
-  -webkit-font-smoothing: antialiased; 
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
@@ -90,7 +106,12 @@ body {
 }
 
 /* ─── Global Typography ─────────────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--near-black);
@@ -118,7 +139,9 @@ h3 {
   margin-bottom: var(--sp-5);
 }
 
-p { margin-bottom: var(--sp-5); }
+p {
+  margin-bottom: var(--sp-5);
+}
 
 a {
   color: var(--blue);
@@ -126,7 +149,9 @@ a {
   transition: color var(--t-fast);
 }
 
-a:hover { color: var(--blue-dark); }
+a:hover {
+  color: var(--blue-dark);
+}
 
 /* ─── Buttons ───────────────────────────────────────────────────────────── */
 .btn {
@@ -171,9 +196,9 @@ a:hover { color: var(--blue-dark); }
   color: var(--white);
 }
 
-.btn-dark:hover { 
-  background: #333336; 
-  text-decoration: none; 
+.btn-dark:hover {
+  background: #333336;
+  text-decoration: none;
 }
 
 /* Outline / Pill link style (Apple "Learn more") */
@@ -191,20 +216,20 @@ a:hover { color: var(--blue-dark); }
 }
 
 .btn-emerald {
-    background: linear-gradient(135deg, var(--success) 0%, #28cd41 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(40, 205, 65, 0.3);
+  background: linear-gradient(135deg, var(--success) 0%, #28cd41 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 205, 65, 0.3);
 }
 
 .btn-rose {
-    background: linear-gradient(135deg, var(--danger) 0%, #ff453a 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(255, 69, 58, 0.3);
+  background: linear-gradient(135deg, var(--danger) 0%, #ff453a 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.3);
 }
 
 .btn-sm {
-    padding: 0.4rem 0.875rem;
-    font-size: 0.875rem;
+  padding: 0.4rem 0.875rem;
+  font-size: 0.875rem;
 }
 
 /* Large variant */
@@ -241,13 +266,17 @@ textarea {
   appearance: none;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--blue);
   box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
 }
 
-input::placeholder { color: var(--gray-mid); }
+input::placeholder {
+  color: var(--gray-mid);
+}
 
 label {
   display: block;
@@ -258,12 +287,28 @@ label {
 }
 
 /* ─── Section helpers ────────────────────────────────────────────────────── */
-.section-dark  { background: var(--black);      color: var(--white); }
-.section-light { background: var(--gray-light); color: var(--near-black); }
-.section-white { background: var(--white);      color: var(--near-black); }
+.section-dark {
+  background: var(--black);
+  color: var(--white);
+}
 
-.section-pad { padding: var(--sp-12) 0; }
-.section-pad-lg { padding: var(--sp-15) 0; }
+.section-light {
+  background: var(--gray-light);
+  color: var(--near-black);
+}
+
+.section-white {
+  background: var(--white);
+  color: var(--near-black);
+}
+
+.section-pad {
+  padding: var(--sp-12) 0;
+}
+
+.section-pad-lg {
+  padding: var(--sp-15) 0;
+}
 
 /* ─── Container ─────────────────────────────────────────────────────────── */
 .container {
@@ -279,22 +324,48 @@ label {
 }
 
 /* ─── Utilities ─────────────────────────────────────────────────────────── */
-.text-center  { text-align: center; }
-.text-muted   { color: var(--gray-mid); }
-.text-blue    { color: var(--blue); }
-.text-white   { color: var(--white); }
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--gray-mid);
+}
+
+.text-blue {
+  color: var(--blue);
+}
+
+.text-white {
+  color: var(--white);
+}
 
 .fade-in {
   animation: fadeIn 0.8s var(--ease) forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
-  h1 { font-size: 40px; }
-  h2 { font-size: 32px; }
-  .section-pad-lg { padding: var(--sp-11) 0; }
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+
+  .section-pad-lg {
+    padding: var(--sp-11) 0;
+  }
 }

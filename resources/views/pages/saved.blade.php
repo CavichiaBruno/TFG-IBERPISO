@@ -2,22 +2,27 @@
 
 @section('title', 'Mis Propiedades Guardadas')
 
+@push('styles')
+    @vite('resources/css/pages/saved.css')
+@endpush
+
 @section('content')
 <div class="container section-pad">
-    <div class="section-header">
+    <div class="saved-page-header">
         <h1 class="section-title">Mis Guardados</h1>
+        <p class="text-muted">Gestiona tus hogares favoritos</p>
     </div>
 
     @if($properties->count() > 0)
-        <div class="properties-grid">
+        <div class="saved-properties-list">
             @foreach($properties as $property)
                 <x-property-card :property="$property">
                     <x-slot name="footer">
                         <form action="{{ route('favorites.remove', $property->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta propiedad de tus guardados?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-rose btn-sm" style="width: 100%;">
-                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            <button type="submit" class="btn-remove-favorite">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                                 Quitar de Guardados
                             </button>
                         </form>

@@ -143,6 +143,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--sp-8);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .results-count {
@@ -150,19 +152,112 @@
   color: var(--near-black);
 }
 
+.results-count strong {
+  font-weight: 600;
+}
+
+.results-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+}
+
 .sort-select {
-  background: transparent;
-  border: none;
+  background: var(--gray-light);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--r-std);
+  padding: 6px 14px;
   font-size: 14px;
-  color: var(--blue-link);
+  color: var(--near-black);
   cursor: pointer;
   outline: none;
+  transition: all var(--t-fast);
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 5 3 3 3-3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+.sort-select:hover {
+  background-color: #ededf2;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--gray-light);
+  padding: 4px;
+  border-radius: 10px;
+  gap: 2px;
+}
+
+.view-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--gray-mid);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.view-btn:hover {
+  color: var(--near-black);
+}
+
+.view-btn.active {
+  background: var(--white);
+  color: var(--near-black);
+  box-shadow: var(--shadow-sm);
 }
 
 .properties-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--sp-8);
+  transition: all var(--t-base);
+}
+
+.properties-grid.list-view {
+  grid-template-columns: 1fr;
+}
+
+.properties-grid.list-view .property-card {
+  flex-direction: row;
+  height: 240px;
+}
+
+.properties-grid.list-view .card-image-link {
+  width: 320px;
+  height: 100%;
+}
+
+.properties-grid.list-view .card-image {
+  height: 100%;
+}
+
+.properties-grid.list-view .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--sp-6);
+}
+
+@media (max-width: 640px) {
+  .properties-grid.list-view .property-card {
+    flex-direction: column;
+    height: auto;
+  }
+  .properties-grid.list-view .card-image-link {
+    width: 100%;
+    height: 200px;
+  }
 }
 
 .no-results {

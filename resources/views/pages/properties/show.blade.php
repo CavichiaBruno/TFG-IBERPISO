@@ -3,7 +3,7 @@
 @section('meta_description', Str::limit($property->description, 160))
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/pages/detail.css') }}">
+    @vite('resources/css/pages/detail.css')
 @endpush
 
 @section('content')
@@ -197,5 +197,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/detail.js') }}"></script>
+    @vite('resources/js/pages/detail.js')
 @endpush
