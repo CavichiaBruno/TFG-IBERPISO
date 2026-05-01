@@ -64,7 +64,8 @@ class Property extends Model
     {
         $cover = $this->media->where('file_type', 'image')->where('is_cover', true)->first()
             ?? $this->media->where('file_type', 'image')->first();
-        return $cover ? asset('storage/' . $cover->file_path) : asset('images/placeholder.jpg');
+        
+        return $cover ? $cover->url : asset('images/placeholder.jpg');
     }
 
     // Listados de opciones fijas para el sistema

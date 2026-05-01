@@ -59,22 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
      * Muestra el mensaje final cuando no quedan más casas
      */
     function showEmptyState() {
-        const container = document.querySelector('.scroll-container');
-        if (container) {
-            container.innerHTML = `
+        const stage = document.querySelector('.iberscroll-stage');
+        if (stage) {
+            stage.innerHTML = `
                 <div class="scroll-empty fade-in">
-                    <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11H3V9z"/></svg>
-                    <h2>¡Eso es todo por ahora!</h2>
-                    <p class="text-secondary">Has visto todas las propiedades disponibles.</p>
-                    <div style="display:flex; gap:12px; justify-content:center; margin-top:20px;">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11H3V9z"/></svg>
+                    </div>
+                    <h2>¡Todo visto por ahora!</h2>
+                    <p>Has visto todas las propiedades disponibles.</p>
+                    <div style="display:flex; gap:12px; justify-content:center; margin-top:24px;">
                         <a href="/guardados" class="btn btn-primary">Ver mis guardados</a>
                         <a href="/propiedades" class="btn btn-outline">Volver a buscar</a>
                     </div>
                 </div>
             `;
         }
-        document.querySelector('.swipe-actions').style.display = 'none';
-        document.querySelector('.scroll-instructions').style.display = 'none';
     }
 
     /**
@@ -123,19 +123,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const rotate = currentX / 12;
         card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
 
-        // Feedback visual (sellos de LIKE/DISLIKE)
+        // Feedback visual (sellos de LIKE/NOPE)
         const likeBadge = card.querySelector('.badge-like');
-        const dislikeBadge = card.querySelector('.badge-dislike');
+        const nopeBadge = card.querySelector('.badge-nope');
 
         if (currentX > 40) {
-            likeBadge.style.opacity = Math.min(currentX / 120, 1);
-            dislikeBadge.style.opacity = 0;
+            if (likeBadge) likeBadge.style.opacity = Math.min(currentX / 120, 1);
+            if (nopeBadge) nopeBadge.style.opacity = 0;
         } else if (currentX < -40) {
-            dislikeBadge.style.opacity = Math.min(-currentX / 120, 1);
-            likeBadge.style.opacity = 0;
+            if (nopeBadge) nopeBadge.style.opacity = Math.min(-currentX / 120, 1);
+            if (likeBadge) likeBadge.style.opacity = 0;
         } else {
-            likeBadge.style.opacity = 0;
-            dislikeBadge.style.opacity = 0;
+            if (likeBadge) likeBadge.style.opacity = 0;
+            if (nopeBadge) nopeBadge.style.opacity = 0;
         }
     }
 
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si no, la carta vuelve al centro (efecto muelle)
             card.style.transform = 'translateX(0) rotate(0)';
             if (card.querySelector('.badge-like')) card.querySelector('.badge-like').style.opacity = 0;
-            if (card.querySelector('.badge-dislike')) card.querySelector('.badge-dislike').style.opacity = 0;
+            if (card.querySelector('.badge-nope')) card.querySelector('.badge-nope').style.opacity = 0;
         }
         currentX = 0;
     }

@@ -141,28 +141,70 @@
     {{-- RIGHT STICKY PANEL --}}
     <aside class="detail-contact">
         <div class="contact-card">
-            <h3>¿Interesado en este inmueble?</h3>
-            <p class="contact-subtitle">Contáctanos sin compromiso</p>
+            @auth
+                @if(Auth::id() === $property->user_id)
+                    <h3>Gestionar Anuncio</h3>
+                    <p class="contact-subtitle">Este anuncio es tuyo. Puedes gestionarlo desde tu panel.</p>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                        <a href="{{ route('user.properties.index') }}" class="btn btn-primary btn-block" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                            Ir a Mis Publicaciones
+                        </a>
+                        <form action="{{ route('user.properties.toggle', $property->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-outline btn-block" style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                                {{ $property->is_active ? 'Desactivar Anuncio' : 'Activar Anuncio' }}
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <h3>¿Interesado en este inmueble?</h3>
+                    <p class="contact-subtitle">Contáctanos sin compromiso</p>
 
-            <form id="inquiry-form" data-property-id="{{ $property->id }}">
-                @csrf
-                @guest
+                    <form id="inquiry-form" data-property-id="{{ $property->id }}">
+                        @csrf
+                        @guest
+                            <div class="form-group">
+                                <input type="text" name="guest_name" placeholder="Tu nombre *" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="guest_email" placeholder="Tu email *" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" name="guest_phone" placeholder="Tu teléfono" class="form-input">
+                            </div>
+                        @endguest
+                        <div class="form-group">
+                            <textarea name="message" placeholder="Me interesa esta propiedad. ¿Podría concertar una visita?" class="form-textarea" rows="4" required minlength="10"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" id="inquiry-submit">Enviar consulta</button>
+                        <div id="inquiry-response"></div>
+                    </form>
+                @endif
+            @else
+                <h3>¿Interesado en este inmueble?</h3>
+                <p class="contact-subtitle">Contáctanos sin compromiso</p>
+
+                <form id="inquiry-form" data-property-id="{{ $property->id }}">
+                    @csrf
+                    @guest
+                        <div class="form-group">
+                            <input type="text" name="guest_name" placeholder="Tu nombre *" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="guest_email" placeholder="Tu email *" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="guest_phone" placeholder="Tu teléfono" class="form-input">
+                        </div>
+                    @endguest
                     <div class="form-group">
-                        <input type="text" name="guest_name" placeholder="Tu nombre *" class="form-input" required>
+                        <textarea name="message" placeholder="Me interesa esta propiedad. ¿Podría concertar una visita?" class="form-textarea" rows="4" required minlength="10"></textarea>
                     </div>
-                    <div class="form-group">
-                        <input type="email" name="guest_email" placeholder="Tu email *" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="tel" name="guest_phone" placeholder="Tu teléfono" class="form-input">
-                    </div>
-                @endguest
-                <div class="form-group">
-                    <textarea name="message" placeholder="Me interesa esta propiedad. ¿Podría concertar una visita?" class="form-textarea" rows="4" required minlength="10"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block" id="inquiry-submit">Enviar consulta</button>
-                <div id="inquiry-response"></div>
-            </form>
+                    <button type="submit" class="btn btn-primary btn-block" id="inquiry-submit">Enviar consulta</button>
+                    <div id="inquiry-response"></div>
+                </form>
+            @endauth
 
             <div class="contact-info">
                 <p>

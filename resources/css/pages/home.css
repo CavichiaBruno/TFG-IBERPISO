@@ -39,6 +39,9 @@
   margin-bottom: var(--sp-4);
 }
 
+  margin-bottom: var(--sp-4);
+}
+
 .hero-description {
   font-size: clamp(19px, 3vw, 26px);
   font-weight: 400;
@@ -47,6 +50,19 @@
   max-width: 680px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.dynamic-text {
+  display: inline-block;
+  min-height: 1.2em;
+  border-right: 3px solid var(--blue);
+  animation: cursor-blink 0.8s infinite;
+  padding-right: 4px;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { border-color: var(--blue); }
+  50% { border-color: transparent; }
 }
 
 /* ── Refined Apple Search Container ── */
@@ -117,13 +133,17 @@
 
 .apple-search-field svg { color: var(--blue); flex-shrink: 0; }
 
-.apple-search-field input, .apple-search-field select {
+.apple-search-field input,
+.apple-search-field select {
   border: none;
   background: transparent;
   width: 100%;
   height: 100%;
   font-size: 16px;
   outline: none;
+  padding: 0 8px 0 0; /* right padding prevents text hitting the border */
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .apple-search-field.field-main { flex: 2; }
@@ -198,4 +218,249 @@
         /* Allow some overflow peaking for the next item */
         margin-right: calc(-1 * var(--sp-10));
     }
+}
+
+/* ── Section helpers for landing ── */
+.bg-light { background: var(--gray-light); }
+.section-white { background: var(--white); }
+
+/* ── Landing typography helpers ── */
+.h-display {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.02em;
+  color: var(--near-black);
+  margin-bottom: 0;
+}
+
+.lp-lead {
+  font-family: var(--font-body);
+  font-size: 19px;
+  color: var(--gray-mid);
+  line-height: 1.5;
+  margin: 16px auto 56px;
+  max-width: 560px;
+}
+
+/* ── How it Works — Steps ── */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.step-card {
+  padding: 36px 32px;
+  background: var(--gray-light);
+  border-radius: 12px;
+}
+
+.step-number {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--near-black);
+  letter-spacing: -0.01em;
+  line-height: 1.14;
+  margin: 0 0 12px;
+}
+
+.step-desc {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--gray-mid);
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .steps-grid { grid-template-columns: 1fr; gap: 16px; }
+  .step-card { padding: 28px 24px; }
+}
+
+/* ── Cities Grid ── */
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.city-card {
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 20px;
+  transition: transform var(--t-base), box-shadow var(--t-base);
+  position: relative;
+}
+
+.city-card:hover {
+  transform: translateY(-4px);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 12px 40px;
+  text-decoration: none;
+}
+
+.city-img {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  transition: transform var(--t-base);
+}
+
+.city-card:hover .city-img {
+  transform: scale(1.05);
+}
+
+.city-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  background: var(--white);
+}
+
+.city-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--near-black);
+  letter-spacing: -0.01em;
+}
+
+.city-arrow {
+  font-size: 16px;
+  color: var(--blue-dark);
+  transition: transform var(--t-fast);
+}
+
+.city-card:hover .city-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 834px) {
+  .cities-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .cities-grid { grid-template-columns: 1fr; }
+  .city-img { height: 160px; }
+}
+
+/* ── IberScroll Dark CTA ── */
+.lp-eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-bright);
+  margin-bottom: 16px;
+}
+
+.lp-dark-heading {
+  color: var(--white);
+  margin-bottom: 20px;
+  font-size: clamp(36px, 5vw, 56px);
+}
+
+.lp-dark-desc {
+  font-family: var(--font-body);
+  font-size: 19px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.5;
+  max-width: 540px;
+  margin: 0 auto 40px;
+  letter-spacing: -0.01em;
+}
+
+.lp-cta-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.lp-link-dark {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--blue-bright);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+.lp-link-dark:hover {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* ── IberScroll Banner — Light variant ── */
+.lp-eyebrow-light {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 16px;
+}
+
+.lp-desc {
+  font-family: var(--font-body);
+  font-size: 19px;
+  color: var(--gray-mid);
+  line-height: 1.5;
+  max-width: 540px;
+  margin: 0 auto 40px;
+  letter-spacing: -0.01em;
+}
+
+.lp-link-light {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--blue-dark);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+.lp-link-light:hover {
+  color: var(--blue);
+  text-decoration: underline;
+}
+
+/* Custom select chevron (since appearance:none hides native arrow) */
+.apple-search-field.field-select {
+  position: relative;
+}
+
+.apple-search-field.field-select::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--gray-mid);
+  pointer-events: none;
+}
+
+.apple-search-field.field-select select {
+  padding-right: 28px; /* room for the chevron */
+  cursor: pointer;
 }

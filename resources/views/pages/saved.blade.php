@@ -9,9 +9,10 @@
 @section('content')
 <div class="container section-pad">
     <div class="saved-page-header">
-        <h1 class="section-title">Mis Guardados</h1>
-        <p class="text-muted">Gestiona tus hogares favoritos</p>
+        <h1 class="section-title">Mis <span class="marker-white">Guardados</span></h1>
+        <p class="section-subtitle">Tus hogares favoritos, en un solo lugar.</p>
     </div>
+
 
     @if($properties->count() > 0)
         <div class="saved-properties-list">

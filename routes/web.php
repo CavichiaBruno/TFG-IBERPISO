@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminPropertyController;
 use App\Http\Controllers\Admin\AdminMediaController;
 use App\Http\Controllers\Admin\AdminInquiryController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AiController;
 
 // --- Public Routes ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -24,7 +25,22 @@ Route::middleware('guest')->group(function () {
     Route::get('/registro', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/registro', [AuthController::class, 'register'])->name('register.post');
 });
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+
+// --- Authenticated User Routes ---
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // User Property Management
+    Route::get('/mis-publicaciones', [\App\Http\Controllers\UserPropertyController::class, 'index'])->name('user.properties.index');
+    Route::get('/publicar', [\App\Http\Controllers\UserPropertyController::class, 'create'])->name('user.properties.create');
+    Route::post('/publicar', [\App\Http\Controllers\UserPropertyController::class, 'store'])->name('user.properties.store');
+    Route::patch('/mis-publicaciones/{id}/toggle', [\App\Http\Controllers\UserPropertyController::class, 'toggleActive'])->name('user.properties.toggle');
+    Route::delete('/mis-publicaciones/{id}', [\App\Http\Controllers\UserPropertyController::class, 'destroy'])->name('user.properties.destroy');
+
+    // AI Integration
+    Route::post('/ai/analyze-image', [AiController::class, 'analyzeImage'])->name('ai.analyzeImage');
+});
 
 // --- Admin Routes ---
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin,agent'])->group(function () {
@@ -59,10 +75,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin,agent'])
     });
 });
 
-// --- Scroll & Favorites Routes (Auth required) ---
-Route::middleware('auth')->group(function () {
-    Route::get('/scroll', [\App\Http\Controllers\ScrollController::class, 'index'])->name('scroll');
-    Route::post('/scroll/interact', [\App\Http\Controllers\ScrollController::class, 'interact'])->name('scroll.interact');
-    Route::get('/guardados', [\App\Http\Controllers\ScrollController::class, 'saved'])->name('saved');
-    Route::delete('/guardados/{property_id}', [\App\Http\Controllers\ScrollController::class, 'removeFavorite'])->name('favorites.remove');
-});
+// --- Scroll & Favorites Routes ---
+Route::get('/scroll', [\App\Http\Controllers\ScrollController::class, 'index'])->name('scroll');
+Route::post('/scroll/interact', [\App\Http\Controllers\ScrollController::class, 'interact'])->name('scroll.interact');
+Route::get('/guardados', [\App\Http\Controllers\ScrollController::class, 'saved'])->name('saved');
+Route::delete('/guardados/{property_id}', [\App\Http\Controllers\ScrollController::class, 'removeFavorite'])->name('favorites.remove');
+

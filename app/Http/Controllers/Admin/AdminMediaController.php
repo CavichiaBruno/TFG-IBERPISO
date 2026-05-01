@@ -33,8 +33,9 @@ class AdminMediaController extends Controller
             return response()->json(['error' => 'Tipo de archivo no permitido.'], 422);
         }
 
-        $dir  = "properties/{$property->id}/{$fileType}s";
-        $path = $file->store($dir, 'public');
+        // Instead of storing in disk, store as base64
+        $base64 = base64_encode(file_get_contents($file->getRealPath()));
+        $path = 'data:' . $file->getMimeType() . ';base64,' . $base64;
 
         $isCover = $fileType === 'image' && !$property->media()->where('file_type', 'image')->exists();
 
@@ -64,7 +65,8 @@ class AdminMediaController extends Controller
     public function destroy(int $id)
     {
         $media = PropertyMedia::findOrFail($id);
-        Storage::disk('public')->delete($media->file_path);
+        // We don't need to delete from disk since it's base64 in DB
+        // Storage::disk('public')->delete($media->file_path);
         $media->delete();
         return response()->json(['success' => true]);
     }

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('property_media', function (Blueprint $table) {
             $table->id();
             $table->foreignId('property_id')->constrained()->onDelete('cascade');
-            $table->string('file_path', 500);
+            $table->longText('file_path');
             $table->string('file_type', 20)->default('image'); // image, pdf, video
             $table->string('mime_type', 100)->nullable();
             $table->integer('file_size_kb')->nullable();

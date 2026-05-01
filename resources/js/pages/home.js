@@ -19,4 +19,41 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Dynamic Typing Animation
+    const dynamicWord = document.getElementById('dynamic-word');
+    if (dynamicWord) {
+        const words = ['ideal', 'perfecto', 'soñado', 'único', 'especial', 'exclusivo'];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 150;
+
+        function type() {
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                dynamicWord.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 80;
+            } else {
+                dynamicWord.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 120;
+            }
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500; // Pause before new word
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        type();
+    }
 });

@@ -6,9 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'IberPiso') — Encuentra tu hogar ideal</title>
     
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
+    @vite('resources/css/app.css')
     @stack('styles')
 </head>
 <body>
@@ -24,24 +22,47 @@
         </a>
 
         <nav class="main-nav">
-            <a href="{{ route('properties.index', ['operacion'=>'venta']) }}" class="nav-link">Comprar</a>
-            <a href="{{ route('properties.index', ['operacion'=>'alquiler']) }}" class="nav-link">Alquilar</a>
-            <a href="{{ route('properties.index', ['is_featured'=>1]) }}" class="nav-link">Destacados</a>
+            <a href="{{ route('home') }}" class="nav-link">Inicio</a>
+            <a href="{{ route('properties.index') }}" class="nav-link">Propiedades</a>
             <a href="{{ route('scroll') }}" class="nav-link">IberScroll</a>
-            <a href="{{ route('saved') }}" class="nav-link">Guardados</a>
         </nav>
+
+
 
         <div class="header-actions">
             @auth
-                <form method="POST" action="{{ route('logout') }}" style="display:inline">
-                    @csrf
-                    <button type="submit" class="btn-login-nav" style="border:none; background:none; cursor:pointer;">Salir</button>
-                </form>
+                <div class="user-profile-dropdown">
+                    <button class="user-profile-btn" id="userDropdownBtn" aria-label="Mi perfil">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" style="font-weight: 600; font-size: 13px; color: var(--gray-mid);">Hola, {{ Auth::user()->name }}</div>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('user.properties.create') }}" class="dropdown-item" style="color: var(--apple-blue, #0071e3); font-weight: 500;">
+                            <svg viewBox="0 0 24 24" width="16" height="16" style="display:inline;vertical-align:middle;margin-right:8px;" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Crear publicación
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        @if(Auth::user()->hasAdminAccess())
+                            <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Panel de Control</a>
+                        @endif
+                        <a href="{{ route('user.properties.index') }}" class="dropdown-item">Mis Publicaciones</a>
+                        <a href="{{ route('saved') }}" class="dropdown-item">Mis Guardados</a>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item" style="color: var(--danger);">Cerrar sesión</button>
+                        </form>
+                    </div>
+                </div>
             @else
                 <a href="{{ route('login') }}" class="btn-login-nav">Entrar</a>
                 <a href="{{ route('register') }}" class="btn-register-nav">Registro</a>
             @endauth
         </div>
+
 
         <button class="menu-toggle" id="menu-toggle" aria-label="Menu">
             <span></span>
@@ -52,18 +73,33 @@
 
 <div class="mobile-drawer" id="mobile-drawer">
     <nav>
-        <a href="{{ route('properties.index', ['operacion'=>'venta']) }}">Comprar</a>
-        <a href="{{ route('properties.index', ['operacion'=>'alquiler']) }}">Alquilar</a>
-        <a href="{{ route('properties.index', ['is_featured'=>1]) }}">Destacados</a>
+        <a href="{{ route('home') }}">Inicio</a>
+        <a href="{{ route('properties.index') }}">Propiedades</a>
         <a href="{{ route('scroll') }}">IberScroll</a>
-        <a href="{{ route('saved') }}">Mis Guardados</a>
+        
         @auth
-            <a href="{{ route('logout') }}" class="nav-link">Salir</a>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 11px; color: var(--gray-mid); margin-bottom: 15px; letter-spacing: 0.1em; font-weight: 600;">MI CUENTA</div>
+                <a href="{{ route('user.properties.create') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block; color: #0071e3;">Crear publicación</a>
+                <a href="{{ route('user.properties.index') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Mis Publicaciones</a>
+                <a href="{{ route('saved') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Mis Guardados</a>
+                @if(Auth::user()->hasAdminAccess())
+                    <a href="{{ route('admin.dashboard') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Panel de Control</a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile">
+                    @csrf
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();" style="color: var(--danger); font-size: 17px; display: block;">Cerrar sesión</a>
+                </form>
+            </div>
         @else
-            <a href="{{ route('login') }}" class="nav-link">Entrar</a>
-            <a href="{{ route('register') }}" class="nav-link">Registro</a>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <a href="{{ route('login') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Entrar</a>
+                <a href="{{ route('register') }}" class="nav-link" style="font-size: 17px; display: block;">Registro</a>
+            </div>
         @endauth
     </nav>
+
+
 </div>
 
 <main>
@@ -71,7 +107,7 @@
 </main>
 
 <footer class="site-footer" id="sobre-nosotros">
-    <div class="footer-inner container">
+    <div class="footer-inner">
         <div class="footer-col">
             <div class="footer-logo">
                 <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
@@ -111,7 +147,7 @@
             </ul>
         </div>
     </div>
-    <div class="footer-bottom container">
+    <div class="footer-bottom">
         <p>© {{ date('Y') }} IberPiso. Todos los derechos reservados.</p>
     </div>
 </footer>
@@ -128,7 +164,7 @@
         });
     }
 </script>
-<script src="{{ asset('js/app.js') }}"></script>
+    @vite('resources/js/app.js')
 @stack('scripts')
 </body>
 </html>

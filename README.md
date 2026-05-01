@@ -80,7 +80,7 @@ php artisan db:seed
 Para desarrollo con recarga en caliente:
 
 ```bash
-npm run dev
+npm start
 ```
 
 Para compilar los activos para producción:
