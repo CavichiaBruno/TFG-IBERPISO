@@ -178,28 +178,32 @@ a:hover {
 /* Primary CTA — Apple Blue */
 .btn-primary {
   background: var(--blue);
-  color: var(--white);
+  color: var(--white) !important; /* Ensure text is white */
 }
-
+ 
 .btn-primary:hover {
   background: var(--blue-hover);
+  color: var(--white) !important; /* Keep text white on hover */
   text-decoration: none;
 }
-
+ 
 .btn-primary:active {
   background: var(--blue-dark);
+  color: var(--white) !important;
 }
-
+ 
 /* Secondary — near-black */
 .btn-dark {
   background: var(--near-black);
-  color: var(--white);
+  color: var(--white) !important;
 }
-
+ 
 .btn-dark:hover {
   background: #333336;
+  color: var(--white) !important;
   text-decoration: none;
 }
+
 
 /* Outline / Pill link style (Apple "Learn more") */
 .btn-outline {
@@ -304,10 +308,12 @@ label {
 
 .section-pad {
   padding: var(--sp-12) 0;
+  margin-bottom: 12px; /* Canal de aire */
 }
 
 .section-pad-lg {
   padding: var(--sp-15) 0;
+  margin-bottom: 12px; /* Canal de aire */
 }
 
 /* ─── Container ─────────────────────────────────────────────────────────── */

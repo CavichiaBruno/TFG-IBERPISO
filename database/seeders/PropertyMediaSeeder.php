@@ -10,8 +10,23 @@ class PropertyMediaSeeder extends Seeder
 {
     public function run(): void
     {
-        // Placeholder: properties will show a default image since no real files are seeded.
-        // In production, upload images through the admin panel.
-        $this->command->info('Property media seeder skipped — upload media via admin panel.');
+        $properties = Property::all();
+        $imageCount = 8; // User provided 8 images now
+
+        foreach ($properties as $index => $property) {
+            $imageNumber = ($index % $imageCount) + 1;
+            $imagePath = 'images/properties/prop' . $imageNumber . '.jpg';
+
+            PropertyMedia::create([
+                'property_id'   => $property->id,
+                'file_path'     => $imagePath,
+                'file_type'     => 'image',
+                'mime_type'     => 'image/jpeg',
+                'file_size_kb'  => 500,
+                'original_name' => 'prop' . $imageNumber . '.jpg',
+                'is_cover'      => true,
+                'sort_order'    => 0,
+            ]);
+        }
     }
 }

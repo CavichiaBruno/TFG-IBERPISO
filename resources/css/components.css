@@ -15,8 +15,8 @@
 
 .btn-favorite-toggle {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 20px;
+  right: 20px;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -72,7 +72,7 @@
 }
 
 .card-body {
-  padding: var(--sp-4);
+  padding: var(--sp-6); /* 20px padding for better symmetry */
 }
 
 .card-price {
@@ -142,16 +142,16 @@
 }
 
 .badge-featured {
-  top: 12px;
-  left: 12px;
+  top: 20px;
+  left: 20px;
   background: var(--white);
   color: var(--near-black);
   box-shadow: var(--shadow-sm);
 }
 
 .badge-operation {
-  top: 12px;
-  right: 56px;
+  top: 20px;
+  right: 64px; /* Adjusted to sit next to the favorite heart */
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -277,8 +277,8 @@
 .marker-white {
   background: #bae6fd;
   /* Celeste cielo */
-  padding: 2px 8px;
-  border-radius: 0;
+  padding: 0px 8px; /* Thinner padding */
+  border-radius: 8px; /* Rounded corners */
   box-shadow: none;
   display: inline-block;
   white-space: nowrap;

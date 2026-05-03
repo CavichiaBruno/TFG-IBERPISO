@@ -536,7 +536,7 @@
     
     <div id="ai-loading-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; transform: scale(0.85); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
         <!-- Lottie Element Provided by User -->
-        <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 300px; height: 300px;" autoplay loop></dotlottie-wc>
+        <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 300px; height: 300px;" autoplay loop worker="true"></dotlottie-wc>
         
         <div style="text-align: center; margin-top: 10px;">
             <h3 id="ai-loading-text" style="font-family: 'SF Pro Display', sans-serif; font-size: 32px; font-weight: 700; color: #1d1d1f; margin: 0; letter-spacing: -0.03em; transition: opacity 0.3s ease;">Analizando imágenes...</h3>
@@ -769,5 +769,5 @@
         document.getElementById('btn-submit').disabled = true;
     });
 </script>
-<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
+
 @endpush

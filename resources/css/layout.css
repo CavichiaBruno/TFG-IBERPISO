@@ -8,10 +8,10 @@
   width: 100%;
   height: 48px;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   transition: background 0.3s var(--ease);
 }
 
@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   gap: var(--sp-2);
-  color: var(--white);
+  color: var(--near-black);
   font-weight: 600;
   font-size: 15px;
   text-decoration: none;
@@ -39,7 +39,7 @@
 }
 
 .logo:hover { opacity: 1; text-decoration: none; }
-.logo svg { width: 17px; height: 17px; stroke-width: 2; color: var(--white); }
+.logo svg { width: 17px; height: 17px; stroke-width: 2; color: var(--near-black); }
 .logo strong { font-weight: 700; }
 
 /* ── Desktop Nav ── */
@@ -55,14 +55,14 @@
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 400;
-  color: var(--white);
+  color: var(--near-black);
   text-decoration: none;
   opacity: 0.8;
   transition: opacity var(--t-base);
   white-space: nowrap;
 }
 
-.nav-link:hover { opacity: 1; text-decoration: none; color: var(--white); }
+.nav-link:hover { opacity: 1; text-decoration: none; color: var(--near-black); }
 
 /* ── Header Right Actions ── */
 .header-actions {
@@ -76,7 +76,7 @@
 .btn-login-nav {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--white);
+  color: var(--near-black);
   opacity: 0.8;
   transition: opacity var(--t-base);
   text-decoration: none;
@@ -85,13 +85,13 @@
   cursor: pointer;
 }
 
-.btn-login-nav:hover { opacity: 1; text-decoration: none; color: var(--white); }
+.btn-login-nav:hover { opacity: 1; text-decoration: none; color: var(--near-black); }
 
 .btn-register-nav {
   font-family: var(--font-body);
   font-size: 12px;
-  background: var(--white);
-  color: var(--near-black);
+  background: var(--near-black);
+  color: var(--white);
   padding: 4px 14px;
   border-radius: var(--r-pill);
   transition: opacity var(--t-base);
@@ -101,7 +101,7 @@
   font-weight: 500;
 }
 
-.btn-register-nav:hover { opacity: 0.85; text-decoration: none; color: var(--near-black); }
+.btn-register-nav:hover { opacity: 0.85; text-decoration: none; color: var(--white); }
 
 /* ── User Profile Dropdown ── */
 .user-profile-dropdown {
@@ -113,7 +113,7 @@
 .user-profile-btn {
   background: none;
   border: none;
-  color: var(--white);
+  color: var(--near-black);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -125,7 +125,7 @@
 
 .user-profile-btn:hover {
   opacity: 1;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .dropdown-menu {
@@ -209,7 +209,7 @@
   display: block;
   width: 18px;
   height: 1.5px;
-  background: var(--white);
+  background: var(--near-black);
   margin: 4px 0;
   transition: transform var(--t-base), opacity var(--t-base);
 }

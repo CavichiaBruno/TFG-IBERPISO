@@ -5,17 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tabs.length > 0 && operacionInput) {
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs
                 tabs.forEach(t => t.classList.remove('active'));
-                
-                // Add active class to clicked tab
                 tab.classList.add('active');
-                
-                // Update hidden input value
                 const op = tab.getAttribute('data-op');
                 operacionInput.value = op;
-                
-                console.log('Operación cambiada a:', op);
             });
         });
     }
@@ -31,24 +24,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function type() {
             const currentWord = words[wordIndex];
+            let typed = currentWord.substring(0, isDeleting ? charIndex - 1 : charIndex + 1);
             
+            dynamicWord.textContent = typed;
+
             if (isDeleting) {
-                dynamicWord.textContent = currentWord.substring(0, charIndex - 1);
                 charIndex--;
                 typeSpeed = 80;
             } else {
-                dynamicWord.textContent = currentWord.substring(0, charIndex + 1);
                 charIndex++;
                 typeSpeed = 120;
             }
 
             if (!isDeleting && charIndex === currentWord.length) {
                 isDeleting = true;
-                typeSpeed = 2000; // Pause at end
+                typeSpeed = 2000;
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false;
                 wordIndex = (wordIndex + 1) % words.length;
-                typeSpeed = 500; // Pause before new word
+                typeSpeed = 500;
             }
 
             setTimeout(type, typeSpeed);
@@ -56,4 +50,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
         type();
     }
+
 });

@@ -8,6 +8,8 @@
     
     @vite('resources/css/app.css')
     @stack('styles')
+    {{-- Global Lottie Script --}}
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
 </head>
 <body>
 

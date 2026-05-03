@@ -23,9 +23,14 @@ class PropertyMedia extends Model
 
     public function getUrlAttribute(): string
     {
-        if (str_starts_with($this->file_path, 'data:')) {
+        if (str_starts_with($this->file_path, 'data:') || str_starts_with($this->file_path, 'http')) {
             return $this->file_path;
         }
+
+        if (str_starts_with($this->file_path, 'images/') || str_starts_with($this->file_path, 'assets/')) {
+            return asset($this->file_path);
+        }
+
         return asset('storage/' . $this->file_path);
     }
 
