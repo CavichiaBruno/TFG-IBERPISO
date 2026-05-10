@@ -1,15 +1,18 @@
 <?php
-echo "<h1>SISTEMA DE DIAGNÓSTICO IBERPISO</h1>";
-echo "PHP Version: " . phpversion() . "<br>";
-echo "Current Directory: " . __DIR__ . "<br>";
-echo "Vendor exists: " . (file_exists(__DIR__ . '/../vendor/autoload.php') ? 'SÍ' : 'NO') . "<br>";
-echo "Public exists: " . (is_dir(__DIR__ . '/../public') ? 'SÍ' : 'NO') . "<br>";
-echo "<hr>";
+// Bypass all error handlers and show the raw truth
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 try {
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {
-    echo "<h2>Error de Laravel:</h2>";
-    echo $e->getMessage();
-    echo "<pre>" . $e->getTraceAsString() . "</pre>";
+    header('Content-Type: text/plain');
+    echo "=== ERROR ORIGINAL DE LARAVEL ===\n";
+    echo "CLASE: " . get_class($e) . "\n";
+    echo "MENSAJE: " . $e->getMessage() . "\n";
+    echo "ARCHIVO: " . $e->getFile() . "\n";
+    echo "LINEA: " . $e->getLine() . "\n";
+    echo "\n=== STACK TRACE ===\n";
+    echo $e->getTraceAsString();
+    exit;
 }
