@@ -18,4 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->afterResolving(Application::class, function ($app) {
+        if (isset($_SERVER['VERCEL_URL'])) {
+            $app->useBootstrapPath('/tmp');
+        }
+    })
+    ->create();
