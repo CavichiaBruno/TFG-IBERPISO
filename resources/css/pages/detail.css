@@ -276,4 +276,23 @@
   .mobile-contact-bar { display: flex; }
   .lightbox-prev, .lightbox-next { display: none; }
   .gallery-main { height: 300px; border-radius: 0; margin-left: calc(-1 * var(--sp-5)); width: calc(100% + 2 * var(--sp-5)); }
+  .detail-title { font-size: 26px; }
+  .detail-price { font-size: 22px; }
+}
+
+@media (max-width: 640px) {
+  .gallery-main { height: 240px; }
+  .detail-title { font-size: 22px; }
+  .detail-price { font-size: 20px; }
+  .key-features { grid-template-columns: repeat(2, 1fr); gap: var(--sp-3); padding: var(--sp-4) 0; }
+  .kf-value { font-size: 17px; }
+  .detail-section-title { font-size: 18px; }
+  .amenities-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-3); }
+  .gallery-thumbs { gap: 8px; }
+  .gallery-thumb { width: 72px; height: 52px; }
+  .lightbox-close { top: 12px; right: 12px; position: fixed; }
+  .detail-layout { padding: 0 var(--sp-5); }
+  .detail-address { font-size: 14px; }
+  .detail-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .mobile-contact-bar .btn { font-size: 14px; height: 44px; }
 }

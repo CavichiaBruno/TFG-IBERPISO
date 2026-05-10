@@ -1,17 +1,188 @@
 /* ─── IberPiso — Home Page (Apple-Inspired) ─────────────────────────── */
 
+/* ── Home Wrapper ── */
+.home-wrapper {
+  background: white;
+  padding: clamp(16px, 4vw, 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Hero Outer ── */
+.hero-outer {
+  margin-bottom: var(--sp-12);
+  margin-top: var(--sp-8);
+  padding: 0 var(--sp-4);
+}
+
 .hero-parallax {
-  position: relative;
-  height: 85vh;
-  min-height: 700px;
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url('https://images.unsplash.com/photo-1550684848-86a5d8727436?auto=format&fit=crop&w=1600&q=40');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .hero-parallax { border-radius: 16px; background-attachment: scroll; }
+  .hero-outer { padding: 0 16px; margin-top: var(--sp-4); margin-bottom: var(--sp-8); }
+  .home-wrapper { padding: 16px 0; }
+}
+
+/* ── Home Section Cards ── */
+.home-section {
+  border-radius: 28px;
+  max-width: 1400px;
+  margin: 0 auto var(--sp-12);
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .home-section { border-radius: 16px; margin-bottom: var(--sp-8); }
+}
+
+/* ── Two-column layout (text + lottie) ── */
+.lp-two-col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-12);
+  flex-wrap: wrap;
+}
+
+.lp-two-col-reverse {
+  flex-direction: row-reverse;
+}
+
+.lp-two-col-text {
+  flex: 1;
+  min-width: min(280px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.lp-two-col-lottie {
+  flex: 1.2;
+  display: flex;
+  justify-content: center;
+  min-width: min(260px, 100%);
+}
+
+/* ── Responsive Lottie ── */
+.lottie-responsive {
+  width: 100%;
+  max-width: 550px;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.lp-two-col-lottie-sm .lottie-responsive {
+  max-width: 360px;
+}
+
+@media (max-width: 768px) {
+  .lp-two-col { gap: var(--sp-8); }
+  .lp-two-col-reverse { flex-direction: column; }
+  .lp-two-col-reverse .lp-two-col-lottie { display: none; }
+  .lp-two-col-text { min-width: 100%; }
+  .lp-two-col-lottie { min-width: 100%; justify-content: center; }
+  .lottie-responsive { max-width: 320px; }
+  .lp-two-col-lottie-sm .lottie-responsive { max-width: 260px; }
+}
+
+@media (max-width: 480px) {
+  .lp-two-col { gap: var(--sp-6); }
+  .lottie-responsive { max-width: 260px; }
+  .lp-two-col-lottie-sm .lottie-responsive { max-width: 200px; }
+}
+
+/* ── Steps Interactive Layout ── */
+.steps-interactive-layout {
+  margin-top: var(--sp-12);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at top right, rgba(0, 113, 227, 0.05), transparent 40%),
-              radial-gradient(circle at bottom left, rgba(0, 113, 227, 0.03), transparent 40%),
-              var(--gray-light);
+  gap: var(--sp-15);
+  flex-wrap: wrap;
+}
+
+.step-column {
+  flex: 1;
+  min-width: min(280px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.step-right-lottie {
+  flex: 1.8;
+  display: flex;
+  justify-content: center;
+  min-width: min(260px, 100%);
+}
+
+.step-right-lottie .lottie-responsive {
+  max-width: 800px;
+}
+
+.step-card-clean {
+  background: white;
+  padding: var(--sp-7);
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.step-card-clean .step-number {
+  font-size: 13px;
+  color: var(--blue);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.step-card-clean .step-title {
+  font-size: 21px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.step-card-clean .step-desc {
+  font-size: 14px;
+  color: var(--gray-mid);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .steps-interactive-layout { gap: var(--sp-8); }
+  .step-right-lottie { min-width: 100%; order: -1; }
+  .step-right-lottie .lottie-responsive { max-width: 280px; }
+  .step-column { min-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .steps-interactive-layout { margin-top: var(--sp-8); }
+  .step-card-clean { padding: var(--sp-5); border-radius: 16px; text-align: center; }
+  .step-right-lottie .lottie-responsive { max-width: 220px; }
+}
+
+/* hero sizing — background defined above */
+.hero-parallax {
+  position: relative;
+  height: 85vh;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
+
 
 .hero-parallax::after {
   content: "";
@@ -82,6 +253,9 @@
   width: 100%;
   max-width: 720px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .search-tabs {
@@ -212,6 +386,20 @@
   .apple-search-fields { flex-direction: column; align-items: stretch; }
   .apple-search-submit { width: 100%; justify-content: center; }
   .hero-trust { flex-wrap: wrap; gap: var(--sp-3); }
+  .hero-headline { font-size: clamp(36px, 8vw, 64px); }
+}
+
+@media (max-width: 480px) {
+  .hero-parallax { min-height: 480px; height: 90vh; }
+  .hero-headline { font-size: clamp(28px, 9vw, 44px); line-height: 1.1; }
+  .hero-description { font-size: 16px; margin-bottom: var(--sp-6); }
+  .hero-parallax-content { padding: 0 var(--sp-5); }
+  .apple-search-card { padding: 8px; border-radius: 16px; }
+  .apple-search-field { height: 46px; padding: 0 12px; border-radius: 12px; }
+  .apple-search-submit { height: 46px; padding: 0 16px; border-radius: 12px; font-size: 14px; }
+  .trust-chip { font-size: 12px; padding: 4px 10px; }
+  .hero-trust { gap: var(--sp-2); }
+  .search-tab { padding: 6px 14px; font-size: 13px; }
 }
 
 /* ── Featured Properties (Horizontal Scroll) ── */
@@ -232,6 +420,10 @@
 .property-grid > * {
     flex: 0 0 320px;
     scroll-snap-align: start;
+}
+
+@media (max-width: 480px) {
+  .property-grid > * { flex: 0 0 85vw; }
 }
 /* Removed negative margins to keep symmetry */
 
@@ -407,6 +599,7 @@
   justify-content: center;
   gap: 24px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .lp-link-dark {
@@ -567,4 +760,27 @@
   0% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
   100% { transform: translateY(0px); }
+}
+
+/* ── Home Page — Mobile Responsive ── */
+@media (max-width: 768px) {
+  .h-display { font-size: clamp(24px, 6vw, 38px); }
+  .lp-lead { font-size: 16px; margin-bottom: 32px; }
+  .lp-desc { font-size: 16px; margin-bottom: 28px; }
+  .lp-dark-heading { font-size: clamp(28px, 7vw, 42px); }
+  .lp-cta-pair { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .cities-grid { grid-template-columns: repeat(2, 1fr); }
+  .floating-card { animation: none; } /* Disable float on mobile for perf */
+  .organic-bg-section::before,
+  .organic-bg-section::after { display: none; }
+}
+
+@media (max-width: 480px) {
+  .h-display { font-size: clamp(22px, 7vw, 32px); }
+  .lp-cta-pair { align-items: center; }
+  .lp-cta-pair .btn { text-align: center; width: 100%; }
+  .cities-grid { grid-template-columns: 1fr; }
+  .city-img { height: 150px; }
+  .step-card { padding: 20px 16px; }
+  .step-title { font-size: 20px; }
 }

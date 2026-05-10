@@ -35,7 +35,7 @@
                                     <div class="card-badge badge-nope">NOPE</div>
                                 </div>
                                 <div class="card-info">
-                                    <div class="card-price">{{ number_format($p['price'], 0, ',', '.') }} €</div>
+                                    <div class="card-price">{{ $p['price'] }} €</div>
                                     <h3 class="card-title">{{ $p['title'] }}</h3>
                                     <p class="card-location">
                                         <svg viewBox="0 0 24 24" width="13" height="13" fill="none"

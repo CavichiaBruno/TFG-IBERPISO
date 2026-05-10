@@ -75,7 +75,25 @@
 
     @media(max-width: 768px) {
         .form-grid { grid-template-columns: 1fr; }
-        .form-card { padding: 40px 20px; }
+        .form-card { padding: 32px 24px; }
+        .create-title { font-size: 36px; }
+        .create-page-bg { padding-top: 48px; padding-bottom: 80px; }
+        .create-header { margin-bottom: 40px; }
+        .step-actions { flex-direction: column-reverse; gap: 12px; align-items: stretch; }
+        .step-actions button, .step-actions .btn-ghost { width: 100%; text-align: center; }
+        .checkbox-group { gap: 16px; }
+    }
+
+    @media(max-width: 480px) {
+        .create-title { font-size: 28px; letter-spacing: -0.02em; }
+        .create-subtitle { font-size: 15px; }
+        .form-card { padding: 24px 16px; border-radius: 16px; }
+        .form-section-title { font-size: 22px; margin-bottom: 24px; }
+        .create-container { padding: 0 16px; }
+        .create-page-bg { padding-top: 32px; padding-bottom: 64px; }
+        .file-upload-box { padding: 40px 16px; }
+        .step-progress-container { margin-bottom: 28px; }
+        .preview-img { width: 90px; height: 90px; }
     }
 
     .form-group {

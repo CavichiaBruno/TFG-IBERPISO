@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 48px;
+  height: 64px;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
@@ -28,19 +28,21 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: var(--sp-2);
-  color: var(--near-black);
-  font-weight: 600;
-  font-size: 15px;
   text-decoration: none;
-  opacity: 0.9;
+  opacity: 1;
   transition: opacity var(--t-base);
   flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  letter-spacing: 0.05em;
+  color: var(--near-black);
+  text-transform: uppercase;
 }
 
-.logo:hover { opacity: 1; text-decoration: none; }
-.logo svg { width: 17px; height: 17px; stroke-width: 2; color: var(--near-black); }
-.logo strong { font-weight: 700; }
+.logo .brand-iber { font-weight: 500; }
+.logo .brand-piso { font-weight: 800; color: #003366; }
+
+.logo:hover { opacity: 0.8; text-decoration: none; }
 
 /* ── Desktop Nav ── */
 .main-nav {
@@ -259,9 +261,15 @@
   .menu-toggle { display: block; }
 }
 
+@media (max-width: 480px) {
+  .header-inner { padding: 0 var(--sp-4); }
+  .logo { font-size: 14px; }
+  .logo svg { width: 15px; height: 15px; }
+}
+
 /* ── main min-height ── */
 main {
-  min-height: calc(100vh - 48px);
+  min-height: calc(100vh - 64px);
 }
 
 /* ── Site Footer ── */

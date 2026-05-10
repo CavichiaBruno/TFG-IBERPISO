@@ -8,13 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const lottie = entry.target;
             
             if (entry.isIntersecting) {
-                // Play animation
                 lottie.setAttribute('playing', 'true');
+                // Ensure we try to play it. If not ready, it will play when it is.
                 if (typeof lottie.play === 'function') {
-                    try { lottie.play(); } catch(e) {}
+                    lottie.play();
+                } else {
+                    // Fallback for when the component hasn't fully loaded yet
+                    lottie.addEventListener('ready', () => lottie.play(), { once: true });
                 }
             } else {
-                // Pause animation when out of view
                 lottie.removeAttribute('playing');
                 if (typeof lottie.pause === 'function') {
                     try { lottie.pause(); } catch(e) {}
@@ -22,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, { 
-        threshold: 0.01,
-        rootMargin: '200px' 
+        threshold: 0.05,
+        rootMargin: '100px' 
     });
 
     const initLottieOptimization = () => {

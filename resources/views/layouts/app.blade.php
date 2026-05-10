@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'IberPiso') — Encuentra tu hogar ideal</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     
     @vite('resources/css/app.css')
     @stack('styles')
@@ -16,11 +17,7 @@
 <header class="site-header" id="site-header">
     <div class="header-inner">
         <a href="{{ route('home') }}" class="logo">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            <span>Iber<strong>Piso</strong></span>
+            <span class="brand-iber">Iber</span><span class="brand-piso">Piso</span>
         </a>
 
         <nav class="main-nav">
@@ -111,11 +108,8 @@
 <footer class="site-footer" id="sobre-nosotros">
     <div class="footer-inner">
         <div class="footer-col">
-            <div class="footer-logo">
-                <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-                    <path d="M14 3L2 12h3v13h7v-8h4v8h7V12h3L14 3z" fill="white"/>
-                </svg>
-                IberPiso
+            <div class="footer-logo" style="text-transform: uppercase; letter-spacing: 0.05em;">
+                <span class="brand-iber" style="font-family: var(--font-display); font-size: 28px; font-weight: 500; color: white;">Iber</span><span class="brand-piso" style="font-family: var(--font-display); font-size: 28px; font-weight: 800; color: #003366;">Piso</span>
             </div>
             <p class="footer-tagline">Tu portal inmobiliario de confianza en España.</p>
         </div>

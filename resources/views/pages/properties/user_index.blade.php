@@ -122,6 +122,33 @@
         padding: 100px 20px;
     }
     .empty-icon { font-size: 64px; margin-bottom: 20px; }
+
+    @media (max-width: 768px) {
+        .user-properties-page { padding: 48px 0; }
+        .user-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .user-title { font-size: 28px; }
+        .properties-grid {
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .user-properties-page { padding: 32px 0; }
+        .user-header { padding: 0 16px; margin-bottom: 20px; }
+        .user-title { font-size: 24px; }
+        .user-subtitle { font-size: 15px; }
+        .properties-grid { padding: 0 16px; grid-template-columns: 1fr; gap: 16px; }
+        .card-actions { grid-template-columns: 1fr; }
+        .btn-delete { grid-column: span 1; }
+        .empty-state { padding: 60px 16px; }
+        .empty-icon { font-size: 48px; }
+    }
 </style>
 @endpush
 

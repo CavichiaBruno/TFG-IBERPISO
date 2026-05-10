@@ -74,12 +74,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Panel de filtros lateral en dispositivos móviles
     var mobileFilterBtn = document.getElementById('mobile-filter-btn');
+    var closeFiltersBtn = document.getElementById('close-filters');
     var filtersSidebar = document.getElementById('filters-sidebar');
 
     if (mobileFilterBtn && filtersSidebar) {
         mobileFilterBtn.addEventListener('click', () => {
-            filtersSidebar.classList.toggle('open');
-            document.body.style.overflow = filtersSidebar.classList.contains('open') ? 'hidden' : '';
+            filtersSidebar.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    if (closeFiltersBtn && filtersSidebar) {
+        closeFiltersBtn.addEventListener('click', () => {
+            filtersSidebar.classList.remove('open');
+            document.body.style.overflow = '';
         });
     }
 });

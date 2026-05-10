@@ -79,5 +79,16 @@
     .saved-properties-list {
         grid-template-columns: 1fr;
     }
+    .saved-page-header {
+        margin-bottom: var(--sp-8);
+    }
 }
 
+@media (max-width: 480px) {
+    .saved-page-header .section-title {
+        font-size: 28px;
+    }
+    .section-subtitle {
+        font-size: 16px;
+    }
+}
