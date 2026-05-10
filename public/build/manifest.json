@@ -1,0 +1,92 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-Z8t32sgM.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/pages/detail.css": {
+    "file": "assets/detail-BI_KLCN1.css",
+    "name": "detail",
+    "names": [
+      "detail.css"
+    ],
+    "src": "resources/css/pages/detail.css",
+    "isEntry": true
+  },
+  "resources/css/pages/home.css": {
+    "file": "assets/home-DxHEffyZ.css",
+    "name": "home",
+    "names": [
+      "home.css"
+    ],
+    "src": "resources/css/pages/home.css",
+    "isEntry": true
+  },
+  "resources/css/pages/listing.css": {
+    "file": "assets/listing-DV0y3uOf.css",
+    "name": "listing",
+    "names": [
+      "listing.css"
+    ],
+    "src": "resources/css/pages/listing.css",
+    "isEntry": true
+  },
+  "resources/css/pages/saved.css": {
+    "file": "assets/saved-_6nSCLwH.css",
+    "name": "saved",
+    "names": [
+      "saved.css"
+    ],
+    "src": "resources/css/pages/saved.css",
+    "isEntry": true
+  },
+  "resources/css/pages/scroll.css": {
+    "file": "assets/scroll-BnU97oSF.css",
+    "name": "scroll",
+    "names": [
+      "scroll.css"
+    ],
+    "src": "resources/css/pages/scroll.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-CfEH81fe.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/pages/detail.js": {
+    "file": "assets/detail-ByAeYL0q.js",
+    "name": "detail",
+    "src": "resources/js/pages/detail.js",
+    "isEntry": true
+  },
+  "resources/js/pages/hero-canvas.js": {
+    "file": "assets/hero-canvas-Bl4hgrdQ.js",
+    "name": "hero-canvas",
+    "src": "resources/js/pages/hero-canvas.js",
+    "isEntry": true
+  },
+  "resources/js/pages/home.js": {
+    "file": "assets/home-DmUfKclq.js",
+    "name": "home",
+    "src": "resources/js/pages/home.js",
+    "isEntry": true
+  },
+  "resources/js/pages/listing.js": {
+    "file": "assets/listing-CvM7POv9.js",
+    "name": "listing",
+    "src": "resources/js/pages/listing.js",
+    "isEntry": true
+  },
+  "resources/js/pages/scroll.js": {
+    "file": "assets/scroll-oXfKZtmY.js",
+    "name": "scroll",
+    "src": "resources/js/pages/scroll.js",
+    "isEntry": true
+  }
+}
