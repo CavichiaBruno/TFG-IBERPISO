@@ -8,6 +8,11 @@ require __DIR__ . '/../vendor/autoload.php';
 // 2. Arrancamos la aplicación
 $app = require __DIR__ . '/../bootstrap/app.php';
 
+// Si por algún motivo nos devuelve un entero, capturamos la instancia global
+if (!is_object($app)) {
+    $app = \Illuminate\Foundation\Application::getInstance();
+}
+
 // 3. Forzamos la ruta de bootstrap a /tmp para evitar errores de escritura en Vercel
 if (isset($_SERVER['VERCEL_URL'])) {
     $app->useBootstrapPath('/tmp');
