@@ -5,7 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "start": "concurrently \"php artisan serve\" \"npm run dev\""
+        "start": "concurrently \"php artisan serve\" \"npm run dev\"",
+        "vercel-build": "vite build && mkdir -p dist && cp -R public/* dist/"
     },
     "devDependencies": {
         "axios": "^1.11.0",
