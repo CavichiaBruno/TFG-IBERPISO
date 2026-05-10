@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 require __DIR__ . '/../vendor/autoload.php';
 
 // 2. Arrancamos la aplicación
-$app = require_once __DIR__ . '/../bootstrap/app.php';
+$app = require __DIR__ . '/../bootstrap/app.php';
 
 // 3. Forzamos la ruta de bootstrap a /tmp para evitar errores de escritura en Vercel
 if (isset($_SERVER['VERCEL_URL'])) {
