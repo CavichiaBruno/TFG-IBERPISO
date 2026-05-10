@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "outputDirectory": "dist",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2"
@@ -9,19 +8,19 @@
   "routes": [
     {
       "src": "/build/(.*)",
-      "dest": "/build/$1"
+      "dest": "/public/build/$1"
     },
     {
       "src": "/favicon.ico",
-      "dest": "/favicon.ico"
+      "dest": "/public/favicon.ico"
     },
     {
       "src": "/favicon.png",
-      "dest": "/favicon.png"
+      "dest": "/public/favicon.png"
     },
     {
       "src": "/robots.txt",
-      "dest": "/robots.txt"
+      "dest": "/public/robots.txt"
     },
     {
       "src": "/(.*)",
