@@ -22,9 +22,19 @@ class Inquiry extends Model
         return $this->belongsTo(Property::class, 'propiedad_id');
     }
 
+    public function propiedad()
+    {
+        return $this->property();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'usuario_id');
+    }
+
+    public function usuario()
+    {
+        return $this->user();
     }
 
     public function getSenderNameAttribute(): string
@@ -44,6 +54,6 @@ class Inquiry extends Model
 
     public function scopeUnread($query)
     {
-        return $query->where('leida', false);
+        return $query->where('leida', \DB::raw('false'));
     }
 }

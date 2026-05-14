@@ -90,7 +90,7 @@
                 <div class="sidebar-avatar">{{ strtoupper(substr(auth()->user()->nombre, 0, 1)) }}</div>
                 <div class="sidebar-user-info">
                     <span class="sidebar-user-name">{{ auth()->user()->nombre }}</span>
-                    <span class="sidebar-user-role">{{ ucfirst(auth()->user()->role) }}</span>
+                    <span class="sidebar-user-role">{{ ucfirst(auth()->user()->rol) }}</span>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
