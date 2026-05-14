@@ -1,13 +1,4 @@
 {
-  "resources/css/admin/admin.css": {
-    "file": "assets/admin-DiWOuCdV.css",
-    "name": "admin",
-    "names": [
-      "admin.css"
-    ],
-    "src": "resources/css/admin/admin.css",
-    "isEntry": true
-  },
   "resources/css/app.css": {
     "file": "assets/app-B2plyt1-.css",
     "name": "app",
@@ -60,12 +51,6 @@
       "scroll.css"
     ],
     "src": "resources/css/pages/scroll.css",
-    "isEntry": true
-  },
-  "resources/js/admin/admin.js": {
-    "file": "assets/admin-ByGrqeTR.js",
-    "name": "admin",
-    "src": "resources/js/admin/admin.js",
     "isEntry": true
   },
   "resources/js/app.js": {
