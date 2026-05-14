@@ -17,13 +17,16 @@ class InquiryController extends Controller
 
         if (auth()->check()) {
             $data['usuario_id'] = auth()->id();
+            $data['nombre_visitante'] = auth()->user()->nombre;
+            $data['correo_visitante'] = auth()->user()->correo;
+            $data['telefono_visitante'] = auth()->user()->telefono;
         }
 
         Inquiry::create($data);
 
         return response()->json([
             'success' => true,
-            'message' => '\u00a1Consulta enviada correctamente! Nos pondremos en contacto contigo pronto.',
+            'message' => '¡Consulta enviada! El propietario ha sido notificado y se pondrá en contacto contigo pronto.',
         ]);
     }
 }

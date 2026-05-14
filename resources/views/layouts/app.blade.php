@@ -11,19 +11,7 @@
     @stack('styles')
 </head>
 <body>
-<div class="acc-toolbar" id="acc-toolbar">
-    <div class="container-wide acc-flex">
-        <div class="acc-group">
-            <button onclick="window.accTools.changeSize(-1)" title="Reducir texto">A-</button>
-            <button onclick="window.accTools.resetSize()" title="Tamaño original">A</button>
-            <button onclick="window.accTools.changeSize(1)" title="Aumentar texto">A+</button>
-        </div>
-        <button onclick="window.accTools.toggleContrast()" class="acc-btn-c">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-18v16a8 8 0 1 0 0-16z"/></svg>
-            Contraste
-        </button>
-    </div>
-</div>
+{{-- El toolbar superior ha sido movido al menú de accesibilidad en el header --}}
 
 <header class="site-header" id="site-header">
     <div class="header-inner">
@@ -41,7 +29,44 @@
 
 
         <div class="header-actions">
+            {{-- Accessibility Dropdown --}}
+            <div class="acc-dropdown">
+                <button class="acc-toggle-btn" id="accDropdownBtn" aria-label="Opciones de accesibilidad">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><path d="M9 12h6M12 9v6"/>
+                    </svg>
+                </button>
+                <div class="acc-menu" id="accMenu">
+                    <div class="acc-menu-header">Accesibilidad</div>
+                    <div class="acc-menu-section">
+                        <span class="acc-menu-label">Tamaño de fuente</span>
+                        <div class="acc-btn-group">
+                            <button onclick="window.accTools.changeSize(-1)">A-</button>
+                            <button onclick="window.accTools.resetSize()">A</button>
+                            <button onclick="window.accTools.changeSize(1)">A+</button>
+                        </div>
+                    </div>
+                    <div class="acc-menu-divider"></div>
+                    <button class="acc-menu-item" onclick="window.accTools.toggleContrast()">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 10px;"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-18v16a8 8 0 1 0 0-16z"/></svg>
+                        Alto Contraste
+                    </button>
+                </div>
+            </div>
+
             @auth
+                {{-- Mailbox Icon / Notifications --}}
+                <a href="{{ route('user.inquiries') }}" class="notification-btn" id="notificationsBtn" aria-label="Mis mensajes" style="position: relative; margin-right: 15px; color: #1d1d1f; display: flex; align-items: center; justify-content: center;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    @if(Auth::user()->unread_inquiries_count > 0)
+                        <span style="position: absolute; top: -2px; right: -4px; background: #ff3b30; color: white; font-size: 10px; min-width: 16px; height: 16px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid white; padding: 0 2px;">
+                            {{ Auth::user()->unread_inquiries_count }}
+                        </span>
+                    @endif
+                </a>
+
                 <div class="user-profile-dropdown">
                     <button class="user-profile-btn" id="userDropdownBtn" aria-label="Mi perfil">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -60,6 +85,7 @@
                             <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Panel de Control</a>
                         @endif
                         <a href="{{ route('user.properties.index') }}" class="dropdown-item">Mis Publicaciones</a>
+                        <a href="{{ route('user.inquiries') }}" class="dropdown-item">Mis Mensajes</a>
                         <a href="{{ route('saved') }}" class="dropdown-item">Mis Guardados</a>
                         <div class="dropdown-divider"></div>
                         <form method="POST" action="{{ route('logout') }}">
@@ -94,6 +120,7 @@
                 <div style="font-size: 11px; color: var(--gray-mid); margin-bottom: 15px; letter-spacing: 0.1em; font-weight: 600;">MI CUENTA</div>
                 <a href="{{ route('user.properties.create') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block; color: #0071e3;">Crear publicación</a>
                 <a href="{{ route('user.properties.index') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Mis Publicaciones</a>
+                <a href="{{ route('user.inquiries') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Mis Mensajes</a>
                 <a href="{{ route('saved') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Mis Guardados</a>
                 @if(Auth::user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Panel de Control</a>
@@ -161,6 +188,23 @@
             mobileDrawer.classList.toggle('open');
             menuToggle.classList.toggle('active');
             document.body.style.overflow = mobileDrawer.classList.contains('open') ? 'hidden' : '';
+        });
+    }
+
+    // Accessibility Dropdown Logic
+    const accBtn = document.getElementById('accDropdownBtn');
+    const accMenu = document.getElementById('accMenu');
+    
+    if (accBtn && accMenu) {
+        accBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            accMenu.classList.toggle('open');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!accMenu.contains(e.target) && !accBtn.contains(e.target)) {
+                accMenu.classList.remove('open');
+            }
         });
     }
 </script>

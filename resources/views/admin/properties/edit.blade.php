@@ -66,9 +66,13 @@ window.addEventListener('load', function() {
                             @if($img->is_cover)<span class="cover-badge">Portada</span>@endif
                             <div class="media-actions">
                                 <button type="button" class="set-cover-btn {{ $img->is_cover ? 'cover-active' : '' }}"
-                                    data-id="{{ $img->id }}" title="Establecer como portada">★</button>
+                                    data-id="{{ $img->id }}" title="Establecer como portada">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                </button>
                                 <button type="button" class="delete-media-btn" data-id="{{ $img->id }}"
-                                    title="Eliminar">✕</button>
+                                    title="Eliminar">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                </button>
                             </div>
                         </div>
                     @endforeach
@@ -99,7 +103,9 @@ window.addEventListener('load', function() {
                             </svg>
                             <span>{{ $doc->original_name }}</span>
                             <small>({{ $doc->file_size_kb }} KB)</small>
-                            <button type="button" class="delete-media-btn" data-id="{{ $doc->id }}">✕</button>
+                            <button type="button" class="delete-media-btn" data-id="{{ $doc->id }}">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
                         </div>
                     @endforeach
                 </div>

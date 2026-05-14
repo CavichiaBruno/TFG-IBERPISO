@@ -23,15 +23,15 @@
                                 <button type="button" class="search-tab active" data-op="venta">Comprar</button>
                                 <button type="button" class="search-tab" data-op="alquiler">Alquilar</button>
                             </div>
-                            <form class="apple-search-card" action="{{ route('properties.index') }}" method="GET" id="hero-search-form" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
+                            <form class="apple-search-card" action="{{ route('properties.index') }}" method="GET" id="hero-search-form">
                                 <input type="hidden" name="operacion" id="search-operacion" value="venta">
                                 <div class="apple-search-fields">
-                                    <div class="apple-search-field field-main" style="background: rgba(255,255,255,0.9);">
+                                    <div class="apple-search-field field-main">
                                         <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" fill="none" stroke-width="2" /></svg>
-                                        <input type="text" name="q" placeholder="Introducir ciudad" autocomplete="off" style="color: black;">
+                                        <input type="text" name="q" placeholder="Introducir ciudad" autocomplete="off">
                                     </div>
-                                    <div class="apple-search-field field-select" style="background: rgba(255,255,255,0.9);">
-                                        <select name="tipo" style="color: black;">
+                                    <div class="apple-search-field field-select">
+                                        <select name="tipo">
                                             <option value="">Tipo de propiedad</option>
                                             <option value="piso">Piso</option>
                                             <option value="casa">Casa</option>
@@ -41,7 +41,7 @@
                                             <option value="oficina">Oficina</option>
                                         </select>
                                     </div>
-                                    <button type="submit" class="apple-search-submit" style="background: white; color: black;">
+                                    <button type="submit" class="apple-search-submit">
                                         <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="8" stroke="currentColor" fill="none" stroke-width="2" /><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" /></svg>
                                         <span>Buscar</span>
                                     </button>

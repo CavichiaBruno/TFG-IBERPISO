@@ -67,4 +67,20 @@ class User extends Authenticatable
             ->wherePivot('tipo', '=', 'like')
             ->withTimestamps();
     }
+
+    /**
+     * Consultas recibidas en propiedades de este usuario
+     */
+    public function receivedInquiries()
+    {
+        return Inquiry::whereIn('propiedad_id', $this->properties()->pluck('id'));
+    }
+
+    /**
+     * Contador de consultas no leídas (para el icono de buzón)
+     */
+    public function getUnreadInquiriesCountAttribute(): int
+    {
+        return $this->receivedInquiries()->where('leida', \DB::raw('false'))->count();
+    }
 }

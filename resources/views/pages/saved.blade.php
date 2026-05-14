@@ -36,7 +36,9 @@
         </div>
     @else
         <div class="text-center" style="padding: 4rem 0">
-            <div style="font-size: 4rem; opacity: 0.2; margin-bottom: 1.5rem">❤️</div>
+            <div class="empty-icon" style="font-size: 48px; opacity: 0.2; margin-bottom: 16px;">
+                <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-11z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
             <h2>Aún no tienes propiedades guardadas</h2>
             <p class="text-secondary">Ve a la sección de Descubrir y desliza a la derecha para guardar tus favoritas.</p>
             <a href="{{ route('scroll') }}" class="btn btn-primary" style="margin-top: 1.5rem">Empezar a descubrir</a>

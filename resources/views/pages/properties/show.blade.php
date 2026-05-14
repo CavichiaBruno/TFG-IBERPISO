@@ -197,20 +197,20 @@
                         @csrf
                         @guest
                             <div class="form-group">
-                                <input type="text" name="guest_name" placeholder="Tu nombre *" class="form-input" required>
+                                <input type="text" name="nombre_visitante" placeholder="Tu nombre *" class="form-input" required>
                             </div>
                             <div class="form-group">
-                                <input type="email" name="guest_email" placeholder="Tu email *" class="form-input" required>
+                                <input type="email" name="correo_visitante" placeholder="Tu email *" class="form-input" required>
                             </div>
                             <div class="form-group">
-                                <input type="tel" name="guest_phone" placeholder="Tu teléfono" class="form-input">
+                                <input type="tel" name="telefono_visitante" placeholder="Tu teléfono" class="form-input">
                             </div>
                         @endguest
                         <div class="form-group">
-                            <textarea name="message" placeholder="Me interesa esta propiedad. ¿Podría concertar una visita?" class="form-textarea" rows="4" required minlength="10"></textarea>
+                            <textarea name="mensaje" placeholder="Me interesa esta propiedad. ¿Podría concertar una visita?" class="form-textarea" rows="4" required minlength="10"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block" id="inquiry-submit">Enviar consulta</button>
-                        <div id="inquiry-response"></div>
+                        <div id="inquiry-response" style="margin-top: 15px;"></div>
                     </form>
                 @endif
             @else
@@ -221,20 +221,20 @@
                     @csrf
                     @guest
                         <div class="form-group">
-                            <input type="text" name="guest_name" placeholder="Tu nombre *" class="form-input" required>
+                            <input type="text" name="nombre_visitante" placeholder="Tu nombre *" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" name="guest_email" placeholder="Tu email *" class="form-input" required>
+                            <input type="email" name="correo_visitante" placeholder="Tu email *" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <input type="tel" name="guest_phone" placeholder="Tu teléfono" class="form-input">
+                            <input type="tel" name="telefono_visitante" placeholder="Tu teléfono" class="form-input">
                         </div>
                     @endguest
                     <div class="form-group">
-                        <textarea name="message" placeholder="Me interesa esta propiedad. ¿Podría concertar una visita?" class="form-textarea" rows="4" required minlength="10"></textarea>
+                        <textarea name="mensaje" placeholder="Me interesa esta propiedad. ¿Podría concertar una visita?" class="form-textarea" rows="4" required minlength="10"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block" id="inquiry-submit">Enviar consulta</button>
-                    <div id="inquiry-response"></div>
+                    <div id="inquiry-response" style="margin-top: 15px;"></div>
                 </form>
             @endauth
 

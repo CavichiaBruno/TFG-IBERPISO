@@ -20,7 +20,10 @@ class AdminPropertyController extends Controller
     public function index(Request $request)
     {
         // Cargamos propiedades incluyendo las borradas lógicamente para gestión
-        $query = Property::with(['medios', 'usuario'])->withTrashed();
+        $query = Property::with([
+            'coverImage',
+            'usuario:id,nombre'
+        ])->withTrashed();
 
         // Búsqueda por texto (título, ciudad o dirección)
         if ($request->filled('q')) {

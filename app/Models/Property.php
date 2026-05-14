@@ -44,6 +44,12 @@ class Property extends Model
 
     public function usuario() { return $this->belongsTo(User::class, 'usuario_id'); }
     public function medios() { return $this->hasMany(PropertyMedia::class, 'propiedad_id')->orderBy('orden'); }
+    public function coverImage() { 
+        return $this->hasOne(PropertyMedia::class, 'propiedad_id')
+            ->where('tipo_archivo', 'imagen')
+            ->orderBy('es_portada', 'desc')
+            ->orderBy('orden', 'asc'); 
+    }
     public function media() { return $this->medios(); } // Alias para compatibilidad
     public function imagenes() { return $this->hasMany(PropertyMedia::class, 'propiedad_id')->where('tipo_archivo', 'imagen')->orderBy('orden'); }
     public function consultas() { return $this->hasMany(Inquiry::class, 'propiedad_id'); }
@@ -67,13 +73,20 @@ class Property extends Model
     public function getCoverUrlAttribute(): ?string
     {
         try {
-            // Obtener medios (eagerly loaded si está disponible, sino carga lazy)
-            $medios = $this->relationLoaded('medios') ? $this->medios : $this->medios()->get();
-            
-            // Buscar primera imagen que sea portada, sino la primera imagen
-            $cover = $medios->where('tipo_archivo', 'imagen')->where('es_portada', true)->first()
-                ?? $medios->where('tipo_archivo', 'imagen')->first();
-            
+            // Si ya cargamos la relación coverImage, la usamos (óptimo)
+            if ($this->relationLoaded('coverImage') && $this->coverImage) {
+                return $this->coverImage->url;
+            }
+
+            // Fallback: buscar en la colección de medios si ya está cargada
+            if ($this->relationLoaded('medios')) {
+                $cover = $this->medios->where('tipo_archivo', 'imagen')->where('es_portada', true)->first()
+                    ?? $this->medios->where('tipo_archivo', 'imagen')->first();
+                return $cover ? $cover->url : 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
+            }
+
+            // Si nada está cargado, buscamos directamente el cover (lazy)
+            $cover = $this->coverImage()->first();
             return $cover ? $cover->url : 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
         } catch (\Exception $e) {
             return 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';

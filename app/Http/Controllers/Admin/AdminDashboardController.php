@@ -18,10 +18,14 @@ class AdminDashboardController extends Controller
             'total_users'       => User::where('activo', \DB::raw('true'))->count(),
         ];
 
-        $recentProperties = Property::with(['medios'])
+        $recentProperties = Property::with(['coverImage'])
+            ->select('id', 'titulo', 'ciudad', 'precio', 'activa')
             ->latest()->take(5)->get();
 
-        $recentInquiries = Inquiry::with(['property'])
+        $recentInquiries = Inquiry::with(['property' => function($q) {
+                $q->select('id', 'titulo');
+            }])
+            ->select('id', 'propiedad_id', 'nombre_visitante', 'estado', 'created_at')
             ->latest()->take(5)->get();
 
         $unreadCount = Inquiry::unread()->count();

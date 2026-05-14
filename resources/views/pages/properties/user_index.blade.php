@@ -167,8 +167,7 @@
             @foreach($properties as $property)
                 <div class="property-admin-card">
                     <div class="card-img-wrapper">
-                        @php $cover = $property->medios->first(); @endphp
-                        <img src="{{ $cover ? $cover->url : asset('images/placeholder.jpg') }}" alt="{{ $property->titulo }}">
+                        <img src="{{ $property->cover_url }}" alt="{{ $property->titulo }}" loading="lazy">
                         <span class="status-badge {{ $property->activa ? 'status-active' : 'status-inactive' }}">
                             {{ $property->activa ? 'ACTIVO' : 'INACTIVO' }}
                         </span>
@@ -184,6 +183,9 @@
                     <div class="card-actions">
                         <a href="{{ route('properties.show', [$property->id, $property->slug]) }}" class="btn-action btn-edit">
                             Ver Anuncio
+                        </a>
+                        <a href="{{ route('user.properties.edit', $property->id) }}" class="btn-action btn-edit" style="background: #e8e8ed;">
+                            Editar
                         </a>
                         <form action="{{ route('user.properties.toggle', $property->id) }}" method="POST">
                             @csrf
@@ -208,7 +210,9 @@
         </div>
     @else
         <div class="empty-state">
-            <div class="empty-icon">🏠</div>
+            <div class="empty-icon" style="font-size: 48px; opacity: 0.2; margin-bottom: 16px;">
+                <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-11z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
             <h2 class="user-title" style="font-size: 24px;">No tienes publicaciones aún</h2>
             <p class="user-subtitle">¡Crea tu primer anuncio y empieza a vender o alquilar!</p>
             <a href="{{ route('user.properties.create') }}" class="btn-primary" style="text-decoration: none; margin-top: 20px; display: inline-block;">Publicar ahora</a>

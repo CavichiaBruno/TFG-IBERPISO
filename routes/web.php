@@ -38,6 +38,12 @@ Route::middleware('auth')->group(function () {
     
     // Gestión de propiedades del usuario
     Route::get('/mis-publicaciones', [\App\Http\Controllers\UserPropertyController::class, 'index'])->name('user.properties.index');
+    Route::get('/mis-publicaciones/{id}/editar', [\App\Http\Controllers\UserPropertyController::class, 'edit'])->name('user.properties.edit');
+    Route::put('/mis-publicaciones/{id}', [\App\Http\Controllers\UserPropertyController::class, 'update'])->name('user.properties.update');
+    Route::patch('/mis-media/{id}/cover', [\App\Http\Controllers\UserPropertyController::class, 'setCover'])->name('user.media.cover');
+    Route::delete('/mis-media/{id}', [\App\Http\Controllers\UserPropertyController::class, 'deleteMedia'])->name('user.media.destroy');
+    Route::get('/mis-consultas', [\App\Http\Controllers\UserPropertyController::class, 'inquiries'])->name('user.inquiries');
+    Route::post('/mis-consultas/{id}/leer', [\App\Http\Controllers\UserPropertyController::class, 'markAsRead'])->name('user.inquiries.read');
     Route::get('/publicar', [\App\Http\Controllers\UserPropertyController::class, 'create'])->name('user.properties.create');
     Route::post('/publicar', [\App\Http\Controllers\UserPropertyController::class, 'store'])->name('user.properties.store');
     Route::patch('/mis-publicaciones/{id}/toggle', [\App\Http\Controllers\UserPropertyController::class, 'toggleActive'])->name('user.properties.toggle');

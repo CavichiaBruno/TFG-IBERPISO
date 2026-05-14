@@ -158,7 +158,7 @@
             </label>
         </div>
         <div id="cert-delete-warning" style="display: none; padding: 12px 16px; background: #fff0f0; border: none; border-radius: 8px; font-size: 14px; font-family: var(--font-body); letter-spacing: -0.224px; color: #ff453a; margin-bottom: 16px;">
-            ⚠️ El certificado será eliminado al guardar los cambios. Si subes un nuevo PDF, se usará éste en su lugar.
+            <strong>Importante:</strong> El certificado será eliminado al guardar los cambios. Si subes un nuevo PDF, se usará éste en su lugar.
         </div>
     @endif
 
