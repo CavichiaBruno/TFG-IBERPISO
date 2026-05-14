@@ -160,6 +160,10 @@
         box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
     }
 
+    .form-textarea:invalid, .form-textarea:required:invalid {
+        border-color: #fca5a5;
+    }
+
     /* Steps Progress Bar */
     .steps-nav {
         display: flex;
@@ -328,6 +332,17 @@
             <form action="{{ route('user.properties.store') }}" method="POST" enctype="multipart/form-data" id="property-form">
                 @csrf
                 
+                @if($errors->any())
+                <div style="background: #fee2e2; border: 1px solid #fecaca; border-radius: 12px; padding: 16px; margin-bottom: 32px; color: #991b1b;">
+                    <h3 style="font-weight: 600; margin-bottom: 8px;">Error en el formulario</h3>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                
                 {{-- STEP 1: TIPO Y PRECIO --}}
                 <div class="form-step active" id="step-1">
                     <h2 class="form-section-title">¿Qué quieres publicar?</h2>
@@ -365,11 +380,11 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Precio (€)</label>
-                            <input type="number" name="precio" id="input-precio" class="form-input" placeholder="0" required oninput="updatePreview()">
+                            <input type="number" name="precio" id="input-precio" class="form-input" placeholder="0" value="{{ old('precio') }}" required oninput="updatePreview()">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Superficie (m²)</label>
-                            <input type="number" name="superficie_m2" class="form-input" placeholder="0" required>
+                            <input type="number" name="superficie_m2" class="form-input" placeholder="0" value="{{ old('superficie_m2') }}" required>
                         </div>
                     </div>
 
@@ -386,15 +401,27 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Habitaciones</label>
-                            <input type="number" name="habitaciones" class="form-input" placeholder="0" required>
+                            <input type="number" name="habitaciones" class="form-input" placeholder="0" value="{{ old('habitaciones') }}" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Baños</label>
-                            <input type="number" name="banos" class="form-input" placeholder="0" required>
+                            <input type="number" name="banos" class="form-input" placeholder="0" value="{{ old('banos') }}" required>
                         </div>
                         <div class="form-group full-width">
-                            <label class="form-label">Ubicación (Ciudad)</label>
-                            <input type="text" name="ciudad" id="input-ciudad" class="form-input" placeholder="Madrid, Barcelona..." required oninput="updatePreview()">
+                            <label class="form-label">Dirección</label>
+                            <input type="text" name="direccion" id="input-direccion" class="form-input" placeholder="Ej: Calle Principal, 123" value="{{ old('direccion') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ciudad</label>
+                            <input type="text" name="ciudad" id="input-ciudad" class="form-input" placeholder="Madrid, Barcelona..." value="{{ old('ciudad') }}" required oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Provincia</label>
+                            <input type="text" name="provincia" id="input-provincia" class="form-input" placeholder="Madrid, Barcelona..." value="{{ old('provincia') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Código Postal</label>
+                            <input type="text" name="codigo_postal" id="input-codigo-postal" class="form-input" placeholder="28001" value="{{ old('codigo_postal') }}" required pattern="[0-9]{5}" maxlength="5">
                         </div>
                     </div>
 
@@ -462,11 +489,16 @@
 
                     <div class="form-group full-width" style="margin-bottom: 24px;">
                         <label class="form-label">Título comercial</label>
-                        <input type="text" name="titulo" id="input-title" class="form-input" placeholder="Ej: Ático de lujo en el centro" required oninput="updatePreview()">
+                        <input type="text" name="titulo" id="input-title" class="form-input" placeholder="Ej: Ático de lujo en el centro" value="{{ old('titulo') }}" required oninput="updatePreview()">
                     </div>
                     <div class="form-group full-width">
                         <label class="form-label">Descripción</label>
-                        <textarea name="descripcion" id="input-description" class="form-textarea" rows="6" placeholder="Cuéntanos más sobre la propiedad..." required></textarea>
+                        <textarea name="descripcion" id="input-description" class="form-textarea" rows="6" placeholder="Cuéntanos más sobre la propiedad..." required minlength="100" oninput="validateDescription()">{{ old('descripcion') }}</textarea>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                            <p style="font-size: 13px; color: #86868b; margin: 0;">Mínimo 100 caracteres requeridos</p>
+                            <span id="char-count" style="font-size: 13px; font-weight: 600; color: #86868b;">0/100</span>
+                        </div>
+                        <div id="description-error" style="display: none; background: #fee2e2; border: 1px solid #fecaca; border-radius: 8px; padding: 8px 12px; margin-top: 8px; color: #991b1b; font-size: 13px;"></div>
                     </div>
 
                     <div class="step-actions">
@@ -633,6 +665,7 @@
                 document.getElementById('input-title').value = data.title;
                 document.getElementById('input-description').value = data.description;
                 updatePreview();
+                validateDescription(); // Actualizar contador y estado del botón
             } else {
                 alert('Error al conectar con la IA');
             }
@@ -644,11 +677,117 @@
         }
     });
 
-    // Submit form protection
-    document.getElementById('property-form').addEventListener('submit', function() {
-        document.getElementById('btn-submit').innerText = 'Publicando...';
-        document.getElementById('btn-submit').disabled = true;
+    // Submit form protection with loading overlay
+    document.getElementById('property-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Detener envío inmediato
+        
+        const form = this;
+        const overlay = document.getElementById('submit-loading-overlay');
+        const spinnerContainer = document.getElementById('spinner-container');
+        const successContainer = document.getElementById('success-container');
+        
+        // Resetear containers
+        spinnerContainer.style.display = 'flex';
+        successContainer.style.display = 'none';
+        
+        // Mostrar el overlay
+        overlay.style.opacity = 1;
+        overlay.style.pointerEvents = 'all';
+        
+        // Esperar un poco para simular procesamiento y mostrar check
+        setTimeout(() => {
+            spinnerContainer.style.display = 'none';
+            successContainer.style.display = 'block';
+        }, 2500);
+        
+        // Después de 4 segundos, enviar el formulario
+        setTimeout(() => {
+            form.submit();
+        }, 4000);
     });
+
+    // --- DESCRIPTION VALIDATION ---
+    function validateDescription() {
+        const textarea = document.getElementById('input-description');
+        const charCount = document.getElementById('char-count');
+        const errorDiv = document.getElementById('description-error');
+        const submitBtn = document.getElementById('btn-submit');
+        const length = textarea.value.length;
+        const minLength = 100;
+        
+        charCount.innerText = length + '/' + minLength;
+        
+        if (length < minLength) {
+            charCount.style.color = '#dc2626';
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = `Necesitas ${minLength - length} caracteres más`;
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+            submitBtn.style.cursor = 'not-allowed';
+        } else {
+            charCount.style.color = '#16a34a';
+            errorDiv.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
+        }
+    }
+
+    // Initialize description validation
+    const descriptionField = document.getElementById('input-description');
+    if (descriptionField) {
+        validateDescription();
+        descriptionField.addEventListener('input', validateDescription);
+    }
+
+    // --- RESTORE PREVIOUS VALUES ON ERROR ---
+    @if(old('tipo_operacion'))
+    (function() {
+        const oldType = '{{ old("tipo_operacion") }}';
+        const cards = document.querySelectorAll('[onclick*="tipo_operacion"]');
+        cards.forEach(card => {
+            if (card.onclick.toString().includes(`'${oldType}'`)) {
+                card.click();
+            }
+        });
+    })();
+    @endif
+
+    @if(old('tipo_propiedad'))
+    (function() {
+        const oldType = '{{ old("tipo_propiedad") }}';
+        const cards = document.querySelectorAll('[onclick*="tipo_propiedad"]');
+        cards.forEach(card => {
+            if (card.onclick.toString().includes(`'${oldType}'`)) {
+                card.click();
+            }
+        });
+    })();
+    @endif
+
+    // --- IF THERE ARE ERRORS, GO TO THE CORRECT STEP ---
+    @if($errors->any())
+    (function() {
+        // Check which field has errors and go to corresponding step
+        const errorMessages = @json($errors->keys());
+        let targetStep = 1;
+        
+        if (errorMessages.includes('titulo') || errorMessages.includes('descripcion')) {
+            targetStep = 4; // Title and description are in step 4
+        } else if (errorMessages.includes('habitaciones') || errorMessages.includes('banos') || 
+                   errorMessages.includes('ciudad') || errorMessages.includes('provincia') || 
+                   errorMessages.includes('codigo_postal') || errorMessages.includes('direccion')) {
+            targetStep = 2; // Location fields are in step 2
+        } else if (errorMessages.includes('images')) {
+            targetStep = 3; // Images are in step 3
+        } else if (errorMessages.includes('precio') || errorMessages.includes('superficie_m2') || 
+                   errorMessages.includes('tipo_operacion') || errorMessages.includes('tipo_propiedad')) {
+            targetStep = 1; // Basic info is in step 1
+        }
+        
+        setTimeout(() => goToStep(targetStep), 100);
+    })();
+    @endif
 
     // --- INITIALIZATION ---
     updatePreview();

@@ -51,8 +51,8 @@ class Property extends Model
 
     // --- Scopes (Atajos para consultas comunes) ---
 
-    public function scopeActive($query) { return $query->where('activa', true); }
-    public function scopeFeatured($query) { return $query->where('destacada', true); }
+    public function scopeActive($query) { return $query->where('activa', \DB::raw('true')); }
+    public function scopeFeatured($query) { return $query->where('destacada', \DB::raw('true')); }
     public function scopeFilterByOperation($query, string $op) { return $query->where('tipo_operacion', $op); }
 
     // --- Accessors (Campos calculados o formateados) ---

@@ -8,7 +8,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = \App\Models\Article::where('publicado', true)
+        $articles = \App\Models\Article::where('publicado', \DB::raw('true'))
                         ->latest('fecha_publicacion')
                         ->paginate(12);
         return view('articles.index', compact('articles'));
@@ -16,7 +16,7 @@ class ArticleController extends Controller
 
     public function show($slug)
     {
-        $article = \App\Models\Article::where('publicado', true)
+        $article = \App\Models\Article::where('publicado', \DB::raw('true'))
                         ->where('slug', $slug)
                         ->firstOrFail();
                         

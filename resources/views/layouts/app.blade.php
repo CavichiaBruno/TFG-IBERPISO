@@ -173,6 +173,39 @@
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </div>
 
+    <!-- Global Submit Loading Overlay -->
+    <div id="submit-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.5s; margin: 0; padding: 0;">
+        <div id="spinner-container" style="display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 80px; height: 80px; border: 4px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <h3 style="margin-top: 30px; font-weight: 600; color: white; font-size: 20px;" id="submit-loading-text">Publicando tu propiedad...</h3>
+            <p style="font-size: 16px; color: rgba(255,255,255,0.7); margin: 12px 0 0; font-weight: 400;">Por favor espera mientras procesamos tu anuncio</p>
+        </div>
+        <div id="success-container" style="display: none; text-align: center; animation: slideUp 0.5s ease-out forwards;">
+            <svg style="width: 80px; height: 80px; color: #10b981; margin-bottom: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <h3 style="font-weight: 600; color: white; font-size: 20px;">¡Publicación creada!</h3>
+            <p style="font-size: 16px; color: rgba(255,255,255,0.7); margin-top: 12px;">Te redirigimos a tu anuncio...</p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+    </style>
+
     @stack('scripts')
 </body>
 </html>

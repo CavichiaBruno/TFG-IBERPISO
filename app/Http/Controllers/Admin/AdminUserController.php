@@ -62,7 +62,7 @@ class AdminUserController extends Controller
             'telefono'    => $request->telefono,
             'rol'     => $request->rol,
             'contrasena' => Hash::make($request->contrasena),
-            'activo' => true,
+            'activo' => \DB::raw('true'),
         ]);
 
         return redirect()->route('admin.users.index')
@@ -117,7 +117,7 @@ class AdminUserController extends Controller
         }
 
         // Evitamos dejar el sistema sin administradores activos
-        $adminCount = User::where('rol', 'admin')->where('activo', true)->count();
+        $adminCount = User::where('rol', 'admin')->where('activo', \DB::raw('true'))->count();
         if ($user->rol === 'admin' && $adminCount <= 1) {
             return response()->json(['error' => 'No puedes eliminar el último administrador.'], 403);
         }
@@ -137,7 +137,7 @@ class AdminUserController extends Controller
             return response()->json(['error' => 'No puedes desactivar tu propia cuenta.'], 403);
         }
 
-        $user->update(['activo' => !$user->activo]);
+        $user->update(['activo' => $user->activo ? \DB::raw('false') : \DB::raw('true')]);
         return response()->json(['success' => true, 'activo' => $user->activo]);
     }
 }

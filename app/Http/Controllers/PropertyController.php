@@ -49,7 +49,7 @@ class PropertyController extends Controller
         
         // Filtro de características adicionales (ascensor, parking, etc.)
         foreach (['tiene_ascensor','tiene_parking','tiene_terraza','tiene_jardin','tiene_piscina','aire_acondicionado'] as $a) {
-            if ($request->boolean($a)) $query->where($a, true);
+            if ($request->boolean($a)) $query->where($a, \DB::raw('true'));
         }
         
         // Filtro por ubicación
@@ -87,6 +87,7 @@ class PropertyController extends Controller
             $properties = $query->paginate(12)->withQueryString();
             return response()->json([
                 'html' => view('pages.properties._results', compact('properties'))->render(),
+                'pagination' => $properties->links('components.pagination')->toHtml(),
                 'count' => $properties->total()
             ]);
         }

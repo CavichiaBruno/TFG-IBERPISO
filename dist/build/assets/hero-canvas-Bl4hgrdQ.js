@@ -1,0 +1,1 @@
+document.addEventListener(`DOMContentLoaded`,()=>{let e=document.getElementById(`hero-canvas`);if(!e)return;let t=e.getContext(`2d`),n,r;function i(){n=e.width=window.innerWidth,r=e.height=window.innerHeight}window.addEventListener(`resize`,i),i();function a(){t.clearRect(0,0,n,r),requestAnimationFrame(a)}});

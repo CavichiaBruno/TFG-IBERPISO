@@ -1,0 +1,1 @@
+document.addEventListener(`DOMContentLoaded`,function(){let e=document.getElementById(`sidebar-toggle`),t=document.getElementById(`admin-sidebar`);e&&t&&e.addEventListener(`click`,()=>t.classList.toggle(`active`))});

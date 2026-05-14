@@ -174,7 +174,7 @@
                         </span>
                     </div>
                     <div class="card-content">
-                        <div class="card-price">€{{ number_format($property->precio, 0, ',', '.') }}</div>
+                        <div class="card-price">€{{ number_format((float) $property->precio, 0, ',', '.') }}</div>
                         <div class="card-title">{{ $property->titulo }}</div>
                         <div style="font-size: 13px; color: #86868b;">
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>

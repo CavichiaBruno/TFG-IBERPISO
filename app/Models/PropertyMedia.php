@@ -23,16 +23,24 @@ class PropertyMedia extends Model
         return $this->belongsTo(Property::class, 'propiedad_id');
     }
 
-    public function getUrlAttribute(): string
+    public function getUrlAttribute(): ?string
     {
+        // Si no hay ruta archivo, retorna null
+        if (empty($this->ruta_archivo)) {
+            return null;
+        }
+
+        // URLs externas y data URIs se devuelven tal cual
         if (str_starts_with($this->ruta_archivo, 'data:') || str_starts_with($this->ruta_archivo, 'http')) {
             return $this->ruta_archivo;
         }
 
+        // Rutas que ya tienen prefijo web
         if (str_starts_with($this->ruta_archivo, 'images/') || str_starts_with($this->ruta_archivo, 'assets/')) {
             return '/' . $this->ruta_archivo;
         }
 
+        // Rutas de storage
         return '/storage/' . $this->ruta_archivo;
     }
 

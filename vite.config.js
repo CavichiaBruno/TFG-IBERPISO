@@ -16,7 +16,10 @@ export default defineConfig({
                 'resources/js/pages/scroll.js',
                 'resources/css/pages/saved.css',
                 'resources/css/pages/detail.css',
-                'resources/js/pages/detail.js'
+                'resources/js/pages/detail.js',
+                'resources/css/pages/auth.css',
+                'resources/css/admin/admin.css',
+                'resources/js/admin/admin.js'
             ],
             refresh: true,
         }),

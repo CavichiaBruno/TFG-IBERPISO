@@ -15,7 +15,7 @@ class AdminDashboardController extends Controller
             'total_properties'  => Property::count(),
             'active_properties' => Property::active()->count(),
             'new_inquiries'     => Inquiry::pending()->count(),
-            'total_users'       => User::where('activo', true)->count(),
+            'total_users'       => User::where('activo', \DB::raw('true'))->count(),
         ];
 
         $recentProperties = Property::with(['medios'])

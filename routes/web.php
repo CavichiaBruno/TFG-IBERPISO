@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AiController;
 
 // --- Rutas Públicas ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/load-featured', [HomeController::class, 'loadFeatured'])->name('home.loadFeatured');
 Route::get('/propiedades', [PropertyController::class, 'index'])->name('properties.index');
 Route::get('/propiedades/{id}-{slug}', [PropertyController::class, 'show'])->name('properties.show');
 Route::post('/propiedades/{id}/contactar', [InquiryController::class, 'store'])->name('inquiries.store');

@@ -31,7 +31,7 @@ class AdminArticleController extends Controller
 
         if (empty($validated['autor'])) $validated['autor'] = 'IberPiso';
         if (empty($validated['categoria'])) $validated['categoria'] = 'Noticias';
-        $validated['publicado'] = $request->has('publicado');
+        $validated['publicado'] = $request->has('publicado') ? \DB::raw('true') : \DB::raw('false');
 
         \App\Models\Article::create($validated);
         return redirect()->route('admin.articles.index')->with('success', 'Noticia creada correctamente.');
@@ -58,7 +58,7 @@ class AdminArticleController extends Controller
 
         if (empty($validated['autor'])) $validated['autor'] = 'IberPiso';
         if (empty($validated['categoria'])) $validated['categoria'] = 'Noticias';
-        $validated['publicado'] = $request->has('publicado');
+        $validated['publicado'] = $request->has('publicado') ? \DB::raw('true') : \DB::raw('false');
 
         $article->update($validated);
         return redirect()->route('admin.articles.index')->with('success', 'Noticia actualizada correctamente.');

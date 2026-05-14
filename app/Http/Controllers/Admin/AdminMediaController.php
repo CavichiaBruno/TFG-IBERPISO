@@ -33,21 +33,26 @@ class AdminMediaController extends Controller
             return response()->json(['error' => 'Tipo de archivo no permitido.'], 422);
         }
 
-        // En lugar de guardar en disco, lo guardamos como base64
-        $base64 = base64_encode(file_get_contents($file->getRealPath()));
-        $path = 'data:' . $file->getMimeType() . ';base64,' . $base64;
+        $directory = match ($fileType) {
+            'imagen' => 'properties',
+            'pdf' => 'documents',
+            'video' => 'videos',
+            default => 'uploads',
+        };
+
+        $path = $file->store($directory, 'public');
 
         $isCover = $fileType === 'imagen' && !$property->medios()->where('tipo_archivo', 'imagen')->exists();
 
         $media = PropertyMedia::create([
             'propiedad_id'   => $property->id,
-            'ruta_archivo'     => $path,
-            'tipo_archivo'     => $fileType,
-            'tipo_mime'     => $file->getMimeType(),
-            'tamano_archivo_kb'  => (int) ceil($file->getSize() / 1024),
+            'ruta_archivo'   => $path,
+            'tipo_archivo'   => $fileType,
+            'tipo_mime'      => $file->getMimeType(),
+            'tamano_archivo_kb' => (int) ceil($file->getSize() / 1024),
             'nombre_original' => $file->getClientOriginalName(),
-            'es_portada'      => $isCover,
-            'orden'    => $property->medios()->count(),
+            'es_portada'     => $isCover ? \DB::raw('true') : \DB::raw('false'),
+            'orden'          => $property->medios()->count(),
         ]);
 
         return response()->json([
@@ -65,8 +70,11 @@ class AdminMediaController extends Controller
     public function destroy(int $id)
     {
         $media = PropertyMedia::findOrFail($id);
-        // No necesitamos borrar del disco ya que es base64 en la BD
-        // Storage::disk('public')->delete($media->file_path);
+
+        if (!str_starts_with($media->ruta_archivo, 'data:') && !str_starts_with($media->ruta_archivo, 'http')) {
+            Storage::disk('public')->delete($media->ruta_archivo);
+        }
+
         $media->delete();
         return response()->json(['success' => true]);
     }
@@ -78,9 +86,9 @@ class AdminMediaController extends Controller
         // Quitar la portada de las otras imágenes de la misma propiedad
         PropertyMedia::where('propiedad_id', $media->propiedad_id)
             ->where('tipo_archivo', 'imagen')
-            ->update(['es_portada' => false]);
+            ->update(['es_portada' => \DB::raw('false')]);
 
-        $media->update(['es_portada' => true]);
+        $media->update(['es_portada' => \DB::raw('true')]);
 
         return response()->json(['success' => true]);
     }

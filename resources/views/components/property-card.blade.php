@@ -1,7 +1,15 @@
 @props(['property'])
 @php
-    $fallbackImage = 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
-    $displayImage = $property->cover_url ?: $fallbackImage;
+    $fallbackImages = [
+        'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200',
+        'https://images.unsplash.com/photo-1570129477492-45927003d148?auto=format&fit=crop&q=80&w=1200',
+        'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=1200',
+        'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=1200',
+    ];
+    $randomFallback = $fallbackImages[array_rand($fallbackImages)];
+    $images = $property->medios->where('tipo_archivo', 'imagen')->filter(function($img) {
+        return !empty($img->url) && $img->url !== null;
+    })->values();
 @endphp
 <article class="property-card" itemscope itemtype="https://schema.org/Residence">
     @if($property->destacada)
@@ -13,7 +21,6 @@
 
     <div class="card-image-container">
         <div class="card-image-slider">
-            @php $images = $property->medios->where('tipo_archivo', 'imagen')->values(); @endphp
             @forelse($images as $idx => $img)
                 <div class="card-image {{ $idx === 0 ? 'active' : '' }}" 
                      data-index="{{ $idx }}"
@@ -21,13 +28,14 @@
                     <img src="{{ $img->url }}" 
                          alt="{{ $property->titulo }} - Imagen {{ $idx + 1 }}"
                          loading="{{ $idx === 0 ? 'eager' : 'lazy' }}"
+                         onerror="this.src='{{ $randomFallback }}'"
                          class="property-card-img">
                     <a href="{{ route('properties.show', [$property->id, $property->slug]) }}" class="card-click-area" aria-label="Ver detalles de {{ $property->titulo }}"></a>
                 </div>
             @empty
                 <div class="card-image active">
-                    <img src="{{ $fallbackImage }}" 
-                         alt="Sin imagen"
+                    <img src="{{ $randomFallback }}" 
+                         alt="Propiedad - Sin imagen disponible"
                          loading="eager"
                          class="property-card-img">
                     <a href="{{ route('properties.show', [$property->id, $property->slug]) }}" class="card-click-area" aria-label="Ver detalles de {{ $property->titulo }}"></a>
@@ -35,7 +43,7 @@
             @endforelse
         </div>
 
-        @if($images->count() > 1)
+        @if(count($images) > 1)
             <button class="card-arrow arrow-prev" onclick="changeCardImage(event, this, -1)" aria-label="Imagen anterior">
                 <svg viewBox="0 0 24 24" width="18" height="18"><polyline points="15 18 9 12 15 6" stroke="currentColor" fill="none" stroke-width="2.5"/></svg>
             </button>

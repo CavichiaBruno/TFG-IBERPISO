@@ -13,10 +13,9 @@ document.addEventListener('DOMContentLoaded', function () {
     /**
      * Carga los resultados usando AJAX para no recargar la página completa
      */
-    function loadResults(url) {
+    function loadResults(url, pushState = true) {
         if (!resultsContainer) return;
-        
-        // Si no hay HTML previo, mostramos esqueletos
+
         if (resultsContainer.innerHTML.trim() === '' || resultsContainer.querySelector('.skeleton-card')) {
             // Ya hay esqueletos o está vacío, no hacemos nada más que asegurar que se vean
         } else {
@@ -26,24 +25,31 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(url, {
             headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
         })
-        .then(r => r.json())
+        .then(r => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+        })
         .then(data => {
             resultsContainer.style.opacity = '1';
             resultsContainer.innerHTML = data.html;
+            if (paginationContainer) paginationContainer.innerHTML = data.pagination || '';
             if (resultsCount) resultsCount.textContent = data.count || '0';
-            
-            // Re-vincular eventos si es necesario (ej. para favoritos si los hubiera en la tarjeta)
+
+            if (pushState) {
+                window.history.pushState({}, '', url);
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         })
-        .catch(err => { 
+        .catch(err => {
             console.error('Error loading properties:', err);
-            resultsContainer.style.opacity = '1'; 
+            resultsContainer.style.opacity = '1';
         });
     }
 
     // Carga inicial automática
     if (resultsContainer && resultsContainer.dataset.autoload === 'true') {
-        loadResults(window.location.href);
+        loadResults(window.location.href, false);
     }
 
     // Cambio de ordenación (Precio, superficie, etc.)
@@ -52,9 +58,34 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!form) return;
             var params = new URLSearchParams(new FormData(form));
             params.set('orden', this.value);
-            window.location.href = window.location.pathname + '?' + params.toString();
+            var url = window.location.pathname + '?' + params.toString();
+            loadResults(url);
         });
     }
+
+    // Envío del formulario de filtros por AJAX
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            var url = this.action + '?' + new URLSearchParams(new FormData(this)).toString();
+            loadResults(url);
+        });
+    }
+
+    // Paginación interna por AJAX
+    if (paginationContainer) {
+        paginationContainer.addEventListener('click', function (event) {
+            var link = event.target.closest('a.page-btn');
+            if (!link) return;
+            event.preventDefault();
+            loadResults(link.href);
+        });
+    }
+
+    // Manejar back/forward del navegador
+    window.addEventListener('popstate', function () {
+        loadResults(window.location.href, false);
+    });
 
     // Botones tipo "Pill" para filtros rápidos (Operación, Habitaciones...)
     document.querySelectorAll('.pill').forEach(function (btn) {
