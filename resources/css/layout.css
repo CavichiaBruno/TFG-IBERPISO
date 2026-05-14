@@ -26,20 +26,28 @@
 }
 
 .logo {
-  display: flex;
-  align-items: center;
+  display: inline-flex;
+  align-items: baseline;
   text-decoration: none;
   opacity: 1;
   transition: opacity var(--t-base);
   flex-shrink: 0;
+  white-space: nowrap;
   font-family: var(--font-display);
-  font-size: 24px;
-  letter-spacing: 0.05em;
+  font-size: 26px;
+  line-height: 1;
+  letter-spacing: 0.03em;
   color: var(--near-black);
   text-transform: uppercase;
 }
 
-.logo .brand-iber { font-weight: 500; }
+.logo span {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: baseline;
+}
+
+.logo .brand-iber { font-weight: 400; }
 .logo .brand-piso { font-weight: 800; color: #003366; }
 
 .logo:hover { opacity: 0.8; text-decoration: none; }
@@ -282,7 +290,7 @@ main {
 
 .footer-inner {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: var(--sp-10);
   max-width: 1080px;
   margin: 0 auto;

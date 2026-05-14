@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', $property->title)
-@section('meta_description', Str::limit($property->description, 160))
+@section('title', $property->titulo)
+@section('meta_description', Str::limit($property->descripcion, 160))
 
 @push('styles')
     @vite('resources/css/pages/detail.css')
@@ -13,11 +13,11 @@
     <div class="detail-main">
 
         {{-- GALLERY --}}
-        @php $images = $property->media->where('file_type', 'image'); @endphp
+        @php $images = $property->medios->where('tipo_archivo', 'imagen'); @endphp
         <div class="gallery-section">
             @if($images->count())
                 <div class="gallery-main" id="gallery-main">
-                    <img src="{{ $images->first()->url }}" alt="{{ $property->title }}" id="main-photo" loading="eager">
+                    <img src="{{ $images->first()->url }}" alt="{{ $property->titulo }}" id="main-photo" loading="eager">
                     <button class="gallery-lightbox-btn" id="open-lightbox">
                         <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2" stroke="white" fill="none" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="white"/><polyline points="21 15 16 10 5 21" stroke="white" fill="none" stroke-width="2"/></svg>
                         Ver todas las fotos ({{ $images->count() }})
@@ -40,29 +40,29 @@
 
         {{-- PRICE & TYPE BAR --}}
         <div class="detail-header">
-            <div class="detail-price">€{{ $property->formatted_price }}{{ $property->operation_type === 'alquiler' ? '/mes' : '' }}</div>
+            <div class="detail-price">€{{ $property->formatted_price }}{{ $property->tipo_operacion === 'alquiler' ? '/mes' : '' }}</div>
             <div class="detail-badges">
-                <span class="badge badge-operation">{{ strtoupper($property->operation_type) }}</span>
-                <span class="badge badge-type" style="background: var(--gray-light); color: var(--near-black);">{{ strtoupper($property->property_type) }}</span>
-                @if($property->is_featured)<span class="badge badge-featured">DESTACADO</span>@endif
+                <span class="badge badge-operation">{{ strtoupper($property->tipo_operacion) }}</span>
+                <span class="badge badge-type" style="background: var(--gray-light); color: var(--near-black);">{{ strtoupper($property->tipo_propiedad) }}</span>
+                @if($property->destacada)<span class="badge badge-featured">DESTACADO</span>@endif
             </div>
         </div>
 
-        <h1 class="detail-title">{{ $property->title }}</h1>
+        <h1 class="detail-title">{{ $property->titulo }}</h1>
         <p class="detail-address">
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            {{ $property->address }}, {{ $property->city }}, {{ $property->province }}
+            {{ $property->direccion }}, {{ $property->ciudad }}, {{ $property->provincia }}
         </p>
 
         {{-- KEY FEATURES --}}
         <div class="key-features">
-            <div class="key-feature"><span class="kf-value">{{ $property->rooms }}</span><span class="kf-label">Habitaciones</span></div>
-            <div class="key-feature"><span class="kf-value">{{ $property->bathrooms }}</span><span class="kf-label">Baños</span></div>
-            <div class="key-feature"><span class="kf-value">{{ $property->surface_m2 }} m²</span><span class="kf-label">Superficie</span></div>
-            @if($property->floor !== null)<div class="key-feature"><span class="kf-value">{{ $property->floor }}º</span><span class="kf-label">Planta</span></div>@endif
-            @if($property->energy_certificate)
+            <div class="key-feature"><span class="kf-value">{{ $property->habitaciones }}</span><span class="kf-label">Habitaciones</span></div>
+            <div class="key-feature"><span class="kf-value">{{ $property->banos }}</span><span class="kf-label">Baños</span></div>
+            <div class="key-feature"><span class="kf-value">{{ $property->superficie_m2 }} m²</span><span class="kf-label">Superficie</span></div>
+            @if($property->piso !== null)<div class="key-feature"><span class="kf-value">{{ $property->piso }}º</span><span class="kf-label">Planta</span></div>@endif
+            @if($property->certificado_energetico)
                 <div class="key-feature">
-                    <span class="kf-value energy-cert energy-{{ strtolower($property->energy_certificate) }}">{{ $property->energy_certificate }}</span>
+                    <span class="kf-value energy-cert energy-{{ strtolower($property->certificado_energetico) }}">{{ $property->certificado_energetico }}</span>
                     <span class="kf-label">Certificado</span>
                 </div>
             @endif
@@ -71,16 +71,48 @@
         {{-- DESCRIPTION --}}
         <div class="detail-section">
             <h2 class="detail-section-title">Descripción</h2>
-            <div class="detail-description">{{ $property->description }}</div>
+            <div class="detail-description">{{ $property->descripcion }}</div>
         </div>
+
+        {{-- CERTIFICADO ENERGÉTICO - DESCARGA DIRECTA --}}
+        @if($property->certificado_energetico_archivo)
+        <div class="detail-section">
+            <h2 class="detail-section-title">Documentación</h2>
+            <a href="{{ Storage::disk('public')->url($property->certificado_energetico_archivo) }}"
+               target="_blank"
+               download
+               class="cert-download-btn"
+               style="display: inline-flex; align-items: center; gap: 12px; padding: 16px 24px; background: #f5f5f7; border-radius: 12px; text-decoration: none; color: #1d1d1f; font-size: 15px; font-weight: 500; transition: all 0.2s; border: 1px solid #e5e5ea;"
+               onmouseover="this.style.background='#ededf2'; this.style.borderColor='#0071e3';"
+               onmouseout="this.style.background='#f5f5f7'; this.style.borderColor='#e5e5ea';">
+                <span style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: #0071e3; border-radius: 8px; flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </span>
+                <span>
+                    <span style="display: block; font-weight: 600; color: #1d1d1f;">Certificado Energético</span>
+                    <span style="display: block; font-size: 13px; color: #86868b; margin-top: 2px;">Descargar PDF oficial</span>
+                </span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#86868b" stroke-width="2" style="margin-left: auto;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+            </a>
+        </div>
+        @endif
 
         {{-- AMENITIES --}}
         <div class="detail-section">
             <h2 class="detail-section-title">Características</h2>
             <div class="amenities-grid">
                 @foreach([
-                    ['has_elevator','Ascensor'],['has_parking','Parking'],['has_terrace','Terraza'],
-                    ['has_garden','Jardín'],['has_pool','Piscina'],['air_conditioning','Aire Acond.']
+                    ['tiene_ascensor','Ascensor'],['tiene_parking','Parking'],['tiene_terraza','Terraza'],
+                    ['tiene_jardin','Jardín'],['tiene_piscina','Piscina'],['aire_acondicionado','Aire Acond.']
                 ] as [$key,$label])
                     <div class="amenity-item {{ $property->$key ? 'amenity-yes' : 'amenity-no' }}">
                         <svg viewBox="0 0 24 24" width="18" height="18">
@@ -98,7 +130,7 @@
         </div>
 
         {{-- DOCUMENTS --}}
-        @php $docs = $property->media->where('file_type', 'pdf'); @endphp
+        @php $docs = $property->medios->where('tipo_archivo', 'pdf'); @endphp
         @if($docs->count())
         <div class="detail-section">
             <h2 class="detail-section-title">Documentos</h2>
@@ -106,8 +138,8 @@
                 @foreach($docs as $doc)
                     <a href="{{ $doc->url }}" target="_blank" class="doc-item" download>
                         <svg viewBox="0 0 24 24" width="20" height="20"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" fill="none" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="currentColor" fill="none" stroke-width="2"/></svg>
-                        {{ $doc->original_name }}
-                        <small>({{ $doc->file_size_kb }} KB)</small>
+                        {{ $doc->nombre_original }}
+                        <small>({{ $doc->tamano_archivo_kb }} KB)</small>
                     </a>
                 @endforeach
             </div>
@@ -115,12 +147,12 @@
         @endif
 
         {{-- MAP --}}
-        @if($property->latitude && $property->longitude)
+        @if($property->latitud && $property->longitud)
         <div class="detail-section">
             <h2 class="detail-section-title">Ubicación</h2>
             <div class="map-placeholder">
-                <p>Lat: {{ $property->latitude }}, Lon: {{ $property->longitude }}</p>
-                <p class="text-muted">{{ $property->address }}, {{ $property->city }}</p>
+                <p>Lat: {{ $property->latitud }}, Lon: {{ $property->longitud }}</p>
+                <p class="text-muted">{{ $property->direccion }}, {{ $property->ciudad }}</p>
             </div>
         </div>
         @endif
@@ -128,7 +160,7 @@
         {{-- RELATED --}}
         @if($related->count())
         <div class="detail-section">
-            <h2 class="detail-section-title">Propiedades similares en {{ $property->city }}</h2>
+            <h2 class="detail-section-title">Propiedades similares en {{ $property->ciudad }}</h2>
             <div class="properties-grid properties-grid-sm">
                 @foreach($related as $rel)
                     <x-property-card :property="$rel" />
@@ -142,7 +174,7 @@
     <aside class="detail-contact">
         <div class="contact-card">
             @auth
-                @if(Auth::id() === $property->user_id)
+                @if(Auth::id() === $property->usuario_id)
                     <h3>Gestionar Anuncio</h3>
                     <p class="contact-subtitle">Este anuncio es tuyo. Puedes gestionarlo desde tu panel.</p>
                     <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
@@ -153,7 +185,7 @@
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-outline btn-block" style="display: flex; align-items: center; justify-content: center; width: 100%;">
-                                {{ $property->is_active ? 'Desactivar Anuncio' : 'Activar Anuncio' }}
+                                {{ $property->activa ? 'Desactivar Anuncio' : 'Activar Anuncio' }}
                             </button>
                         </form>
                     </div>

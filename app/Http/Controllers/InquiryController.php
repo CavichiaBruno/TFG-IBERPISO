@@ -13,10 +13,10 @@ class InquiryController extends Controller
         $property = Property::active()->findOrFail($id);
 
         $data = $request->validated();
-        $data['property_id'] = $property->id;
+        $data['propiedad_id'] = $property->id;
 
         if (auth()->check()) {
-            $data['user_id'] = auth()->id();
+            $data['usuario_id'] = auth()->id();
         }
 
         Inquiry::create($data);

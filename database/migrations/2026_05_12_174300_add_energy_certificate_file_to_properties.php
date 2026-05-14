@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,9 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('properties', function (Blueprint $table) {
-            $table->string('slug')->unique()->nullable()->after('title');
-        });
+        DB::statement("ALTER TABLE propiedades ADD COLUMN certificado_energetico_archivo VARCHAR(500) NULL");
     }
 
     /**
@@ -21,8 +20,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('properties', function (Blueprint $table) {
-            $table->dropColumn('slug');
-        });
+        DB::statement("ALTER TABLE propiedades DROP COLUMN IF EXISTS certificado_energetico_archivo");
     }
 };

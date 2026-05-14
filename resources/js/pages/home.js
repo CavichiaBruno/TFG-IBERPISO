@@ -51,4 +51,54 @@ document.addEventListener('DOMContentLoaded', () => {
         type();
     }
 
+    // --- CARROUSEL DE DESTACADOS ---
+    const carousel = document.getElementById('featured-carousel');
+    const prevBtn = document.getElementById('featured-prev');
+    const nextBtn = document.getElementById('featured-next');
+
+    if (carousel && prevBtn && nextBtn) {
+        // Función para calcular cuánto desplazar (un tercio del ancho o una tarjeta)
+        const getScrollAmount = () => {
+            const firstCard = carousel.querySelector('.property-card');
+            return firstCard ? firstCard.offsetWidth + 32 : 400; // 32 is the gap (var--sp-8)
+        };
+
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+        });
+
+        // Ocultar/Mostrar flechas según el scroll
+        carousel.addEventListener('scroll', () => {
+            const isAtStart = carousel.scrollLeft <= 10;
+            const isAtEnd = carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth - 10;
+            
+            prevBtn.style.opacity = isAtStart ? '0.3' : '1';
+            prevBtn.style.pointerEvents = isAtStart ? 'none' : 'auto';
+            
+            nextBtn.style.opacity = isAtEnd ? '0.3' : '1';
+            nextBtn.style.pointerEvents = isAtEnd ? 'none' : 'auto';
+        });
+
+        // Trigger inicial
+        carousel.dispatchEvent(new Event('scroll'));
+
+        // Carga asíncrona de datos (Estrategia Skeleton-first)
+        if (carousel.dataset.autoload === 'true') {
+            fetch(window.location.href, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                carousel.innerHTML = data.html;
+                carousel.dataset.autoload = 'false';
+                // El MutationObserver o dispatching scroll servirá para actualizar flechas
+                carousel.dispatchEvent(new Event('scroll'));
+            })
+            .catch(err => console.error("Error loading featured:", err));
+        }
+    }
 });

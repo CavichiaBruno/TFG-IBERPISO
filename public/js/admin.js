@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (r) { return r.json(); })
             .then(function (res) {
                 if (res.success) {
-                    self.classList.toggle('active', res.is_active);
-                    self.classList.toggle('inactive', !res.is_active);
-                    self.title = res.is_active ? 'Desactivar' : 'Activar';
+                    self.classList.toggle('active', res.activa);
+                    self.classList.toggle('inactive', !res.activa);
+                    self.title = res.activa ? 'Desactivar' : 'Activar';
                 }
             });
         });
@@ -138,10 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!userModal) return;
         document.getElementById('modal-title').textContent = title;
         document.getElementById('user-id').value   = data.id || '';
-        document.getElementById('u-name').value    = data.name || '';
-        document.getElementById('u-email').value   = data.email || '';
-        document.getElementById('u-phone').value   = data.phone || '';
-        document.getElementById('u-role').value    = data.role || 'user';
+        document.getElementById('u-name').value    = data.nombre || '';
+        document.getElementById('u-email').value   = data.correo || '';
+        document.getElementById('u-phone').value   = data.telefono || '';
+        document.getElementById('u-role').value    = data.rol || 'usuario';
         document.getElementById('u-password').value = '';
         document.getElementById('u-password').required = !data.id;
         var pwdHint = document.getElementById('pwd-hint');
@@ -162,8 +162,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.edit-user-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             openUserModal('Editar usuario', {
-                id: this.dataset.id, name: this.dataset.name,
-                email: this.dataset.email, phone: this.dataset.phone, role: this.dataset.role,
+                id: this.dataset.id, nombre: this.dataset.name,
+                correo: this.dataset.email, telefono: this.dataset.phone, rol: this.dataset.role,
             });
         });
     });
@@ -176,11 +176,11 @@ document.addEventListener('DOMContentLoaded', function () {
             var method = userId ? 'PUT' : 'POST';
 
             var payload = {
-                name:     document.getElementById('u-name').value,
-                email:    document.getElementById('u-email').value,
-                phone:    document.getElementById('u-phone').value,
-                role:     document.getElementById('u-role').value,
-                password: document.getElementById('u-password').value,
+                nombre:     document.getElementById('u-name').value,
+                correo:    document.getElementById('u-email').value,
+                telefono:    document.getElementById('u-phone').value,
+                rol:     document.getElementById('u-role').value,
+                contrasena: document.getElementById('u-password').value,
             };
             if (userId) payload['_method'] = 'PUT';
 
@@ -217,9 +217,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (r) { return r.json(); })
             .then(function (res) {
                 if (res.success) {
-                    self.classList.toggle('active', res.is_active);
-                    self.classList.toggle('inactive', !res.is_active);
-                    self.textContent = res.is_active ? 'Activo' : 'Inactivo';
+                    self.classList.toggle('active', res.activo);
+                    self.classList.toggle('inactive', !res.activo);
+                    self.textContent = res.activo ? 'Activo' : 'Inactivo';
                 }
             });
         });

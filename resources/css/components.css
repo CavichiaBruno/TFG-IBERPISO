@@ -13,6 +13,109 @@
   position: relative;
 }
 
+.card-image-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.card-image-slider {
+  height: 100%;
+  width: 100%;
+}
+
+.card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--t-base), opacity 0.4s var(--ease);
+}
+
+.property-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+  display: block;
+}
+
+.property-card:hover .property-card-img {
+  transform: scale(1.05);
+}
+
+.card-click-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.card-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.6; /* Hacemos que se vea un poco para que el usuario sepa que existe */
+  transition: all 0.3s var(--ease);
+  z-index: 10;
+  color: var(--near-black);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.card-arrow:hover {
+  background: white;
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.property-card:hover .card-arrow {
+  opacity: 1;
+}
+
+.arrow-prev { left: 12px; }
+.arrow-next { right: 12px; }
+
+.card-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.card-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s var(--ease);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.card-dots .dot.active {
+  background: white;
+  transform: scale(1.3);
+  width: 7px;
+  height: 7px;
+}
+
 .btn-favorite-toggle {
   position: absolute;
   top: 20px;
@@ -54,21 +157,8 @@
   box-shadow: var(--shadow-card);
 }
 
-.card-image-link {
-  display: block;
-  width: 100%;
-  overflow: hidden;
-}
-
-.card-image {
-  height: 220px;
-  background-size: cover;
-  background-position: center;
-  transition: transform var(--t-base);
-}
-
-.property-card:hover .card-image {
-  transform: scale(1.05);
+.card-body {
+  padding: var(--sp-6); /* 20px padding for better symmetry */
 }
 
 .card-body {
@@ -284,4 +374,65 @@
   white-space: nowrap;
   line-height: 1.1;
   vertical-align: baseline;
+}
+
+/* ── Skeleton Screens & Shimmer ── */
+.skeleton {
+  background: #eee;
+  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  border-radius: 4px;
+  background-size: 200% 100%;
+  animation: 1.5s shimmer linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+.skeleton-card {
+  border-radius: var(--r-large);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-img {
+  height: 220px;
+  width: 100%;
+}
+
+.skeleton-content {
+  padding: var(--sp-6);
+}
+
+.skeleton-price {
+  height: 24px;
+  width: 40%;
+  margin-bottom: var(--sp-3);
+}
+
+.skeleton-title {
+  height: 20px;
+  width: 80%;
+  margin-bottom: var(--sp-2);
+}
+
+.skeleton-text {
+  height: 14px;
+  width: 60%;
+  margin-bottom: var(--sp-5);
+}
+
+.skeleton-features {
+  display: flex;
+  gap: 12px;
+}
+
+.skeleton-feature {
+  height: 14px;
+  width: 40px;
 }

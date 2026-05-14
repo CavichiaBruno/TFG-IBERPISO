@@ -10,15 +10,15 @@ class PropertiesSeeder extends Seeder
 {
     public function run(): void
     {
-        $agents = User::whereIn('role', ['admin', 'agent'])->pluck('id')->toArray();
+        $agents = User::where('rol', 'admin')->pluck('id')->toArray();
 
         $cities = [
-            ['city' => 'Madrid',    'province' => 'Madrid'],
-            ['city' => 'Barcelona', 'province' => 'Barcelona'],
-            ['city' => 'Valencia',  'province' => 'Valencia'],
-            ['city' => 'Sevilla',   'province' => 'Sevilla'],
-            ['city' => 'Zaragoza',  'province' => 'Zaragoza'],
-            ['city' => 'Málaga',    'province' => 'Málaga'],
+            ['ciudad' => 'Madrid',    'provincia' => 'Madrid'],
+            ['ciudad' => 'Barcelona', 'provincia' => 'Barcelona'],
+            ['ciudad' => 'Valencia',  'provincia' => 'Valencia'],
+            ['ciudad' => 'Sevilla',   'provincia' => 'Sevilla'],
+            ['ciudad' => 'Zaragoza',  'provincia' => 'Zaragoza'],
+            ['ciudad' => 'Málaga',    'provincia' => 'Málaga'],
         ];
 
         $types      = ['piso', 'casa', 'chalet', 'local', 'garaje', 'oficina'];
@@ -38,39 +38,39 @@ class PropertiesSeeder extends Seeder
             'Plaza de garaje en parking seguro',
         ];
 
-        for ($i = 0; $i < 9; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $location   = $cities[array_rand($cities)];
             $type       = $types[array_rand($types)];
             $operation  = $operations[array_rand($operations)];
             $agentId    = $agents[array_rand($agents)];
-            $title      = $titles[$i % count($titles)] . ' - ' . $location['city'];
+            $title      = $titles[$i % count($titles)] . ' - ' . $location['ciudad'];
 
             Property::create([
-                'user_id'            => $agentId,
-                'title'              => $title,
-                'description'        => 'Increíble propiedad ubicada en una zona privilegiada de ' . $location['city'] . '. Esta propiedad cuenta con acabados de alta calidad, amplias estancias luminosas y una distribución perfecta. Ideal para familias que buscan confort y calidad de vida. La zona dispone de excelentes servicios: colegios, supermercados, transporte público y zonas verdes a pocos metros. No pierdas la oportunidad de conocer esta joya inmobiliaria.',
-                'price'              => rand(250000, 2850000), // Higher prices for premium feel
-                'surface_m2'         => rand(120, 550),
-                'rooms'              => rand(3, 8),
-                'bathrooms'          => rand(2, 6),
-                'floor'              => rand(0, 5),
-                'property_type'      => $i < 5 ? 'chalet' : ($i < 7 ? 'piso' : 'casa'),
-                'operation_type'     => $operation,
-                'address'            => 'Calle ' . ['Mayor', 'Gran Vía', 'Paseo de la Castellana', 'Av. Diagonal', 'Calle Serrano'][rand(0,4)] . ' ' . rand(1, 200),
-                'city'               => $location['city'],
-                'province'           => $location['province'],
-                'postal_code'        => str_pad(rand(10000, 52000), 5, '0', STR_PAD_LEFT),
-                'latitude'           => round(rand(3600, 4380) / 100, 7),
-                'longitude'          => round(rand(-730, 330) / 100, 7),
-                'has_elevator'       => true,
-                'has_parking'        => true,
-                'has_terrace'        => true,
-                'has_garden'         => true,
-                'has_pool'           => true,
-                'air_conditioning'   => true,
-                'is_featured'        => true,
-                'is_active'          => true,
-                'energy_certificate' => $certs[array_rand($certs)],
+                'usuario_id'             => $agentId,
+                'titulo'                 => $title,
+                'descripcion'            => 'Increíble propiedad ubicada en una zona privilegiada de ' . $location['ciudad'] . '. Esta propiedad cuenta con acabados de alta calidad, amplias estancias luminosas y una distribución perfecta. Ideal para familias que buscan confort y calidad de vida. La zona dispone de excelentes servicios: colegios, supermercados, transporte público y zonas verdes a pocos metros. No pierdas la oportunidad de conocer esta joya inmobiliaria.',
+                'precio'                 => rand(250000, 2850000), // Precios altos para una sensación premium
+                'superficie_m2'          => rand(120, 550),
+                'habitaciones'           => rand(3, 8),
+                'banos'                  => rand(2, 6),
+                'piso'                   => rand(0, 5),
+                'tipo_propiedad'         => $i < 5 ? 'chalet' : ($i < 7 ? 'piso' : 'casa'),
+                'tipo_operacion'         => $operation,
+                'direccion'              => 'Calle ' . ['Mayor', 'Gran Vía', 'Paseo de la Castellana', 'Av. Diagonal', 'Calle Serrano'][rand(0,4)] . ' ' . rand(1, 200),
+                'ciudad'                 => $location['ciudad'],
+                'provincia'              => $location['provincia'],
+                'codigo_postal'          => str_pad(rand(10000, 52000), 5, '0', STR_PAD_LEFT),
+                'latitud'                => round(rand(3600, 4380) / 100, 7),
+                'longitud'               => round(rand(-730, 330) / 100, 7),
+                'tiene_ascensor'         => true,
+                'tiene_parking'          => true,
+                'tiene_terraza'          => true,
+                'tiene_jardin'           => true,
+                'tiene_piscina'          => true,
+                'aire_acondicionado'     => true,
+                'destacada'              => true,
+                'activa'                 => true,
+                'certificado_energetico' => $certs[array_rand($certs)],
             ]);
         }
     }

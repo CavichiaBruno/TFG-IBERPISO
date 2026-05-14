@@ -16,15 +16,15 @@ class AdminMediaController extends Controller
 
         $request->validate([
             'file'      => 'required|file|max:102400',
-            'file_type' => 'required|in:image,pdf,video',
+            'tipo_archivo' => 'required|in:imagen,pdf,video',
         ]);
 
         $file     = $request->file('file');
-        $fileType = $request->file_type;
+        $fileType = $request->tipo_archivo;
 
-        // Validate MIME types server-side
+        // Validar tipos MIME en el servidor
         $allowedMimes = [
-            'image' => ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+            'imagen' => ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
             'pdf'   => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             'video' => ['video/mp4', 'video/quicktime', 'video/x-msvideo'],
         ];
@@ -33,21 +33,21 @@ class AdminMediaController extends Controller
             return response()->json(['error' => 'Tipo de archivo no permitido.'], 422);
         }
 
-        // Instead of storing in disk, store as base64
+        // En lugar de guardar en disco, lo guardamos como base64
         $base64 = base64_encode(file_get_contents($file->getRealPath()));
         $path = 'data:' . $file->getMimeType() . ';base64,' . $base64;
 
-        $isCover = $fileType === 'image' && !$property->media()->where('file_type', 'image')->exists();
+        $isCover = $fileType === 'imagen' && !$property->medios()->where('tipo_archivo', 'imagen')->exists();
 
         $media = PropertyMedia::create([
-            'property_id'   => $property->id,
-            'file_path'     => $path,
-            'file_type'     => $fileType,
-            'mime_type'     => $file->getMimeType(),
-            'file_size_kb'  => (int) ceil($file->getSize() / 1024),
-            'original_name' => $file->getClientOriginalName(),
-            'is_cover'      => $isCover,
-            'sort_order'    => $property->media()->count(),
+            'propiedad_id'   => $property->id,
+            'ruta_archivo'     => $path,
+            'tipo_archivo'     => $fileType,
+            'tipo_mime'     => $file->getMimeType(),
+            'tamano_archivo_kb'  => (int) ceil($file->getSize() / 1024),
+            'nombre_original' => $file->getClientOriginalName(),
+            'es_portada'      => $isCover,
+            'orden'    => $property->medios()->count(),
         ]);
 
         return response()->json([
@@ -55,9 +55,9 @@ class AdminMediaController extends Controller
             'media'   => [
                 'id'       => $media->id,
                 'url'      => $media->url,
-                'type'     => $media->file_type,
-                'name'     => $media->original_name,
-                'is_cover' => $media->is_cover,
+                'tipo_archivo'     => $media->tipo_archivo,
+                'nombre_original'     => $media->nombre_original,
+                'es_portada' => $media->es_portada,
             ],
         ]);
     }
@@ -65,7 +65,7 @@ class AdminMediaController extends Controller
     public function destroy(int $id)
     {
         $media = PropertyMedia::findOrFail($id);
-        // We don't need to delete from disk since it's base64 in DB
+        // No necesitamos borrar del disco ya que es base64 en la BD
         // Storage::disk('public')->delete($media->file_path);
         $media->delete();
         return response()->json(['success' => true]);
@@ -75,12 +75,12 @@ class AdminMediaController extends Controller
     {
         $media = PropertyMedia::findOrFail($id);
 
-        // Remove cover from other images of the same property
-        PropertyMedia::where('property_id', $media->property_id)
-            ->where('file_type', 'image')
-            ->update(['is_cover' => false]);
+        // Quitar la portada de las otras imágenes de la misma propiedad
+        PropertyMedia::where('propiedad_id', $media->propiedad_id)
+            ->where('tipo_archivo', 'imagen')
+            ->update(['es_portada' => false]);
 
-        $media->update(['is_cover' => true]);
+        $media->update(['es_portada' => true]);
 
         return response()->json(['success' => true]);
     }

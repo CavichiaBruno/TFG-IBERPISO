@@ -12,13 +12,13 @@ use App\Http\Controllers\Admin\AdminInquiryController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AiController;
 
-// --- Public Routes ---
+// --- Rutas Públicas ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/propiedades', [PropertyController::class, 'index'])->name('properties.index');
 Route::get('/propiedades/{id}-{slug}', [PropertyController::class, 'show'])->name('properties.show');
 Route::post('/propiedades/{id}/contactar', [InquiryController::class, 'store'])->name('inquiries.store');
 
-// --- Auth Routes ---
+// --- Rutas de Autenticación ---
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -26,27 +26,31 @@ Route::middleware('guest')->group(function () {
     Route::post('/registro', [AuthController::class, 'register'])->name('register.post');
 });
 
+// --- Noticias (Articles) ---
+Route::get('/noticias', [\App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
+Route::get('/noticias/{slug}', [\App\Http\Controllers\ArticleController::class, 'show'])->name('articles.show');
 
-// --- Authenticated User Routes ---
+
+// --- Rutas de Usuarios Autenticados ---
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // User Property Management
+    // Gestión de propiedades del usuario
     Route::get('/mis-publicaciones', [\App\Http\Controllers\UserPropertyController::class, 'index'])->name('user.properties.index');
     Route::get('/publicar', [\App\Http\Controllers\UserPropertyController::class, 'create'])->name('user.properties.create');
     Route::post('/publicar', [\App\Http\Controllers\UserPropertyController::class, 'store'])->name('user.properties.store');
     Route::patch('/mis-publicaciones/{id}/toggle', [\App\Http\Controllers\UserPropertyController::class, 'toggleActive'])->name('user.properties.toggle');
     Route::delete('/mis-publicaciones/{id}', [\App\Http\Controllers\UserPropertyController::class, 'destroy'])->name('user.properties.destroy');
 
-    // AI Integration
+    // Integración con IA
     Route::post('/ai/analyze-image', [AiController::class, 'analyzeImage'])->name('ai.analyzeImage');
 });
 
-// --- Admin Routes ---
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin,agent'])->group(function () {
+// --- Rutas de Administración ---
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Properties
+    // Propiedades
     Route::get('/propiedades', [AdminPropertyController::class, 'index'])->name('properties.index');
     Route::get('/propiedades/crear', [AdminPropertyController::class, 'create'])->name('properties.create');
     Route::post('/propiedades', [AdminPropertyController::class, 'store'])->name('properties.store');
@@ -55,27 +59,56 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin,agent'])
     Route::delete('/propiedades/{id}', [AdminPropertyController::class, 'destroy'])->name('properties.destroy');
     Route::patch('/propiedades/{id}/toggle-active', [AdminPropertyController::class, 'toggleActive'])->name('properties.toggleActive');
 
-    // Media
+    // Medios (Imágenes)
     Route::post('/propiedades/{id}/media', [AdminMediaController::class, 'store'])->name('media.store');
     Route::delete('/media/{id}', [AdminMediaController::class, 'destroy'])->name('media.destroy');
     Route::patch('/media/{id}/cover', [AdminMediaController::class, 'setCover'])->name('media.cover');
 
-    // Inquiries
+    // Consultas (Inquiries)
     Route::get('/consultas', [AdminInquiryController::class, 'index'])->name('inquiries.index');
+    Route::get('/consultas/crear', [AdminInquiryController::class, 'create'])->name('inquiries.create');
+    Route::post('/consultas', [AdminInquiryController::class, 'store'])->name('inquiries.store');
+    Route::get('/consultas/{id}/editar', [AdminInquiryController::class, 'edit'])->name('inquiries.edit');
+    Route::put('/consultas/{id}', [AdminInquiryController::class, 'update'])->name('inquiries.update');
     Route::patch('/consultas/{id}/estado', [AdminInquiryController::class, 'updateStatus'])->name('inquiries.updateStatus');
     Route::delete('/consultas/{id}', [AdminInquiryController::class, 'destroy'])->name('inquiries.destroy');
 
-    // Users (admin only)
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/usuarios', [AdminUserController::class, 'index'])->name('users.index');
-        Route::post('/usuarios', [AdminUserController::class, 'store'])->name('users.store');
-        Route::put('/usuarios/{id}', [AdminUserController::class, 'update'])->name('users.update');
-        Route::delete('/usuarios/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
-        Route::patch('/usuarios/{id}/toggle-active', [AdminUserController::class, 'toggleActive'])->name('users.toggleActive');
-    });
+    // Interacciones (Interactions)
+    Route::resource('interacciones', \App\Http\Controllers\Admin\AdminInteractionController::class)->names([
+        'index' => 'interactions.index',
+        'create' => 'interactions.create',
+        'store' => 'interactions.store',
+        'edit' => 'interactions.edit',
+        'update' => 'interactions.update',
+        'destroy' => 'interactions.destroy',
+        'show' => 'interactions.show',
+    ]);
+
+    // Noticias (Articles)
+    Route::resource('noticias', \App\Http\Controllers\Admin\AdminArticleController::class)->names([
+        'index' => 'articles.index',
+        'create' => 'articles.create',
+        'store' => 'articles.store',
+        'edit' => 'articles.edit',
+        'update' => 'articles.update',
+        'destroy' => 'articles.destroy',
+        'show' => 'articles.show',
+    ]);
+
+    // Usuarios
+    Route::get('/usuarios', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/usuarios/crear', [AdminUserController::class, 'create'])->name('users.create');
+    Route::post('/usuarios', [AdminUserController::class, 'store'])->name('users.store');
+    Route::get('/usuarios/{id}/editar', [AdminUserController::class, 'edit'])->name('users.edit');
+    Route::put('/usuarios/{id}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::delete('/usuarios/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+    Route::patch('/usuarios/{id}/toggle-active', [AdminUserController::class, 'toggleActive'])->name('users.toggleActive');
+
+    // IA
+    Route::post('/ai/analyze-image', [AiController::class, 'analyzeImage'])->name('ai.analyzeImage');
 });
 
-// --- Scroll & Favorites Routes ---
+// --- Rutas de Scroll y Favoritos ---
 Route::get('/scroll', [\App\Http\Controllers\ScrollController::class, 'index'])->name('scroll');
 Route::post('/scroll/interact', [\App\Http\Controllers\ScrollController::class, 'interact'])->name('scroll.interact');
 Route::get('/guardados', [\App\Http\Controllers\ScrollController::class, 'saved'])->name('saved');

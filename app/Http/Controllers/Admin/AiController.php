@@ -18,12 +18,12 @@ class AiController extends Controller
     public function analyzeImage(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|max:10240', // max 10MB
+            'image' => 'required|image|max:10240', // máx 10MB
         ]);
 
         $imageFile = $request->file('image');
         
-        // Convert to base64
+        // Convertir a base64
         $imageData = base64_encode(file_get_contents($imageFile->getRealPath()));
 
         $result = $this->aiService->analyzePropertyImage($imageData);

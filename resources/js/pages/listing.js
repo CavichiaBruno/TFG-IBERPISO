@@ -15,22 +15,35 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function loadResults(url) {
         if (!resultsContainer) return;
-        resultsContainer.style.opacity = '0.5';
+        
+        // Si no hay HTML previo, mostramos esqueletos
+        if (resultsContainer.innerHTML.trim() === '' || resultsContainer.querySelector('.skeleton-card')) {
+            // Ya hay esqueletos o está vacío, no hacemos nada más que asegurar que se vean
+        } else {
+            resultsContainer.style.opacity = '0.5';
+        }
 
-        // Añadimos un parámetro para que el servidor sepa que es una petición AJAX
-        var fetchUrl = url + (url.includes('?') ? '&' : '?') + '_ajax=1';
-        fetch(fetchUrl, {
+        fetch(url, {
             headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
         })
         .then(r => r.json())
         .then(data => {
-            resultsContainer.innerHTML = data.html;
-            if (paginationContainer) paginationContainer.innerHTML = data.pagination || '';
-            if (resultsCount) resultsCount.textContent = data.total;
             resultsContainer.style.opacity = '1';
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Volvemos arriba suavemente
+            resultsContainer.innerHTML = data.html;
+            if (resultsCount) resultsCount.textContent = data.count || '0';
+            
+            // Re-vincular eventos si es necesario (ej. para favoritos si los hubiera en la tarjeta)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         })
-        .catch(() => { resultsContainer.style.opacity = '1'; });
+        .catch(err => { 
+            console.error('Error loading properties:', err);
+            resultsContainer.style.opacity = '1'; 
+        });
+    }
+
+    // Carga inicial automática
+    if (resultsContainer && resultsContainer.dataset.autoload === 'true') {
+        loadResults(window.location.href);
     }
 
     // Cambio de ordenación (Precio, superficie, etc.)

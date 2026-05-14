@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="auth-split-container">
-        <!-- Left Section: Login Form -->
+        <!-- Sección Izquierda: Formulario de Login -->
         <div class="auth-left">
             <div class="auth-card-compact">
                 <div class="auth-header">
@@ -24,8 +24,8 @@
                 <form method="POST" action="{{ route('login.post') }}" class="auth-form">
                     @csrf
                     <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-input" value="{{ old('email') }}"
+                        <label for="correo" class="form-label">Email</label>
+                        <input type="email" id="correo" name="correo" class="form-input" value="{{ old('correo') }}"
                             placeholder="tu@email.com" required autofocus>
                     </div>
 
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <!-- Right Section: Lottie Animation -->
+        <!-- Sección Derecha: Animación Lottie -->
         <div class="auth-right">
             <div class="lottie-container">
                 <dotlottie-wc src="https://lottie.host/9bd978b5-cdca-4594-a9d5-90fcb6b3b56f/N8m2OwxN67.lottie" 

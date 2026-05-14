@@ -14,11 +14,11 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        if (!in_array($request->user()->role, $roles)) {
+        if (!in_array($request->user()->rol, $roles)) {
             abort(403, 'Acceso no autorizado.');
         }
 
-        if (!$request->user()->is_active) {
+        if (!$request->user()->activo) {
             auth()->logout();
             return redirect()->route('login')->withErrors(['email' => 'Tu cuenta está desactivada.']);
         }

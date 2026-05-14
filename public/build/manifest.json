@@ -1,6 +1,15 @@
 {
+  "resources/css/admin/admin.css": {
+    "file": "assets/admin-DiWOuCdV.css",
+    "name": "admin",
+    "names": [
+      "admin.css"
+    ],
+    "src": "resources/css/admin/admin.css",
+    "isEntry": true
+  },
   "resources/css/app.css": {
-    "file": "assets/app-Z8t32sgM.css",
+    "file": "assets/app-B2plyt1-.css",
     "name": "app",
     "names": [
       "app.css"
@@ -18,7 +27,7 @@
     "isEntry": true
   },
   "resources/css/pages/home.css": {
-    "file": "assets/home-DxHEffyZ.css",
+    "file": "assets/home-BaJ_lusq.css",
     "name": "home",
     "names": [
       "home.css"
@@ -27,7 +36,7 @@
     "isEntry": true
   },
   "resources/css/pages/listing.css": {
-    "file": "assets/listing-DV0y3uOf.css",
+    "file": "assets/listing-CNcJiG0W.css",
     "name": "listing",
     "names": [
       "listing.css"
@@ -53,8 +62,14 @@
     "src": "resources/css/pages/scroll.css",
     "isEntry": true
   },
+  "resources/js/admin/admin.js": {
+    "file": "assets/admin-ByGrqeTR.js",
+    "name": "admin",
+    "src": "resources/js/admin/admin.js",
+    "isEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CfEH81fe.js",
+    "file": "assets/app-B3F-CLBO.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
@@ -72,13 +87,13 @@
     "isEntry": true
   },
   "resources/js/pages/home.js": {
-    "file": "assets/home-DmUfKclq.js",
+    "file": "assets/home-Bg8nqOAG.js",
     "name": "home",
     "src": "resources/js/pages/home.js",
     "isEntry": true
   },
   "resources/js/pages/listing.js": {
-    "file": "assets/listing-CvM7POv9.js",
+    "file": "assets/listing-Bk7hGXy6.js",
     "name": "listing",
     "src": "resources/js/pages/listing.js",
     "isEntry": true

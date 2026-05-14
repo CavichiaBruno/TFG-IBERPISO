@@ -6,46 +6,48 @@ use Illuminate\Database\Eloquent\Model;
 
 class PropertyMedia extends Model
 {
+    protected $table = 'medios_propiedades';
+
     protected $fillable = [
-        'property_id', 'file_path', 'file_type', 'mime_type',
-        'file_size_kb', 'original_name', 'is_cover', 'sort_order',
+        'propiedad_id', 'ruta_archivo', 'tipo_archivo', 'tipo_mime',
+        'tamano_archivo_kb', 'nombre_original', 'es_portada', 'orden',
     ];
 
     protected $casts = [
-        'is_cover'  => 'boolean',
-        'sort_order'=> 'integer',
+        'es_portada'  => 'boolean',
+        'orden'       => 'integer',
     ];
 
     public function property()
     {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(Property::class, 'propiedad_id');
     }
 
     public function getUrlAttribute(): string
     {
-        if (str_starts_with($this->file_path, 'data:') || str_starts_with($this->file_path, 'http')) {
-            return $this->file_path;
+        if (str_starts_with($this->ruta_archivo, 'data:') || str_starts_with($this->ruta_archivo, 'http')) {
+            return $this->ruta_archivo;
         }
 
-        if (str_starts_with($this->file_path, 'images/') || str_starts_with($this->file_path, 'assets/')) {
-            return asset($this->file_path);
+        if (str_starts_with($this->ruta_archivo, 'images/') || str_starts_with($this->ruta_archivo, 'assets/')) {
+            return '/' . $this->ruta_archivo;
         }
 
-        return asset('storage/' . $this->file_path);
+        return '/storage/' . $this->ruta_archivo;
     }
 
     public function scopeImages($query)
     {
-        return $query->where('file_type', 'image');
+        return $query->where('tipo_archivo', 'imagen');
     }
 
     public function scopeDocuments($query)
     {
-        return $query->where('file_type', 'pdf');
+        return $query->where('tipo_archivo', 'pdf');
     }
 
     public function scopeVideos($query)
     {
-        return $query->where('file_type', 'video');
+        return $query->where('tipo_archivo', 'video');
     }
 }

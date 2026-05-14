@@ -9,10 +9,21 @@
     
     @vite('resources/css/app.css')
     @stack('styles')
-    {{-- Global Lottie Script --}}
-    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
 </head>
 <body>
+<div class="acc-toolbar" id="acc-toolbar">
+    <div class="container-wide acc-flex">
+        <div class="acc-group">
+            <button onclick="window.accTools.changeSize(-1)" title="Reducir texto">A-</button>
+            <button onclick="window.accTools.resetSize()" title="Tamaño original">A</button>
+            <button onclick="window.accTools.changeSize(1)" title="Aumentar texto">A+</button>
+        </div>
+        <button onclick="window.accTools.toggleContrast()" class="acc-btn-c">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-18v16a8 8 0 1 0 0-16z"/></svg>
+            Contraste
+        </button>
+    </div>
+</div>
 
 <header class="site-header" id="site-header">
     <div class="header-inner">
@@ -23,6 +34,7 @@
         <nav class="main-nav">
             <a href="{{ route('home') }}" class="nav-link">Inicio</a>
             <a href="{{ route('properties.index') }}" class="nav-link">Propiedades</a>
+            <a href="{{ route('articles.index') }}" class="nav-link">Noticias</a>
             <a href="{{ route('scroll') }}" class="nav-link">IberScroll</a>
         </nav>
 
@@ -37,14 +49,14 @@
                         </svg>
                     </button>
                     <div class="dropdown-menu">
-                        <div class="dropdown-item" style="font-weight: 600; font-size: 13px; color: var(--gray-mid);">Hola, {{ Auth::user()->name }}</div>
+                        <div class="dropdown-item" style="font-weight: 600; font-size: 13px; color: var(--gray-mid);">Hola, {{ Auth::user()->nombre }}</div>
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('user.properties.create') }}" class="dropdown-item" style="color: var(--apple-blue, #0071e3); font-weight: 500;">
                             <svg viewBox="0 0 24 24" width="16" height="16" style="display:inline;vertical-align:middle;margin-right:8px;" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Crear publicación
                         </a>
                         <div class="dropdown-divider"></div>
-                        @if(Auth::user()->hasAdminAccess())
+                        @if(Auth::user()->isAdmin())
                             <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Panel de Control</a>
                         @endif
                         <a href="{{ route('user.properties.index') }}" class="dropdown-item">Mis Publicaciones</a>
@@ -74,6 +86,7 @@
     <nav>
         <a href="{{ route('home') }}">Inicio</a>
         <a href="{{ route('properties.index') }}">Propiedades</a>
+        <a href="{{ route('articles.index') }}">Noticias</a>
         <a href="{{ route('scroll') }}">IberScroll</a>
         
         @auth
@@ -82,7 +95,7 @@
                 <a href="{{ route('user.properties.create') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block; color: #0071e3;">Crear publicación</a>
                 <a href="{{ route('user.properties.index') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Mis Publicaciones</a>
                 <a href="{{ route('saved') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Mis Guardados</a>
-                @if(Auth::user()->hasAdminAccess())
+                @if(Auth::user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="nav-link" style="font-size: 17px; margin-bottom: 12px; display: block;">Panel de Control</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile">
@@ -123,15 +136,6 @@
             </ul>
         </div>
         <div class="footer-col">
-            <h4>Empresa</h4>
-            <ul>
-                <li><a href="#">Sobre nosotros</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Trabaja con nosotros</a></li>
-                <li><a href="#">Aviso legal</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
             <h4>Contacto</h4>
             <ul>
                 <li>
@@ -160,7 +164,15 @@
         });
     }
 </script>
+    {{-- Script Global de Lottie (Diferido para mejorar performance) --}}
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module" defer></script>
     @vite('resources/js/app.js')
-@stack('scripts')
+
+    <!-- Back to Top Button -->
+    <div id="back-to-top" class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Subir al inicio">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </div>
+
+    @stack('scripts')
 </body>
 </html>

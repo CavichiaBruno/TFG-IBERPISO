@@ -10,64 +10,61 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'usuarios';
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'phone',
+        'nombre',
+        'correo',
+        'contrasena',
+        'rol',
+        'telefono',
         'avatar',
-        'is_active',
+        'activo',
     ];
 
     protected $hidden = [
-        'password',
+        'contrasena',
         'remember_token',
     ];
 
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_active' => 'boolean',
+            'correo_verificado_en' => 'datetime',
+            'contrasena' => 'hashed',
+            'activo' => 'boolean',
         ];
     }
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->rol === 'admin';
     }
 
-    public function isAgent(): bool
+    public function getAuthPassword()
     {
-        return $this->role === 'agent';
-    }
-
-    public function hasAdminAccess(): bool
-    {
-        return in_array($this->role, ['admin', 'agent']);
+        return $this->contrasena;
     }
 
     public function properties()
     {
-        return $this->hasMany(Property::class);
+        return $this->hasMany(Property::class, 'usuario_id');
     }
 
     public function inquiries()
     {
-        return $this->hasMany(Inquiry::class);
+        return $this->hasMany(Inquiry::class, 'usuario_id');
     }
 
     public function interactions()
     {
-        return $this->hasMany(PropertyInteraction::class);
+        return $this->hasMany(PropertyInteraction::class, 'usuario_id');
     }
 
     public function favoriteProperties()
     {
-        return $this->belongsToMany(Property::class, 'property_interactions')
-            ->wherePivot('type', '=', 'like')
+        return $this->belongsToMany(Property::class, 'interacciones_propiedades')
+            ->wherePivot('tipo', '=', 'like')
             ->withTimestamps();
     }
 }

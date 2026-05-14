@@ -3,318 +3,308 @@
 
 @push('styles')
 <style>
+    :root {
+        --apple-blue: #0071e3;
+        --apple-gray: #f5f5f7;
+        --apple-near-black: #1d1d1f;
+        --apple-silver: #d2d2d7;
+    }
+
     .create-page-bg {
-        background-color: #f5f5f7;
+        background-color: #ffffff;
         min-height: 100vh;
-        padding-top: 80px;
+        padding-top: 60px;
         padding-bottom: 120px;
     }
     
     .create-container {
-        max-width: 980px; /* Apple's max content width */
+        max-width: 1100px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 0 40px;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 60px;
+        align-items: start;
     }
     
+    @media(max-width: 1024px) {
+        .create-container {
+            grid-template-columns: 1fr;
+            max-width: 700px;
+            gap: 40px;
+        }
+        .preview-sticky { display: none; }
+    }
+
     .create-header {
-        text-align: center;
-        margin-bottom: 60px;
+        grid-column: 1 / -1;
+        text-align: left;
+        margin-bottom: 40px;
     }
     
     .create-title {
-        font-family: 'SF Pro Display', -apple-system, sans-serif;
-        font-size: 56px;
+        font-size: 48px;
         font-weight: 600;
-        letter-spacing: -0.28px;
+        letter-spacing: -0.015em;
         line-height: 1.07;
-        color: #1d1d1f;
-        margin-bottom: 16px;
+        color: var(--apple-near-black);
+        margin-bottom: 12px;
     }
     
     .create-subtitle {
-        font-family: 'SF Pro Text', -apple-system, sans-serif;
-        font-size: 17px;
+        font-size: 19px;
         line-height: 1.47;
-        letter-spacing: -0.374px;
-        color: rgba(0, 0, 0, 0.8);
+        letter-spacing: -0.022em;
+        color: #86868b;
         max-width: 600px;
-        margin: 0 auto;
     }
 
+    /* Selection Cards (The 'Enjoyable' Part) */
+    .selection-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .selection-card {
+        background: var(--apple-gray);
+        border: 2px solid transparent;
+        border-radius: 18px;
+        padding: 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .selection-card:hover {
+        background: #ededf2;
+        transform: translateY(-2px);
+    }
+
+    .selection-card.active {
+        background: #ffffff;
+        border-color: var(--apple-blue);
+        box-shadow: 0 8px 24px rgba(0, 113, 227, 0.15);
+    }
+
+    .selection-card svg {
+        width: 32px;
+        height: 32px;
+        color: #86868b;
+        transition: color 0.3s;
+    }
+
+    .selection-card.active svg {
+        color: var(--apple-blue);
+    }
+
+    .selection-card span {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--apple-near-black);
+    }
+
+    /* Form Layout */
     .form-card {
         background: #ffffff;
-        border-radius: 12px;
-        padding: 60px;
-        box-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px; /* Signature soft shadow */
+        padding: 0;
         border: none;
-        margin-bottom: 40px;
+        box-shadow: none;
     }
 
     .form-section-title {
-        font-family: 'SF Pro Display', -apple-system, sans-serif;
-        font-size: 28px;
-        font-weight: 400;
-        line-height: 1.14;
-        letter-spacing: 0.196px;
-        color: #1d1d1f;
-        margin-bottom: 40px;
-        border: none;
-        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--apple-near-black);
+        margin-bottom: 24px;
     }
 
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 24px;
-    }
-    .form-grid-3 {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 24px;
+        gap: 20px;
+        margin-bottom: 32px;
     }
 
-    @media(max-width: 768px) {
-        .form-grid { grid-template-columns: 1fr; }
-        .form-card { padding: 32px 24px; }
-        .create-title { font-size: 36px; }
-        .create-page-bg { padding-top: 48px; padding-bottom: 80px; }
-        .create-header { margin-bottom: 40px; }
-        .step-actions { flex-direction: column-reverse; gap: 12px; align-items: stretch; }
-        .step-actions button, .step-actions .btn-ghost { width: 100%; text-align: center; }
-        .checkbox-group { gap: 16px; }
-    }
-
-    @media(max-width: 480px) {
-        .create-title { font-size: 28px; letter-spacing: -0.02em; }
-        .create-subtitle { font-size: 15px; }
-        .form-card { padding: 24px 16px; border-radius: 16px; }
-        .form-section-title { font-size: 22px; margin-bottom: 24px; }
-        .create-container { padding: 0 16px; }
-        .create-page-bg { padding-top: 32px; padding-bottom: 64px; }
-        .file-upload-box { padding: 40px 16px; }
-        .step-progress-container { margin-bottom: 28px; }
-        .preview-img { width: 90px; height: 90px; }
-    }
-
-    .form-group {
-        margin-bottom: 24px;
-    }
-    
-    .form-group.full-width {
-        grid-column: 1 / -1;
-    }
+    .form-group { margin-bottom: 0; }
+    .full-width { grid-column: 1 / -1; }
 
     .form-label {
-        display: block;
-        font-family: 'SF Pro Text', -apple-system, sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: -0.224px;
-        color: #1d1d1f;
-        margin-bottom: 10px;
-    }
-
-    .form-input, .form-select, .form-textarea {
-        width: 100%;
-        padding: 16px 20px;
-        font-family: 'SF Pro Text', -apple-system, sans-serif;
-        font-size: 17px;
-        color: #1d1d1f;
-        background-color: #f5f5f7;
-        border: none;
-        border-radius: 8px;
-        transition: box-shadow 0.2s ease;
-        box-sizing: border-box;
-    }
-    
-    .form-textarea {
-        resize: none;
-    }
-
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-        outline: none;
-        background-color: #ffffff;
-        box-shadow: 0 0 0 2px #0071e3;
-    }
-
-    .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: #0071e3;
-        color: #ffffff;
-        padding: 12px 24px;
-        border-radius: 980px;
-        font-family: 'SF Pro Text', -apple-system, sans-serif;
-        font-size: 17px;
-        font-weight: 400;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.2s;
-    }
-    .btn-primary:hover {
-        background: #0077ED;
-    }
-    .btn-primary:active {
-        background: #ededf2;
-        color: #1d1d1f;
-    }
-    .btn-primary:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .btn-intelligence {
-        background: linear-gradient(135deg, #0071e3 0%, #2997ff 100%);
-        color: white;
-        box-shadow: rgba(0, 113, 227, 0.3) 0px 4px 14px 0px;
-    }
-    .btn-intelligence:hover {
-        background: linear-gradient(135deg, #0077ED 0%, #30A0FF 100%);
-    }
-
-    .file-upload-box {
-        border-radius: 12px;
-        padding: 60px 20px;
-        text-align: center;
-        background: #f5f5f7;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .file-upload-box:hover {
-        background: #ededf2;
-    }
-    
-    #preview-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin-top: 24px;
-        justify-content: center;
-    }
-    .preview-img {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 8px;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-    }
-
-    .ai-result-box {
-        background: #f5f5f7;
-        border-radius: 12px;
-        padding: 30px;
-        margin-bottom: 40px;
-        text-align: left;
-    }
-    
-    .ai-rec-item {
-        margin-bottom: 16px;
-    }
-    .ai-rec-item:last-child {
-        margin-bottom: 0;
-    }
-    .ai-badge {
-        font-family: 'SF Pro Text', sans-serif;
         font-size: 12px;
         font-weight: 600;
+        color: #86868b;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        margin-right: 8px;
-    }
-    .badge-alta { color: #ff3b30; }
-    .badge-media { color: #ff9500; }
-    .badge-baja { color: #0071e3; }
-
-    .checkbox-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 24px;
-    }
-    .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-family: 'SF Pro Text', -apple-system, sans-serif;
-        font-size: 17px;
-        cursor: pointer;
-        color: #1d1d1f;
-    }
-    .checkbox-label input {
-        width: 20px;
-        height: 20px;
-        accent-color: #0071e3;
-    }
-    
-    /* GLOBAL FONTS - APPLE SYSTEM ENFORCED */
-    * {
-        font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-    
-    h1, h2, h3, h4, h5, h6, .create-title, .form-section-title, .btn-primary, .btn-intelligence, .ai-result-box h4 {
-        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-    }
-
-    /* MULTI-STEP SLIDES UI */
-    .form-step {
-        display: none;
-    }
-    .form-step.active {
+        margin-bottom: 8px;
         display: block;
-        animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes slideUpFade {
-        0% { opacity: 0; transform: translateY(30px); }
-        100% { opacity: 1; transform: translateY(0); }
     }
 
-    .step-progress-container {
+    .form-input, .form-textarea {
+        background: var(--apple-gray);
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-size: 17px;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+        width: 100%;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+        background: #ffffff;
+        border-color: var(--apple-blue);
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+    }
+
+    /* Steps Progress Bar */
+    .steps-nav {
         display: flex;
-        justify-content: center;
+        gap: 8px;
+        margin-bottom: 48px;
+    }
+
+    .step-indicator {
+        flex: 1;
+        height: 4px;
+        background: var(--apple-gray);
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .step-indicator::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0;
+        background: var(--apple-blue);
+        transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .step-indicator.active::after { width: 100%; }
+    .step-indicator.completed::after { width: 100%; }
+
+    /* Sticky Preview */
+    .preview-sticky {
+        position: sticky;
+        top: 100px;
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 32px;
+        border: 1px solid #e5e5ea;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+    }
+
+    .preview-tag {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--apple-blue);
+        text-transform: uppercase;
+        margin-bottom: 24px;
+        display: block;
+    }
+
+    .preview-card-mock {
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--apple-gray);
+    }
+
+    .preview-img-placeholder {
+        width: 100%;
+        aspect-ratio: 4/3;
+        background: #e5e5ea;
+        display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 40px;
+        justify-content: center;
+        color: #86868b;
     }
-    .step-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #d2d2d7;
-        transition: background 0.4s ease, transform 0.4s ease;
+
+    .preview-content {
+        padding: 20px;
     }
-    .step-dot.active {
-        background: #0071e3;
-        transform: scale(1.3);
+
+    .preview-title {
+        font-size: 19px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        min-height: 1.2em;
     }
-    .step-dot.completed {
-        background: #0071e3;
+
+    .preview-price {
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--apple-near-black);
+    }
+
+    /* Multi-step slides */
+    .form-step { display: none; }
+    .form-step.active { display: block; animation: appleSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    @keyframes appleSlideIn {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
     }
 
     .step-actions {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-top: 40px;
-        border-top: 1px solid #e5e5ea;
-        padding-top: 30px;
+        margin-top: 48px;
     }
-    
-    .btn-ghost {
-        background: transparent;
-        color: #1d1d1f;
-        border: none;
-        font-family: 'SF Pro Text', -apple-system, sans-serif;
+
+    .btn-apple {
         font-size: 17px;
-        font-weight: 400;
+        font-weight: 500;
+        padding: 14px 28px;
+        border-radius: 980px;
+        transition: all 0.3s;
         cursor: pointer;
-        padding: 12px 24px;
-        transition: color 0.2s;
+        border: none;
     }
-    .btn-ghost:hover {
-        color: #0071e3;
+
+    .btn-apple-primary {
+        background: var(--apple-blue);
+        color: #ffffff;
     }
+
+    .btn-apple-primary:hover { transform: scale(1.02); background: #0077ED; }
+    .btn-apple-secondary { background: var(--apple-gray); color: var(--apple-near-black); }
+    .btn-apple-secondary:hover { background: #e5e5ea; }
+
+    /* Custom Checkbox Pills */
+    .extra-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .extra-pill {
+        cursor: pointer;
+    }
+
+    .extra-pill input { display: none; }
+
+    .extra-pill span {
+        display: inline-block;
+        padding: 10px 20px;
+        background: var(--apple-gray);
+        border-radius: 980px;
+        font-size: 15px;
+        color: var(--apple-near-black);
+        transition: all 0.2s;
+    }
+
+    .extra-pill input:checked + span {
+        background: var(--apple-near-black);
+        color: #ffffff;
+    }
+
 </style>
 @endpush
 
@@ -323,250 +313,225 @@
     <div class="create-container">
         
         <div class="create-header">
-            <h1 class="create-title">Publica tu inmueble</h1>
-            <p class="create-subtitle">Sube tus fotos, añade los detalles y pon tu propiedad a la vista de miles de compradores y arrendatarios en IberPiso.</p>
+            <h1 class="create-title">Vende o alquila tu propiedad.</h1>
+            <p class="create-subtitle">Un proceso sencillo, minimalista e impulsado por inteligencia artificial.</p>
         </div>
 
-        @if ($errors->any())
-            <div style="background: #ffefef; border: 1px solid #ff3b30; color: #ff3b30; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <ul style="margin: 0; padding-left: 20px;">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="{{ route('user.properties.store') }}" method="POST" enctype="multipart/form-data" id="property-form">
-            @csrf
-            
-            <div class="step-progress-container" id="progress-indicator">
-                <div class="step-dot active" id="dot-1"></div>
-                <div class="step-dot" id="dot-2"></div>
-                <div class="step-dot" id="dot-3"></div>
-                <div class="step-dot" id="dot-4"></div>
+        <div class="form-area">
+            <div class="steps-nav">
+                <div class="step-indicator active" id="dot-1"></div>
+                <div class="step-indicator" id="dot-2"></div>
+                <div class="step-indicator" id="dot-3"></div>
+                <div class="step-indicator" id="dot-4"></div>
             </div>
 
-            {{-- STEP 1: DETALLES PRINCIPALES --}}
-            <div class="form-step active" id="step-1">
-                <div class="form-card" style="position: relative;">
-                    <h2 class="form-section-title">Detalles Principales</h2>
+            <form action="{{ route('user.properties.store') }}" method="POST" enctype="multipart/form-data" id="property-form">
+                @csrf
+                
+                {{-- STEP 1: TIPO Y PRECIO --}}
+                <div class="form-step active" id="step-1">
+                    <h2 class="form-section-title">¿Qué quieres publicar?</h2>
+                    
+                    <label class="form-label">Tipo de operación</label>
+                    <div class="selection-grid">
+                        <div class="selection-card" onclick="selectOption('tipo_operacion', 'venta', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            <span>Venta</span>
+                        </div>
+                        <div class="selection-card" onclick="selectOption('tipo_operacion', 'alquiler', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10V4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6h18zM3 10v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10H3z"/></svg>
+                            <span>Alquiler</span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="tipo_operacion" id="input-tipo_operacion" required>
+
+                    <label class="form-label">Tipo de inmueble</label>
+                    <div class="selection-grid">
+                        <div class="selection-card" onclick="selectOption('tipo_propiedad', 'piso', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7h18M3 3h18M3 11h18M3 15h18M3 19h18M3 3v18M21 3v18"/></svg>
+                            <span>Piso</span>
+                        </div>
+                        <div class="selection-card" onclick="selectOption('tipo_propiedad', 'casa', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                            <span>Casa</span>
+                        </div>
+                        <div class="selection-card" onclick="selectOption('tipo_propiedad', 'chalet', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 12h3v8h14v-8h3L12 3z"/></svg>
+                            <span>Chalet</span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="tipo_propiedad" id="input-tipo_propiedad" required>
+
                     <div class="form-grid">
                         <div class="form-group">
-                            <label class="form-label">Operación *</label>
-                            <select name="operation_type" class="form-select" required>
-                                <option value="">Selecciona...</option>
-                                <option value="venta" {{ old('operation_type') == 'venta' ? 'selected' : '' }}>Venta</option>
-                                <option value="alquiler" {{ old('operation_type') == 'alquiler' ? 'selected' : '' }}>Alquiler</option>
-                            </select>
+                            <label class="form-label">Precio (€)</label>
+                            <input type="number" name="precio" id="input-precio" class="form-input" placeholder="0" required oninput="updatePreview()">
                         </div>
-                        
                         <div class="form-group">
-                            <label class="form-label">Tipo de Inmueble *</label>
-                            <select name="property_type" class="form-select" required>
-                                <option value="">Selecciona...</option>
-                                <option value="piso" {{ old('property_type') == 'piso' ? 'selected' : '' }}>Piso</option>
-                                <option value="chalet" {{ old('property_type') == 'chalet' ? 'selected' : '' }}>Chalet</option>
-                                <option value="duplex" {{ old('property_type') == 'duplex' ? 'selected' : '' }}>Dúplex</option>
-                                <option value="atico" {{ old('property_type') == 'atico' ? 'selected' : '' }}>Ático</option>
-                                <option value="estudio" {{ old('property_type') == 'estudio' ? 'selected' : '' }}>Estudio</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Precio (€) *</label>
-                            <input type="number" name="price" class="form-input" value="{{ old('price') }}" required min="0" step="0.01" placeholder="Ej: 250000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Superficie (m²) *</label>
-                            <input type="number" name="surface_m2" class="form-input" value="{{ old('surface_m2') }}" required min="0" placeholder="Ej: 95">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Habitaciones *</label>
-                            <input type="number" name="rooms" class="form-input" value="{{ old('rooms') }}" required min="0" placeholder="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Baños *</label>
-                            <input type="number" name="bathrooms" class="form-input" value="{{ old('bathrooms') }}" required min="0" placeholder="0">
-                        </div>
-                    </div>
-                    
-                    <div class="step-actions" style="justify-content: flex-end;">
-                        <button type="button" class="btn-primary" onclick="goToStep(2)">Continuar</button>
-                    </div>
-                </div>
-            </div>
-
-            {{-- STEP 2: UBICACIÓN Y EXTRAS --}}
-            <div class="form-step" id="step-2">
-                <div class="form-card" style="position: relative;">
-                    <h2 class="form-section-title">Ubicación y Extras</h2>
-                    <div class="form-grid" style="margin-bottom: 30px;">
-                        <div class="form-group full-width">
-                            <label class="form-label">Dirección Completa *</label>
-                            <input type="text" name="address" class="form-input" value="{{ old('address') }}" required placeholder="Calle...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Ciudad *</label>
-                            <input type="text" name="city" class="form-input" value="{{ old('city') }}" required>
-                        </div>
-                        
-                        @php
-                            $provinces = ["Álava","Albacete","Alicante","Almería","Asturias","Ávila","Badajoz","Baleares","Barcelona","Burgos","Cáceres","Cádiz","Cantabria","Castellón","Ciudad Real","Córdoba","Cuenca","Gerona","Granada","Guadalajara","Guipúzcoa","Huelva","Huesca","Jaén","La Coruña","La Rioja","Las Palmas","León","Lérida","Lugo","Madrid","Málaga","Murcia","Navarra","Orense","Palencia","Pontevedra","Salamanca","Santa Cruz de Tenerife","Segovia","Sevilla","Soria","Tarragona","Teruel","Toledo","Valencia","Valladolid","Vizcaya","Zamora","Zaragoza"];
-                        @endphp
-                        <div class="form-group">
-                            <label class="form-label">Provincia *</label>
-                            <select name="province" class="form-select" required>
-                                <option value="">Seleccionar</option>
-                                @foreach($provinces as $prov)
-                                    <option value="{{ $prov }}" {{ old('province') == $prov ? 'selected' : '' }}>{{ $prov }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Código Postal *</label>
-                            <input type="text" name="postal_code" class="form-input" value="{{ old('postal_code') }}" required pattern="[0-9]{5}" maxlength="5" placeholder="00000">
+                            <label class="form-label">Superficie (m²)</label>
+                            <input type="number" name="superficie_m2" class="form-input" placeholder="0" required>
                         </div>
                     </div>
 
-                    <h3 style="font-size:20px; margin-bottom: 16px; color:#1d1d1f; font-weight: 600;">Características Extra</h3>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="ascensor" value="1" {{ old('ascensor') ? 'checked' : '' }}>
-                            Ascensor
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="piscina" value="1" {{ old('piscina') ? 'checked' : '' }}>
-                            Piscina
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="garaje" value="1" {{ old('garaje') ? 'checked' : '' }}>
-                            Garaje
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="trastero" value="1" {{ old('trastero') ? 'checked' : '' }}>
-                            Trastero
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="jardin" value="1" {{ old('jardin') ? 'checked' : '' }}>
-                            Jardín
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="terraza" value="1" {{ old('terraza') ? 'checked' : '' }}>
-                            Terraza
-                        </label>
-                    </div>
-                    
                     <div class="step-actions">
-                        <button type="button" class="btn-ghost" onclick="goToStep(1)">Atrás</button>
-                        <button type="button" class="btn-primary" onclick="goToStep(3)">Continuar</button>
+                        <div></div>
+                        <button type="button" class="btn-apple btn-apple-primary" onclick="goToStep(2)">Continuar</button>
                     </div>
                 </div>
-            </div>
 
-            {{-- STEP 3: IMÁGENES --}}
-            <div class="form-step" id="step-3">
-                <div class="form-card" style="position: relative;">
-                    <h2 class="form-section-title">Fotografías del Inmueble</h2>
-                    <p style="font-family: 'SF Pro Text'; font-size: 15px; color: rgba(0,0,0,0.6); margin-bottom: 20px;">
-                        Sube imágenes de buena calidad. La primera imagen será usada para nuestra Inteligencia Artificial en el siguiente paso.
-                    </p>
-                    <label for="images-input" class="file-upload-box" style="display: block;">
-                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#0071e3" stroke-width="1.5" style="margin-bottom: 16px;">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                            <polyline points="21 15 16 10 5 21"/>
-                        </svg>
-                        <div style="font-family: 'SF Pro Text'; font-size: 17px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px;">Haz clic aquí para seleccionar fotos</div>
-                        <div style="font-family: 'SF Pro Text'; font-size: 14px; color: #86868b;">JPG, PNG. Máximo 5MB por foto.</div>
+                {{-- STEP 2: CARACTERÍSTICAS --}}
+                <div class="form-step" id="step-2">
+                    <h2 class="form-section-title">Habitaciones y Extras</h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Habitaciones</label>
+                            <input type="number" name="habitaciones" class="form-input" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Baños</label>
+                            <input type="number" name="banos" class="form-input" placeholder="0" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Ubicación (Ciudad)</label>
+                            <input type="text" name="ciudad" id="input-ciudad" class="form-input" placeholder="Madrid, Barcelona..." required oninput="updatePreview()">
+                        </div>
+                    </div>
+
+                    <label class="form-label">Características adicionales</label>
+                    <div class="extra-pills">
+                        <label class="extra-pill"><input type="checkbox" name="tiene_ascensor"><span>Ascensor</span></label>
+                        <label class="extra-pill"><input type="checkbox" name="tiene_parking"><span>Garaje</span></label>
+                        <label class="extra-pill"><input type="checkbox" name="tiene_terraza"><span>Terraza</span></label>
+                        <label class="extra-pill"><input type="checkbox" name="tiene_piscina"><span>Piscina</span></label>
+                        <label class="extra-pill"><input type="checkbox" name="aire_acondicionado"><span>Aire Acond.</span></label>
+                    </div>
+
+                    <div class="form-group full-width" style="margin-top: 32px;">
+                        <label class="form-label">Certificado Energético (PDF)</label>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="file" name="certificado_energetico_archivo" id="cert-input" accept="application/pdf" style="display: none;">
+                            <button type="button" class="btn-apple btn-apple-secondary" onclick="document.getElementById('cert-input').click()" id="btn-cert">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                Adjuntar certificado
+                            </button>
+                            <span id="cert-filename" style="font-size: 14px; color: #86868b;">Ningún archivo seleccionado</span>
+                        </div>
+                        <p style="font-size: 13px; color: #86868b; margin-top: 8px;">Sube el documento oficial en formato PDF para que los compradores puedan descargarlo.</p>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn-apple btn-apple-secondary" onclick="goToStep(1)">Atrás</button>
+                        <button type="button" class="btn-apple btn-apple-primary" onclick="goToStep(3)">Continuar</button>
+                    </div>
+                </div>
+
+                {{-- STEP 3: IMÁGENES --}}
+                <div class="form-step" id="step-3">
+                    <h2 class="form-section-title">Fotos del inmueble</h2>
+                    <p style="color: #86868b; margin-bottom: 24px;">Sube al menos una foto para que nuestra IA pueda analizar el espacio.</p>
+                    
+                    <div class="file-upload-area" style="border: 2px dashed #d2d2d7; border-radius: 20px; padding: 60px; text-align: center;">
                         <input type="file" name="images[]" id="images-input" multiple accept="image/*" style="display: none;">
-                    </label>
-                    
-                    @error('images.*')
-                        <div class="error-msg">{{ $message }}</div>
-                    @enderror
+                        <button type="button" class="btn-apple btn-apple-secondary" onclick="document.getElementById('images-input').click()">Seleccionar archivos</button>
+                        <div id="preview-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; margin-top: 32px;"></div>
+                    </div>
 
-                    <div id="preview-container"></div>
-                    
                     <div class="step-actions">
-                        <button type="button" class="btn-ghost" onclick="goToStep(2)">Atrás</button>
-                        <button type="button" class="btn-primary" onclick="goToStep(4)">Continuar</button>
+                        <button type="button" class="btn-apple btn-apple-secondary" onclick="goToStep(2)">Atrás</button>
+                        <button type="button" class="btn-apple btn-apple-primary" onclick="goToStep(4)">Continuar</button>
                     </div>
                 </div>
-            </div>
 
-            {{-- STEP 4: TÍTULO Y DESCRIPCIÓN CON IA --}}
-            <div class="form-step" id="step-4">
-                <div class="form-card" style="position: relative; text-align: center; overflow: hidden; min-height: 500px;">
+                {{-- STEP 4: IA Y DESCRIPCIÓN --}}
+                <div class="form-step" id="step-4">
+                    <h2 class="form-section-title">Título y Descripción</h2>
                     
-                    <h2 class="form-section-title">Presentación Inmobiliaria</h2>
-                    <p style="font-size: 17px; color: rgba(0,0,0,0.8); margin: 0 auto 40px; max-width: 600px;">
-                        Escribe el texto comercial para tu anuncio. Si ya has subido fotos, usa la Inteligencia Artificial para redactar un texto persuasivo de nivel experto.
-                    </p>
-                    
-                    <div style="margin-bottom: 40px;" id="ai-actions">
-                        <button type="button" class="btn-primary btn-intelligence" id="btn-analyze-ai" style="gap: 8px;">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                            <span>Autocompletar con Inteligencia Artificial</span>
-                        </button>
-                    </div>
-
-                    <div id="ai-result-box" class="ai-result-box" style="display: none;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#0071e3" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                            <h4 style="font-size:21px; font-weight:600; margin:0; color:#1d1d1f;">Auditoría Fotográfica</h4>
+                    <div style="background: var(--apple-near-black); color: white; padding: 24px; border-radius: 20px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px;">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">IberIA Magic</div>
+                                <div style="font-size: 13px; opacity: 0.7;">Redacción automática profesional</div>
+                            </div>
                         </div>
-                        <div id="ai-recommendations">
-                            <!-- Dynamic content here -->
-                        </div>
+                        <button type="button" class="btn-apple" id="btn-analyze-ai" style="background: white; color: black; font-size: 14px; font-weight: 600;">Generar ahora</button>
                     </div>
 
-                    <div style="text-align: left;">
-                        <div class="form-group full-width">
-                            <label class="form-label">Título Comercial *</label>
-                            <input type="text" name="title" id="input-title" class="form-input" value="{{ old('title') }}" required placeholder="Ej: Espectacular piso céntrico...">
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label class="form-label">Descripción Persuasiva *</label>
-                            <textarea name="description" id="input-description" class="form-textarea" rows="8" required minlength="100" placeholder="Describe los beneficios, el estilo de vida y las sensaciones..."></textarea>
-                        </div>
+                    <div class="form-group full-width" style="margin-bottom: 24px;">
+                        <label class="form-label">Título comercial</label>
+                        <input type="text" name="titulo" id="input-title" class="form-input" placeholder="Ej: Ático de lujo en el centro" required oninput="updatePreview()">
                     </div>
-                    
-                    <div class="step-actions" style="margin-top: 60px;">
-                        <button type="button" class="btn-ghost" onclick="goToStep(3)">Atrás</button>
-                        <button type="submit" class="btn-primary" id="btn-submit" style="font-weight: 600;">Publicar Inmueble</button>
+                    <div class="form-group full-width">
+                        <label class="form-label">Descripción</label>
+                        <textarea name="descripcion" id="input-description" class="form-textarea" rows="6" placeholder="Cuéntanos más sobre la propiedad..." required></textarea>
                     </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn-apple btn-apple-secondary" onclick="goToStep(3)">Atrás</button>
+                        <button type="submit" class="btn-apple btn-apple-primary" id="btn-submit">Publicar anuncio</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {{-- PREVIEW SIDEBAR --}}
+        <div class="preview-sticky">
+            <span class="preview-tag">Vista previa en tiempo real</span>
+            <div class="preview-card-mock">
+                <div class="preview-img-placeholder" id="preview-image-box">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </div>
+                <div class="preview-content">
+                    <div class="preview-title" id="preview-title-text">Título de tu anuncio</div>
+                    <div style="font-size: 14px; color: #86868b; margin-bottom: 12px;" id="preview-location-text">Ubicación</div>
+                    <div class="preview-price" id="preview-price-text">0 €</div>
                 </div>
             </div>
             
-        </form>
-    </div>
-</div>
-
-<!-- Lottie Global Overlay (Fixed to Viewport, Unaffected by Layout Shifts) -->
-<div id="ai-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.85); backdrop-filter: blur(40px) saturate(150%); -webkit-backdrop-filter: blur(40px) saturate(150%); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); display: flex;">
-    
-    <div id="ai-loading-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; transform: scale(0.85); transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-        <!-- Lottie Element Provided by User -->
-        <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 300px; height: 300px;" autoplay loop worker="true"></dotlottie-wc>
-        
-        <div style="text-align: center; margin-top: 10px;">
-            <h3 id="ai-loading-text" style="font-family: 'SF Pro Display', sans-serif; font-size: 32px; font-weight: 700; color: #1d1d1f; margin: 0; letter-spacing: -0.03em; transition: opacity 0.3s ease;">Analizando imágenes...</h3>
-            <p id="ai-loading-subtext" style="font-family: 'SF Pro Text', sans-serif; font-size: 19px; color: #86868b; margin: 12px 0 0; font-weight: 400; transition: opacity 0.3s ease;">Nuestra IA está redactando el anuncio perfecto</p>
+            <div style="margin-top: 32px; border-top: 1px solid #e5e5ea; padding-top: 32px;">
+                <p style="font-size: 13px; color: #86868b; line-height: 1.5;">Tu anuncio se publicará al instante tras la revisión de seguridad.</p>
+            </div>
         </div>
+
     </div>
 </div>
 
+<div id="ai-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.5s;">
+    <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 200px; height: 200px;" autoplay loop></dotlottie-wc>
+    <h3 style="margin-top: 20px; font-weight: 600;" id="ai-loading-text">Analizando tu propiedad...</h3>
+    <p style="font-size: 19px; color: #86868b; margin: 12px 0 0; font-weight: 400;">Redactando el anuncio perfecto</p>
+</div>
 @endsection
 
 @push('scripts')
 <script>
+    // --- SELECTION LOGIC ---
+    function selectOption(field, value, element) {
+        document.getElementById('input-' + field).value = value;
+        
+        // Update UI
+        const grid = element.parentElement;
+        grid.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
+        element.classList.add('active');
+        
+        updatePreview();
+    }
+
+    // --- PREVIEW LOGIC ---
+    function updatePreview() {
+        const title = document.getElementById('input-title').value || 'Título de tu anuncio';
+        const price = document.getElementById('input-precio').value || '0';
+        const city = document.getElementById('input-ciudad').value || 'Ubicación';
+        const operacion = document.getElementById('input-tipo_operacion').value;
+        
+        document.getElementById('preview-title-text').innerText = title;
+        document.getElementById('preview-price-text').innerText = price + ' €' + (operacion === 'alquiler' ? '/mes' : '');
+        document.getElementById('preview-location-text').innerText = city;
+    }
+
     // --- MULTI-STEP LOGIC ---
     let currentStepIndex = 1;
     const totalSteps = 4;
@@ -575,6 +540,8 @@
         if (step > currentStepIndex) {
             // Validate current step before moving forward
             const currentStepEl = document.getElementById('step-' + currentStepIndex);
+            
+            // Check required inputs
             const inputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
             let valid = true;
             
@@ -588,204 +555,102 @@
             if (!valid) return;
         }
         
-        // Hide all
+        // Update Steps Nav
         for(let i=1; i<=totalSteps; i++) {
-            document.getElementById('step-' + i).classList.remove('active');
-            
-            const dot = document.getElementById('dot-' + i);
-            dot.classList.remove('active');
-            if (i < step) {
-                dot.classList.add('completed');
-            } else {
-                dot.classList.remove('completed');
-            }
+            const indicator = document.getElementById('dot-' + i);
+            indicator.classList.remove('active', 'completed');
+            if (i === step) indicator.classList.add('active');
+            else if (i < step) indicator.classList.add('completed');
         }
         
-        // Show target
+        // Show target step
+        document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
         document.getElementById('step-' + step).classList.add('active');
-        document.getElementById('dot-' + step).classList.add('active');
-        
-        // Scroll slightly to keep header visible without harsh jumps
-        const formCard = document.querySelector('#step-' + step + ' .form-card');
-        if (formCard) {
-            formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
         
         currentStepIndex = step;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // --- IMAGES & AI LOGIC ---
+    // --- IMAGES LOGIC ---
     const imageInput = document.getElementById('images-input');
     const previewContainer = document.getElementById('preview-container');
-    const btnAnalyzeAi = document.getElementById('btn-analyze-ai');
+    const previewImageBox = document.getElementById('preview-image-box');
     
-    // Preview images
     imageInput.addEventListener('change', function() {
         previewContainer.innerHTML = '';
         if (this.files && this.files.length > 0) {
+            const file = this.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImageBox.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+            reader.readAsDataURL(file);
+
             Array.from(this.files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.classList.add('preview-img');
-                    previewContainer.appendChild(img);
+                const r = new FileReader();
+                r.onload = function(e) {
+                    previewContainer.innerHTML += `<img src="${e.target.result}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px;">`;
                 }
-                reader.readAsDataURL(file);
+                r.readAsDataURL(file);
             });
         }
     });
 
-    // Analyze with Mistral AI
+    // --- CERTIFICATE LOGIC ---
+    document.getElementById('cert-input').addEventListener('change', function() {
+        const filename = this.files.length > 0 ? this.files[0].name : 'Ningún archivo seleccionado';
+        document.getElementById('cert-filename').innerText = filename;
+        if (this.files.length > 0) {
+            document.getElementById('btn-cert').style.borderColor = 'var(--apple-blue)';
+            document.getElementById('btn-cert').style.color = 'var(--apple-blue)';
+        }
+    });
+
+    // --- AI LOGIC ---
+    const btnAnalyzeAi = document.getElementById('btn-analyze-ai');
     btnAnalyzeAi.addEventListener('click', async function() {
         if (!imageInput.files || imageInput.files.length === 0) {
-            alert('Por favor, sube al menos una imagen en el paso 3 para poder analizarla.');
+            alert('Sube al menos una foto en el paso anterior.');
             return;
         }
         
-        // We send the first image for analysis
-        const file = imageInput.files[0];
-        const formData = new FormData();
-        formData.append('image', file);
-        
-        const originalText = this.querySelector('span').innerText;
-        
         const overlay = document.getElementById('ai-loading-overlay');
-        const loadingContent = document.getElementById('ai-loading-content');
-        const loadingText = document.getElementById('ai-loading-text');
-        const loadingSubtext = document.getElementById('ai-loading-subtext');
-        
-        // Helper to update text with a small fade
-        const updateLoadingText = (title, sub) => {
-            loadingText.style.opacity = 0;
-            loadingSubtext.style.opacity = 0;
-            setTimeout(() => {
-                loadingText.innerText = title;
-                loadingSubtext.innerText = sub;
-                loadingText.style.opacity = 1;
-                loadingSubtext.style.opacity = 1;
-            }, 300);
-        };
-
-        // Show overlay with animation
         overlay.style.opacity = 1;
         overlay.style.pointerEvents = 'all';
-        loadingContent.style.transform = 'scale(1)';
         
-        loadingText.innerText = 'Analizando imágenes...';
-        loadingSubtext.innerText = 'Nuestra IA está redactando el anuncio perfecto';
-        loadingText.style.opacity = 1;
-        loadingSubtext.style.opacity = 1;
-        
-        // Fake progress states for better UX
-        const stateTimer1 = setTimeout(() => {
-            updateLoadingText('Redactando descripción...', 'Extrayendo puntos clave y beneficios');
-        }, 3000);
-        
-        const stateTimer2 = setTimeout(() => {
-            updateLoadingText('Optimizando título...', 'Aplicando técnicas de copywriting inmobiliario');
-        }, 6000);
-        
-        const resultBox = document.getElementById('ai-result-box');
-        const recommendationsBox = document.getElementById('ai-recommendations');
+        const formData = new FormData();
+        formData.append('image', imageInput.files[0]);
         
         try {
             const response = await fetch('{{ route("ai.analyzeImage") }}', {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
             });
             
             const data = await response.json();
-            
-            function extractText(obj) {
-                if (typeof obj === 'string') return obj;
-                if (Array.isArray(obj)) return obj.map(extractText).join('\\n');
-                if (typeof obj === 'object' && obj !== null) {
-                    return Object.values(obj).map(extractText).join('\\n\\n');
-                }
-                return String(obj);
-            }
-            
             if (response.ok) {
-                if (data.title) {
-                    document.getElementById('input-title').value = extractText(data.title).replace(/\\n/g, ' ');
-                }
-                if (data.description) {
-                    document.getElementById('input-description').value = extractText(data.description);
-                }
-                
-                // Render structured recommendations
-                if (data.recommendations) {
-                    recommendationsBox.innerHTML = '';
-                    
-                    let recs = data.recommendations;
-                    if (typeof recs === 'string') {
-                        recommendationsBox.innerHTML = '<div class="ai-rec-item"><p style="margin:0; font-family:\'SF Pro Text\'; font-size:17px; color:#1d1d1f; line-height: 1.47;">' + recs + '</p></div>';
-                    } else if (Array.isArray(recs)) {
-                        recs.forEach(rec => {
-                            if (typeof rec === 'object' && rec.text) {
-                                let badgeClass = 'badge-baja';
-                                let prioLabel = rec.priority || 'Sugerencia';
-                                if (prioLabel.toLowerCase().includes('alta')) badgeClass = 'badge-alta';
-                                else if (prioLabel.toLowerCase().includes('media')) badgeClass = 'badge-media';
-                                
-                                recommendationsBox.innerHTML += `
-                                    <div class="ai-rec-item">
-                                        <p style="margin:0; font-family:'SF Pro Text'; font-size:17px; line-height:1.47; color:#1d1d1f;">
-                                            <span class="ai-badge ${badgeClass}">[${prioLabel}]</span> ${rec.text}
-                                        </p>
-                                    </div>
-                                `;
-                            } else {
-                                recommendationsBox.innerHTML += `
-                                    <div class="ai-rec-item">
-                                        <p style="margin:0; font-family:'SF Pro Text'; font-size:17px; line-height:1.47; color:#1d1d1f;">${extractText(rec)}</p>
-                                    </div>
-                                `;
-                            }
-                        });
-                    }
-                    resultBox.style.display = 'block';
-                }
-                
-                // Show completion state in overlay before hiding
-                clearTimeout(stateTimer1);
-                clearTimeout(stateTimer2);
-                updateLoadingText('¡Anuncio Completado!', 'Revisa los textos y recomendaciones generadas');
-                
-                setTimeout(() => {
-                    overlay.style.opacity = 0;
-                    overlay.style.pointerEvents = 'none';
-                    loadingContent.style.transform = 'scale(0.9)';
-                    setTimeout(() => { this.disabled = false; }, 500);
-                }, 2000);
-                
+                document.getElementById('input-title').value = data.title;
+                document.getElementById('input-description').value = data.description;
+                updatePreview();
             } else {
-                clearTimeout(stateTimer1);
-                clearTimeout(stateTimer2);
-                overlay.style.opacity = 0;
-                overlay.style.pointerEvents = 'none';
-                alert('Error de IA: ' + (data.error || 'Error desconocido'));
-                this.disabled = false;
+                alert('Error al conectar con la IA');
             }
-        } catch (error) {
-            console.error(error);
-            clearTimeout(stateTimer1);
-            clearTimeout(stateTimer2);
+        } catch (e) {
+            alert('Error de red');
+        } finally {
             overlay.style.opacity = 0;
             overlay.style.pointerEvents = 'none';
-            alert('Hubo un error contactando con la IA.');
-            this.disabled = false;
         }
     });
+
     // Submit form protection
     document.getElementById('property-form').addEventListener('submit', function() {
         document.getElementById('btn-submit').innerText = 'Publicando...';
         document.getElementById('btn-submit').disabled = true;
     });
-</script>
 
+    // --- INITIALIZATION ---
+    updatePreview();
+</script>
 @endpush

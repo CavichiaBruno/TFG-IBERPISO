@@ -1,4 +1,4 @@
-/* ─── IberPiso — Listing Page (Apple-Inspired) ──────────────────────────── */
+/* ─── IberPiso — Página de Listado (Inspirado en Apple) ──────────────────────────── */
 
 .listing-layout {
   display: flex;
@@ -16,7 +16,7 @@
   }
 }
 
-/* ── Sidebar Filters ── */
+/* ── Filtros Laterales ── */
 .filters-sidebar {
   width: 100%;
   position: relative;
@@ -27,9 +27,24 @@
 
 @media (min-width: 834px) {
   .filters-sidebar {
-    width: 280px;
+    width: 250px;
     position: sticky;
-    top: 84px; /* 64px nav + 20px gap */
+    top: 84px; /* 64px nav + 20px de separación */
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding: var(--sp-4) var(--sp-5);
+  }
+
+  /* Scrollbar personalizado para estética Apple */
+  .filters-sidebar::-webkit-scrollbar {
+    width: 5px;
+  }
+  .filters-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .filters-sidebar::-webkit-scrollbar-thumb {
+    background: var(--gray-subtle);
+    border-radius: 10px;
   }
 }
 
@@ -37,11 +52,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--sp-8);
+  margin-bottom: var(--sp-4);
 }
 
 .filters-header h2 {
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 600;
   margin-bottom: 0;
 }
@@ -67,31 +82,31 @@
 }
 
 .filter-group {
-  margin-bottom: var(--sp-8);
+  margin-bottom: var(--sp-4);
 }
 
 .filter-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--gray-mid);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
-  margin-bottom: var(--sp-4);
+  letter-spacing: 0.05em;
+  margin-bottom: var(--sp-3);
   display: block;
 }
 
-/* ── Filter Inputs ── */
+/* ── Inputs de Filtros ── */
 .radio-group, .checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: var(--sp-2);
 }
 
 .radio-option, .checkbox-option {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  font-size: 15px;
+  font-size: 14px;
   color: var(--near-black);
   cursor: pointer;
 }
@@ -107,7 +122,7 @@
   background: var(--white);
   border: 1px solid var(--gray-subtle);
   border-radius: var(--r-std);
-  padding: 8px 12px;
+  padding: 6px 12px;
   font-size: 14px;
   outline: none;
 }
@@ -125,9 +140,9 @@
 .pill {
   background: var(--white);
   border: 1px solid var(--gray-subtle);
-  padding: 6px 12px;
+  padding: 4px 10px;
   border-radius: var(--r-pill);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: all var(--t-base);
 }
@@ -143,12 +158,12 @@
   background: var(--white);
   border: 1px solid var(--gray-subtle);
   border-radius: var(--r-std);
-  padding: 8px 12px;
+  padding: 6px 12px;
   font-size: 15px;
   outline: none;
 }
 
-/* ── Results Area ── */
+/* ── Área de Resultados ── */
 .listing-results {
   flex: 1;
 }
@@ -247,7 +262,7 @@
   height: 240px;
 }
 
-.properties-grid.list-view .card-image-link {
+.properties-grid.list-view .card-image-container {
   width: 320px;
   height: 100%;
 }
@@ -269,7 +284,7 @@
     flex-direction: column;
     height: auto;
   }
-  .properties-grid.list-view .card-image-link {
+  .properties-grid.list-view .card-image-container {
     width: 100%;
     height: 200px;
   }
@@ -291,7 +306,7 @@
   justify-content: center;
 }
 
-/* ── Mobile Filter Btn ── */
+/* ── Botón de Filtros en Móvil ── */
 .mobile-filter-btn {
   display: none;
   position: fixed;
@@ -339,7 +354,7 @@
 }
 
 @media (max-width: 480px) {
-  .view-toggle { display: none; } /* Not needed on very small screens */
+  .view-toggle { display: none; } /* No se necesita en pantallas muy pequeñas */
   .sort-select { width: 100%; }
   .results-controls { flex-direction: column; align-items: flex-start; gap: var(--sp-2); }
   .mobile-filter-btn { bottom: 16px; padding: 10px 20px; font-size: 14px; }

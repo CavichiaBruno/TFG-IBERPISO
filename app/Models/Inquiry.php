@@ -6,42 +6,44 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inquiry extends Model
 {
+    protected $table = 'consultas';
+
     protected $fillable = [
-        'property_id', 'user_id', 'guest_name', 'guest_email',
-        'guest_phone', 'message', 'status', 'is_read',
+        'propiedad_id', 'usuario_id', 'nombre_visitante', 'correo_visitante',
+        'telefono_visitante', 'mensaje', 'estado', 'leida',
     ];
 
     protected $casts = [
-        'is_read' => 'boolean',
+        'leida' => 'boolean',
     ];
 
     public function property()
     {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(Property::class, 'propiedad_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 
     public function getSenderNameAttribute(): string
     {
-        return $this->user ? $this->user->name : ($this->guest_name ?? 'Desconocido');
+        return $this->user ? $this->user->nombre : ($this->nombre_visitante ?? 'Desconocido');
     }
 
     public function getSenderEmailAttribute(): ?string
     {
-        return $this->user ? $this->user->email : $this->guest_email;
+        return $this->user ? $this->user->correo : $this->correo_visitante;
     }
 
     public function scopePending($query)
     {
-        return $query->where('status', 'pending');
+        return $query->where('estado', 'pendiente');
     }
 
     public function scopeUnread($query)
     {
-        return $query->where('is_read', false);
+        return $query->where('leida', false);
     }
 }

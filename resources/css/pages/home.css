@@ -402,28 +402,71 @@
   .search-tab { padding: 6px 14px; font-size: 13px; }
 }
 
-/* ── Featured Properties (Horizontal Scroll) ── */
-.property-grid {
+/* ── Featured Properties Carousel ── */
+.featured-carousel-wrapper {
+    position: relative;
+    padding: 0 var(--sp-11); /* Espacio para las flechas */
+    margin: 0 -20px; /* Compensa el padding del contenedor para que las flechas queden fuera */
+}
+
+.property-grid.carousel-track {
     display: flex;
-    gap: var(--sp-6); /* 20px gap between cards */
+    gap: var(--sp-8);
     overflow-x: auto;
-    padding-bottom: var(--sp-6); /* Space for shadows/scroll */
+    scroll-behavior: smooth;
+    padding: var(--sp-4) 0 var(--sp-10) 0;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
-.property-grid::-webkit-scrollbar {
+.property-grid.carousel-track::-webkit-scrollbar {
     display: none;
 }
 
-.property-grid > * {
-    flex: 0 0 320px;
+.property-grid.carousel-track > * {
+    flex: 0 0 calc(33.333% - 22px); /* 3 cards visible on desktop */
+    min-width: 300px;
     scroll-snap-align: start;
 }
 
-@media (max-width: 480px) {
-  .property-grid > * { flex: 0 0 85vw; }
+.carousel-nav {
+    position: absolute;
+    top: calc(50% - 30px);
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.08);
+    color: var(--near-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s var(--ease);
+}
+
+.carousel-nav:hover {
+    background: var(--white);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav.prev { left: 0; }
+.carousel-nav.next { right: 0; }
+
+@media (max-width: 1100px) {
+    .property-grid.carousel-track > * { flex: 0 0 calc(50% - 16px); }
+}
+
+@media (max-width: 768px) {
+    .featured-carousel-wrapper { padding: 0; margin: 0; }
+    .carousel-nav { display: none; }
+    .property-grid.carousel-track { padding: var(--sp-4) var(--sp-5) var(--sp-8); margin: 0 -20px; }
+    .property-grid.carousel-track > * { flex: 0 0 280px; }
 }
 /* Removed negative margins to keep symmetry */
 

@@ -8,7 +8,7 @@
 @section('content')
     <div class="home-wrapper">
 
-        {{-- ── HERO SECTION ── --}}
+        {{-- ── SECCIÓN HERO ── --}}
         <div class="hero-outer">
             <section class="hero-parallax" id="hero-parallax">
                 <canvas id="hero-canvas"></canvas>
@@ -68,25 +68,30 @@
             </section>
         </div>
 
-        {{-- ── FEATURED SECTION ── --}}
+        {{-- ── SECCIÓN DESTACADOS ── --}}
         <section class="section-pad bg-light home-section">
             <div class="container-wide">
                 <h2 class="h-display text-center" style="margin-bottom: var(--sp-10);">Viviendas <span class="marker-white">destacadas.</span></h2>
-                @if($featured->count())
-                    <div class="property-grid">
-                        @foreach($featured as $property)
-                            <x-property-card :property="$property" />
-                        @endforeach
+                <div class="featured-carousel-wrapper">
+                    <button class="carousel-nav prev" id="featured-prev" aria-label="Anterior">
+                        <svg viewBox="0 0 24 24" width="24" height="24"><polyline points="15 18 9 12 15 6" stroke="currentColor" fill="none" stroke-width="2.5"/></svg>
+                    </button>
+                    
+                    <div class="property-grid carousel-track" id="featured-carousel" data-autoload="true">
+                        {{-- Skeletons initial load --}}
+                        <x-property-card-skeleton />
+                        <x-property-card-skeleton />
+                        <x-property-card-skeleton />
                     </div>
-                @else
-                    <div class="text-center">
-                        <p class="text-muted">No hay propiedades destacadas ahora mismo.</p>
-                    </div>
-                @endif
+
+                    <button class="carousel-nav next" id="featured-next" aria-label="Siguiente">
+                        <svg viewBox="0 0 24 24" width="24" height="24"><polyline points="9 18 15 12 9 6" stroke="currentColor" fill="none" stroke-width="2.5"/></svg>
+                    </button>
+                </div>
             </div>
         </section>
 
-        {{-- ── HOW IT WORKS ── --}}
+        {{-- ── CÓMO FUNCIONA ── --}}
         <section class="section-pad section-white home-section">
             <div class="container-wide">
                 <h2 class="h-display text-center" style="margin-bottom: 12px;">Tan simple como <span class="marker-white">tres pasos.</span></h2>
@@ -116,7 +121,7 @@
             </div>
         </section>
 
-        {{-- ── SEARCH ANIMATION SECTION ── --}}
+        {{-- ── SECCIÓN DE ANIMACIÓN DE BÚSQUEDA ── --}}
         <section class="section-pad bg-light organic-bg-section home-section" style="position: relative; overflow: hidden; padding-bottom: var(--sp-4) !important;">
             <div class="container-wide">
                 <div class="lp-two-col">
@@ -132,7 +137,7 @@
             </div>
         </section>
 
-        {{-- ── CITIES ── --}}
+        {{-- ── CIUDADES ── --}}
         <section class="section-pad section-white home-section" style="padding-top: var(--sp-4) !important;">
             <div class="container-wide">
                 <div class="lp-two-col lp-two-col-reverse">
@@ -148,7 +153,7 @@
             </div>
         </section>
 
-        {{-- ── IBERSCROLL CTA BANNER ── --}}
+        {{-- ── BANNER CTA IBERSCROLL ── --}}
         <section class="section-pad bg-light home-section">
             <div class="container">
                 <div class="lp-two-col">

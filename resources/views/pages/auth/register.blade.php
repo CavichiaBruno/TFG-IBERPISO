@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="auth-split-container">
-        <!-- Left Section: Register Form -->
+        <!-- Sección Izquierda: Formulario de Registro -->
         <div class="auth-left">
             <div class="auth-card-compact">
                 <div class="auth-header">
@@ -25,32 +25,32 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="name" class="form-label">Nombre completo</label>
-                        <input type="text" id="name" name="name" class="form-input" value="{{ old('name') }}"
+                        <label for="nombre" class="form-label">Nombre completo</label>
+                        <input type="text" id="nombre" name="nombre" class="form-input" value="{{ old('nombre') }}"
                             placeholder="Tu nombre" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-input" value="{{ old('email') }}"
+                        <label for="correo" class="form-label">Email</label>
+                        <input type="email" id="correo" name="correo" class="form-input" value="{{ old('correo') }}"
                             placeholder="tu@email.com" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="phone" class="form-label">Teléfono</label>
-                        <input type="tel" id="phone" name="phone" class="form-input" value="{{ old('phone') }}"
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" class="form-input" value="{{ old('telefono') }}"
                             placeholder="+34 600 000 000">
                     </div>
 
                     <div class="form-group">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" id="password" name="password" class="form-input"
+                        <label for="contrasena" class="form-label">Contraseña</label>
+                        <input type="password" id="contrasena" name="contrasena" class="form-input"
                             placeholder="Mínimo 8 caracteres" required minlength="8">
                     </div>
 
                     <div class="form-group">
-                        <label for="password_confirmation" class="form-label">Confirmar contraseña</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-input"
+                        <label for="contrasena_confirmation" class="form-label">Confirmar contraseña</label>
+                        <input type="password" id="contrasena_confirmation" name="contrasena_confirmation" class="form-input"
                             placeholder="Repite tu contraseña" required>
                     </div>
 
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <!-- Right Section: Lottie Animation -->
+        <!-- Sección Derecha: Animación Lottie -->
         <div class="auth-right">
             <div class="lottie-container">
                 <dotlottie-wc src="https://lottie.host/1b6983e6-a524-409e-afc6-ca0f723dd4a1/J2UV87FS0W.lottie" 

@@ -24,8 +24,8 @@ class AdminUserController extends Controller
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($sub) use ($q) {
-                $sub->where('name', 'like', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%");
+                $sub->where('nombre', 'like', "%{$q}%")
+                    ->orWhere('correo', 'like', "%{$q}%");
             });
         }
 
@@ -36,27 +36,46 @@ class AdminUserController extends Controller
     }
 
     /**
+     * Muestra el formulario para crear un nuevo usuario
+     */
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    /**
      * Crea un nuevo usuario validando los datos recibidos
      */
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:100',
-            'email'    => 'required|email|max:150|unique:users',
-            'phone'    => 'nullable|string|max:20',
-            'role'     => 'required|in:admin,agent,user',
-            'password' => ['required', Password::min(8)],
+            'nombre'     => 'required|string|max:100',
+            'correo'    => 'required|email|max:150|unique:usuarios',
+            'telefono'    => 'nullable|string|max:20',
+            'rol'     => 'required|in:admin,usuario',
+            'contrasena' => ['required', Password::min(8)],
         ]);
 
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'phone'    => $request->phone,
-            'role'     => $request->role,
-            'password' => Hash::make($request->password), // Encriptamos la clave
+            'nombre'     => $request->nombre,
+            'correo'    => $request->correo,
+            'telefono'    => $request->telefono,
+            'rol'     => $request->rol,
+            'contrasena' => Hash::make($request->contrasena),
+            'activo' => true,
         ]);
 
-        return response()->json(['success' => true]);
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Usuario creado correctamente');
+    }
+
+    /**
+     * Muestra el formulario para editar un usuario existente
+     */
+    public function edit(int $id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
@@ -67,21 +86,22 @@ class AdminUserController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'name'     => 'required|string|max:100',
-            'email'    => 'required|email|max:150|unique:users,email,' . $user->id,
-            'phone'    => 'nullable|string|max:20',
-            'role'     => 'required|in:admin,agent,user',
-            'password' => ['nullable', Password::min(8)],
+            'nombre'     => 'required|string|max:100',
+            'correo'    => 'required|email|max:150|unique:usuarios,correo,' . $user->id,
+            'telefono'    => 'nullable|string|max:20',
+            'rol'     => 'required|in:admin,usuario',
+            'contrasena' => ['nullable', Password::min(8)],
         ]);
 
-        $data = $request->only('name', 'email', 'phone', 'role');
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+        $data = $request->only('nombre', 'correo', 'telefono', 'rol');
+        if ($request->filled('contrasena')) {
+            $data['contrasena'] = Hash::make($request->contrasena);
         }
 
         $user->update($data);
 
-        return response()->json(['success' => true]);
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Usuario actualizado correctamente');
     }
 
     /**
@@ -97,8 +117,8 @@ class AdminUserController extends Controller
         }
 
         // Evitamos dejar el sistema sin administradores activos
-        $adminCount = User::where('role', 'admin')->where('is_active', true)->count();
-        if ($user->role === 'admin' && $adminCount <= 1) {
+        $adminCount = User::where('rol', 'admin')->where('activo', true)->count();
+        if ($user->rol === 'admin' && $adminCount <= 1) {
             return response()->json(['error' => 'No puedes eliminar el último administrador.'], 403);
         }
 
@@ -117,7 +137,7 @@ class AdminUserController extends Controller
             return response()->json(['error' => 'No puedes desactivar tu propia cuenta.'], 403);
         }
 
-        $user->update(['is_active' => !$user->is_active]);
-        return response()->json(['success' => true, 'is_active' => $user->is_active]);
+        $user->update(['activo' => !$user->activo]);
+        return response()->json(['success' => true, 'activo' => $user->activo]);
     }
 }

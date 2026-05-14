@@ -59,12 +59,12 @@
                         <td>
                             <div class="table-property-cell">
                                 <div class="table-thumb" style="background-image:url('{{ $p->cover_url }}')"></div>
-                                <span>{{ Str::limit($p->title, 35) }}</span>
+                                <span>{{ Str::limit($p->titulo, 35) }}</span>
                             </div>
                         </td>
-                        <td>{{ $p->city }}</td>
+                        <td>{{ $p->ciudad }}</td>
                         <td>€{{ $p->formatted_price }}</td>
-                        <td><span class="status-badge {{ $p->is_active ? 'status-active' : 'status-inactive' }}">{{ $p->is_active ? 'Activa' : 'Inactiva' }}</span></td>
+                        <td><span class="status-badge {{ $p->activa ? 'status-active' : 'status-inactive' }}">{{ $p->activa ? 'Activa' : 'Inactiva' }}</span></td>
                         <td><a href="{{ route('admin.properties.edit', $p->id) }}" class="action-btn">Editar</a></td>
                     </tr>
                 @empty
@@ -87,13 +87,13 @@
                 <tbody>
                 @forelse($recentInquiries as $inq)
                     <tr>
-                        <td>{{ $inq->property ? Str::limit($inq->property->title, 25) : '—' }}</td>
-                        <td>{{ $inq->sender_name }}</td>
+                        <td>{{ $inq->propiedad ? Str::limit($inq->propiedad->titulo, 25) : '—' }}</td>
+                        <td>{{ $inq->nombre_visitante }}</td>
                         <td>{{ $inq->created_at->diffForHumans() }}</td>
                         <td>
-                            @php $cls = ['pending'=>'status-pending','read'=>'status-read','answered'=>'status-answered'][$inq->status] ?? ''; @endphp
+                            @php $cls = ['pendiente'=>'status-pending','leida'=>'status-read','respondida'=>'status-answered'][$inq->estado] ?? ''; @endphp
                             <span class="status-badge {{ $cls }}">
-                                {{ ['pending'=>'Pendiente','read'=>'Leída','answered'=>'Respondida'][$inq->status] ?? $inq->status }}
+                                {{ ['pendiente'=>'Pendiente','leida'=>'Leída','respondida'=>'Respondida'][$inq->estado] ?? $inq->estado }}
                             </span>
                         </td>
                     </tr>

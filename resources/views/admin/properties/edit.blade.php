@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Editar: ' . $property->title)
+@section('title', 'Editar: ' . $property->titulo)
 @section('page-title', 'Editar Propiedad')
 
 @section('topbar-actions')
@@ -8,7 +8,33 @@
 @endsection
 
 @section('content')
-    <form method="POST" action="{{ route('admin.properties.update', $property->id) }}" id="property-form" novalidate>
+{{-- Loading Overlay con Lottie --}}
+<div id="property-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(245, 245, 247, 0.8); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s;">
+    <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 150px; height: 150px;" autoplay loop></dotlottie-wc>
+    <h3 style="margin-top: 20px; font-family: var(--font-display); font-weight: 600; font-size: 28px; line-height: 1.14; letter-spacing: 0.196px; color: #1d1d1f;">Actualizando propiedad...</h3>
+    <p style="font-family: var(--font-body); font-size: 17px; color: #86868b; margin: 8px 0 0; font-weight: 400; letter-spacing: -0.374px;">Por favor espera mientras procesamos tu solicitud</p>
+</div>
+
+{{-- Script de Lottie para Admin --}}
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module" defer></script>
+
+<script>
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        const form = document.getElementById('property-form');
+        const loadingOverlay = document.getElementById('property-loading-overlay');
+        
+        if (form && loadingOverlay) {
+            form.addEventListener('submit', function() {
+                loadingOverlay.style.opacity = '1';
+                loadingOverlay.style.pointerEvents = 'auto';
+            });
+        }
+    }, 100);
+});
+</script>
+
+    <form method="POST" action="{{ route('admin.properties.update', $property->id) }}" id="property-form" novalidate enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @include('admin.properties._form', ['property' => $property])
@@ -34,7 +60,7 @@
                         class="upload-input" style="display:none">
                 </div>
                 <div class="media-grid" id="images-grid">
-                    @foreach($property->media->where('file_type', 'image') as $img)
+                    @foreach($property->medios->where('tipo_archivo', 'imagen') as $img)
                         <div class="media-item" data-id="{{ $img->id }}">
                             <img src="{{ $img->url }}" alt="Imagen" loading="lazy">
                             @if($img->is_cover)<span class="cover-badge">Portada</span>@endif
@@ -65,7 +91,7 @@
                         style="display:none">
                 </div>
                 <div id="docs-list">
-                    @foreach($property->media->where('file_type', 'pdf') as $doc)
+                    @foreach($property->medios->where('tipo_archivo', 'pdf') as $doc)
                         <div class="doc-item-admin" data-id="{{ $doc->id }}">
                             <svg viewBox="0 0 24 24" width="18" height="18">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor"

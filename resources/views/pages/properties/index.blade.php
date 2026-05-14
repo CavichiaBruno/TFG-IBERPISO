@@ -8,7 +8,7 @@
 @section('content')
 <div class="listing-layout">
 
-    {{-- SIDEBAR FILTERS --}}
+    {{-- FILTROS LATERALES --}}
     <aside class="filters-sidebar" id="filters-sidebar">
         <div class="filters-header">
             <h2>Filtros</h2>
@@ -80,8 +80,8 @@
             <div class="filter-group">
                 <label class="filter-label">Características</label>
                 @foreach([
-                    ['has_elevator','Ascensor'],['has_parking','Parking'],['has_terrace','Terraza'],
-                    ['has_garden','Jardín'],['has_pool','Piscina'],['air_conditioning','Aire Acond.']
+                    ['tiene_ascensor','Ascensor'],['tiene_parking','Parking'],['tiene_terraza','Terraza'],
+                    ['tiene_jardin','Jardín'],['tiene_piscina','Piscina'],['aire_acondicionado','Aire Acond.']
                 ] as [$key,$label])
                     <label class="checkbox-option">
                         <input type="checkbox" name="{{ $key }}" value="1" {{ request($key)?'checked':'' }}>
@@ -104,7 +104,7 @@
         </form>
     </aside>
 
-    {{-- RESULTS --}}
+    {{-- RESULTADOS --}}
     <div class="listing-results">
         <div class="results-topbar">
             <span class="results-count"><strong>{{ $properties->total() }}</strong> propiedades encontradas</span>
@@ -126,8 +126,11 @@
             </div>
         </div>
 
-        <div id="results-container" class="properties-grid">
-            @include('pages.properties._results', ['properties' => $properties])
+        <div id="results-container" class="properties-grid" data-autoload="true">
+            {{-- Skeletons initial load --}}
+            @for($i = 0; $i < 6; $i++)
+                <x-property-card-skeleton />
+            @endfor
         </div>
 
         <div id="pagination-container" class="pagination-wrapper">
@@ -136,7 +139,7 @@
     </div>
 </div>
 
-{{-- MOBILE FILTER BUTTON --}}
+{{-- BOTÓN DE FILTROS EN MÓVIL --}}
 <button class="mobile-filter-btn" id="mobile-filter-btn">
     <svg viewBox="0 0 24 24" width="18" height="18"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" stroke="currentColor" fill="none" stroke-width="2"/></svg>
     Filtros

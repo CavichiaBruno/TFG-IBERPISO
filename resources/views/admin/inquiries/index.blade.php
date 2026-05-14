@@ -27,22 +27,22 @@
         </thead>
         <tbody>
         @forelse($inquiries as $inq)
-            <tr class="{{ !$inq->is_read ? 'row-unread' : '' }}" data-id="{{ $inq->id }}">
-                <td>{{ $inq->property ? Str::limit($inq->property->title, 30) : '—' }}</td>
+            <tr class="{{ !$inq->leida ? 'row-unread' : '' }}" data-id="{{ $inq->id }}">
+                <td>{{ $inq->propiedad ? Str::limit($inq->propiedad->titulo, 30) : '—' }}</td>
                 <td>
-                    <strong>{{ $inq->sender_name }}</strong><br>
-                    <small class="text-muted">{{ $inq->sender_email }}</small>
+                    <strong>{{ $inq->nombre_visitante }}</strong><br>
+                    <small class="text-muted">{{ $inq->correo_visitante }}</small>
                 </td>
-                <td>{{ $inq->guest_phone ?? ($inq->user?->phone ?? '—') }}</td>
+                <td>{{ $inq->telefono_visitante ?? ($inq->usuario?->telefono ?? '—') }}</td>
                 <td>
-                    <span class="message-preview" title="{{ $inq->message }}">{{ Str::limit($inq->message, 50) }}</span>
+                    <span class="message-preview" title="{{ $inq->mensaje }}">{{ Str::limit($inq->mensaje, 50) }}</span>
                 </td>
                 <td>{{ $inq->created_at->format('d/m/Y H:i') }}</td>
                 <td>
                     <select class="status-select" data-id="{{ $inq->id }}">
-                        <option value="pending" {{ $inq->status==='pending'?'selected':'' }}>Pendiente</option>
-                        <option value="read"    {{ $inq->status==='read'?'selected':'' }}>Leída</option>
-                        <option value="answered"{{ $inq->status==='answered'?'selected':'' }}>Respondida</option>
+                        <option value="pendiente" {{ $inq->estado==='pendiente'?'selected':'' }}>Pendiente</option>
+                        <option value="leida"    {{ $inq->estado==='leida'?'selected':'' }}>Leída</option>
+                        <option value="respondida"{{ $inq->estado==='respondida'?'selected':'' }}>Respondida</option>
                     </select>
                 </td>
                 <td>

@@ -8,29 +8,30 @@ class StorePropertyRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasAdminAccess();
+        return auth()->check() && auth()->user()->isAdmin();
     }
 
     public function rules(): array
     {
         return [
-            'title'              => 'required|string|max:200',
-            'description'        => 'required|string|min:100',
-            'price'              => 'required|numeric|min:0',
-            'surface_m2'         => 'required|numeric|min:0',
-            'rooms'              => 'required|integer|min:0|max:20',
-            'bathrooms'          => 'required|integer|min:0|max:10',
-            'floor'              => 'nullable|integer',
-            'property_type'      => 'required|in:piso,casa,chalet,local,garaje,oficina',
-            'operation_type'     => 'required|in:venta,alquiler',
-            'address'            => 'required|string|max:255',
-            'city'               => 'required|string|max:100',
-            'province'           => 'required|string|max:100',
-            'postal_code'        => 'required|string|size:5',
-            'latitude'           => 'nullable|numeric|between:-90,90',
-            'longitude'          => 'nullable|numeric|between:-180,180',
-            'energy_certificate' => 'nullable|in:A,B,C,D,E,F,G',
-            'virtual_tour_url'   => 'nullable|url|max:500',
+            'titulo'              => 'required|string|max:200',
+            'descripcion'        => 'required|string|min:100',
+            'precio'              => 'required|numeric|min:0',
+            'superficie_m2'         => 'required|numeric|min:0',
+            'habitaciones'              => 'required|integer|min:0|max:20',
+            'banos'          => 'required|integer|min:0|max:10',
+            'piso'              => 'nullable|integer',
+            'tipo_propiedad'      => 'required|in:piso,casa,chalet,local,garaje,oficina',
+            'tipo_operacion'     => 'required|in:venta,alquiler',
+            'direccion'            => 'required|string|max:255',
+            'ciudad'               => 'required|string|max:100',
+            'provincia'           => 'required|string|max:100',
+            'codigo_postal'        => 'required|string|size:5',
+            'latitud'           => 'nullable|numeric|between:-90,90',
+            'longitud'          => 'nullable|numeric|between:-180,180',
+            'certificado_energetico' => 'nullable|in:A,B,C,D,E,F,G',
+            'url_tour_virtual'   => 'nullable|url|max:500',
+            'certificado_energetico_archivo' => 'nullable|file|mimes:pdf|max:5120',
         ];
     }
 }

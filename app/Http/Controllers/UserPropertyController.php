@@ -19,23 +19,24 @@ class UserPropertyController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:200',
-            'description' => 'required|string|min:100',
-            'property_type' => 'required|string',
-            'operation_type' => 'required|in:venta,alquiler',
-            'price' => 'required|numeric|min:0',
-            'surface_m2' => 'required|numeric|min:0',
-            'rooms' => 'required|integer|min:0',
-            'bathrooms' => 'required|integer|min:0',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'province' => 'required|string',
-            'postal_code' => 'required|string|size:5',
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120'
+            'titulo' => 'required|string|max:200',
+            'descripcion' => 'required|string|min:100',
+            'tipo_propiedad' => 'required|string',
+            'tipo_operacion' => 'required|in:venta,alquiler',
+            'precio' => 'required|numeric|min:0',
+            'superficie_m2' => 'required|numeric|min:0',
+            'habitaciones' => 'required|integer|min:0',
+            'banos' => 'required|integer|min:0',
+            'direccion' => 'required|string',
+            'ciudad' => 'required|string',
+            'provincia' => 'required|string',
+            'codigo_postal' => 'required|string|size:5',
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
+            'certificado_energetico_archivo' => 'nullable|file|mimes:pdf|max:5120'
         ]);
 
-        // Auto-generate slug
-        $baseSlug = Str::slug($validated['title']);
+        // Generar slug automáticamente
+        $baseSlug = Str::slug($validated['titulo']);
         $slug = $baseSlug;
         $counter = 1;
         while (Property::where('slug', $slug)->exists()) {
@@ -46,19 +47,24 @@ class UserPropertyController extends Controller
         $property = new Property();
         $property->fill($validated);
         $property->slug = $slug;
-        $property->user_id = Auth::id(); // Assign to the logged in user
-        // Users properties are active by default as requested
-        $property->is_active = true; 
+        $property->usuario_id = Auth::id(); // Asignar al usuario autenticado
+        // Las propiedades de los usuarios están activas por defecto
+        $property->activa = true; 
         
-        // Default boolean fields to 0 if not present
-        $booleanFields = ['is_featured', 'has_elevator', 'has_parking', 'has_terrace', 'has_garden', 'has_pool', 'air_conditioning'];
+        // Valores por defecto para campos booleanos si no están presentes
+        $booleanFields = ['destacada', 'tiene_ascensor', 'tiene_parking', 'tiene_terraza', 'tiene_jardin', 'tiene_piscina', 'aire_acondicionado'];
         foreach ($booleanFields as $field) {
             $property->$field = $request->has($field);
         }
 
+        // Gestión del certificado energético (PDF)
+        if ($request->hasFile('certificado_energetico_archivo')) {
+            $property->certificado_energetico_archivo = $request->file('certificado_energetico_archivo')->store('certificates', 'public');
+        }
+
         $property->save();
 
-        // Handle Image Uploads
+        // Gestión de la subida de imágenes
         if ($request->hasFile('images')) {
             $isFirst = true;
             foreach ($request->file('images') as $image) {
@@ -67,13 +73,13 @@ class UserPropertyController extends Controller
                 $path = 'data:' . $mimeType . ';base64,' . $base64;
 
                 PropertyMedia::create([
-                    'property_id' => $property->id,
-                    'file_path' => $path,
-                    'file_type' => 'image',
-                    'mime_type' => $mimeType,
-                    'file_size_kb' => (int) ceil($image->getSize() / 1024),
-                    'original_name' => $image->getClientOriginalName(),
-                    'is_cover' => $isFirst,
+                    'propiedad_id' => $property->id,
+                    'ruta_archivo' => $path,
+                    'tipo_archivo' => 'imagen',
+                    'tipo_mime' => $mimeType,
+                    'tamano_archivo_kb' => (int) ceil($image->getSize() / 1024),
+                    'nombre_original' => $image->getClientOriginalName(),
+                    'es_portada' => $isFirst,
                 ]);
 
                 $isFirst = false;
@@ -85,28 +91,28 @@ class UserPropertyController extends Controller
     }
     public function index()
     {
-        $properties = Property::where('user_id', Auth::id())
-            ->with(['media' => function($query) {
-                $query->where('file_type', 'image')->orderBy('is_cover', 'desc');
+        $properties = Property::where('usuario_id', Auth::id())
+            ->with(['medios' => function($query) {
+                $query->where('tipo_archivo', 'imagen')->orderBy('es_portada', 'desc');
             }])
             ->latest()
-            ->get();
+            ->paginate(12);
 
         return view('pages.properties.user_index', compact('properties'));
     }
 
     public function toggleActive($id)
     {
-        $property = Property::where('user_id', Auth::id())->findOrFail($id);
-        $property->is_active = !$property->is_active;
+        $property = Property::where('usuario_id', Auth::id())->findOrFail($id);
+        $property->activa = !$property->activa;
         $property->save();
 
-        return back()->with('success', $property->is_active ? 'Anuncio activado.' : 'Anuncio desactivado.');
+        return back()->with('success', $property->activa ? 'Anuncio activado.' : 'Anuncio desactivado.');
     }
 
     public function destroy($id)
     {
-        $property = Property::where('user_id', Auth::id())->findOrFail($id);
+        $property = Property::where('usuario_id', Auth::id())->findOrFail($id);
         $property->delete();
 
         return redirect()->route('user.properties.index')->with('success', 'Anuncio eliminado correctamente.');

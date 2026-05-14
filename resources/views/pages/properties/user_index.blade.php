@@ -167,18 +167,18 @@
             @foreach($properties as $property)
                 <div class="property-admin-card">
                     <div class="card-img-wrapper">
-                        @php $cover = $property->media->first(); @endphp
-                        <img src="{{ $cover ? $cover->url : asset('images/placeholder.jpg') }}" alt="{{ $property->title }}">
-                        <span class="status-badge {{ $property->is_active ? 'status-active' : 'status-inactive' }}">
-                            {{ $property->is_active ? 'ACTIVO' : 'INACTIVO' }}
+                        @php $cover = $property->medios->first(); @endphp
+                        <img src="{{ $cover ? $cover->url : asset('images/placeholder.jpg') }}" alt="{{ $property->titulo }}">
+                        <span class="status-badge {{ $property->activa ? 'status-active' : 'status-inactive' }}">
+                            {{ $property->activa ? 'ACTIVO' : 'INACTIVO' }}
                         </span>
                     </div>
                     <div class="card-content">
-                        <div class="card-price">€{{ number_format($property->price, 0, ',', '.') }}</div>
-                        <div class="card-title">{{ $property->title }}</div>
+                        <div class="card-price">€{{ number_format($property->precio, 0, ',', '.') }}</div>
+                        <div class="card-title">{{ $property->titulo }}</div>
                         <div style="font-size: 13px; color: #86868b;">
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {{ $property->city }}, {{ $property->province }}
+                            {{ $property->ciudad }}, {{ $property->provincia }}
                         </div>
                     </div>
                     <div class="card-actions">
@@ -189,7 +189,7 @@
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn-action btn-toggle" style="width: 100%;">
-                                {{ $property->is_active ? 'Desactivar' : 'Activar' }}
+                                {{ $property->activa ? 'Desactivar' : 'Activar' }}
                             </button>
                         </form>
                         <form action="{{ route('user.properties.destroy', $property->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este anuncio? Esta acción no se puede deshacer.')" style="grid-column: span 2;">
@@ -202,6 +202,9 @@
                     </div>
                 </div>
             @endforeach
+        </div>
+        <div style="margin-top: 40px;">
+            {{ $properties->links('components.pagination') }}
         </div>
     @else
         <div class="empty-state">

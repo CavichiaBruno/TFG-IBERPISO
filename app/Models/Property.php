@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -11,61 +12,72 @@ use Illuminate\Support\Str;
  */
 class Property extends Model
 {
-    use SoftDeletes; // Permite el borrado lógico (quedan en BD pero no se muestran)
+    use HasFactory, SoftDeletes;
+
+    protected $table = 'propiedades';
 
     protected $fillable = [
-        'user_id', 'title', 'description', 'price', 'surface_m2', 'rooms', 
-        'bathrooms', 'floor', 'property_type', 'operation_type', 'address', 
-        'city', 'province', 'postal_code', 'latitude', 'longitude', 
-        'has_elevator', 'has_parking', 'has_terrace', 'has_garden', 
-        'has_pool', 'air_conditioning', 'is_featured', 'is_active', 
-        'energy_certificate', 'virtual_tour_url',
+        'usuario_id', 'titulo', 'descripcion', 'precio', 'superficie_m2', 'habitaciones', 
+        'banos', 'piso', 'tipo_propiedad', 'tipo_operacion', 'direccion', 
+        'ciudad', 'provincia', 'codigo_postal', 'latitud', 'longitud', 
+        'tiene_ascensor', 'tiene_parking', 'tiene_terraza', 'tiene_jardin', 
+        'tiene_piscina', 'aire_acondicionado', 'destacada', 'activa', 
+        'certificado_energetico', 'url_tour_virtual', 'slug', 'certificado_energetico_archivo',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'surface_m2' => 'decimal:2',
-        'latitude' => 'decimal:7',
-        'longitude' => 'decimal:7',
-        'has_elevator' => 'boolean',
-        'has_parking' => 'boolean',
-        'has_terrace' => 'boolean',
-        'has_garden' => 'boolean',
-        'has_pool' => 'boolean',
-        'air_conditioning' => 'boolean',
-        'is_featured' => 'boolean',
-        'is_active' => 'boolean',
+        'precio' => 'decimal:2',
+        'superficie_m2' => 'decimal:2',
+        'latitud' => 'decimal:7',
+        'longitud' => 'decimal:7',
+        'tiene_ascensor' => 'boolean',
+        'tiene_parking' => 'boolean',
+        'tiene_terraza' => 'boolean',
+        'tiene_jardin' => 'boolean',
+        'tiene_piscina' => 'boolean',
+        'aire_acondicionado' => 'boolean',
+        'destacada' => 'boolean',
+        'activa' => 'boolean',
     ];
 
     // --- Relaciones ---
 
-    public function user() { return $this->belongsTo(User::class); }
-    public function media() { return $this->hasMany(PropertyMedia::class)->orderBy('sort_order'); }
-    public function images() { return $this->hasMany(PropertyMedia::class)->where('file_type', 'image')->orderBy('sort_order'); }
-    public function inquiries() { return $this->hasMany(Inquiry::class); }
-    public function interactions() { return $this->hasMany(PropertyInteraction::class); }
+    public function usuario() { return $this->belongsTo(User::class, 'usuario_id'); }
+    public function medios() { return $this->hasMany(PropertyMedia::class, 'propiedad_id')->orderBy('orden'); }
+    public function media() { return $this->medios(); } // Alias para compatibilidad
+    public function imagenes() { return $this->hasMany(PropertyMedia::class, 'propiedad_id')->where('tipo_archivo', 'imagen')->orderBy('orden'); }
+    public function consultas() { return $this->hasMany(Inquiry::class, 'propiedad_id'); }
+    public function interacciones() { return $this->hasMany(PropertyInteraction::class, 'propiedad_id'); }
 
     // --- Scopes (Atajos para consultas comunes) ---
 
-    public function scopeActive($query) { return $query->where('is_active', true); }
-    public function scopeFeatured($query) { return $query->where('is_featured', true); }
-    public function scopeFilterByOperation($query, string $op) { return $query->where('operation_type', $op); }
+    public function scopeActive($query) { return $query->where('activa', true); }
+    public function scopeFeatured($query) { return $query->where('destacada', true); }
+    public function scopeFilterByOperation($query, string $op) { return $query->where('tipo_operacion', $op); }
 
     // --- Accessors (Campos calculados o formateados) ---
 
     // Genera el slug amigable para URLs basándose en el título
-    public function getSlugAttribute(): string { return Str::slug($this->title); }
+    public function getSlugAttribute(): string { return Str::slug($this->titulo); }
 
     // Formatea el precio con separador de miles
-    public function getFormattedPriceAttribute(): string { return number_format((float) $this->price, 0, ',', '.'); }
+    public function getFormattedPriceAttribute(): string { return number_format((float) $this->precio, 0, ',', '.'); }
 
     // Obtiene la URL de la imagen de portada o un placeholder si no hay
     public function getCoverUrlAttribute(): ?string
     {
-        $cover = $this->media->where('file_type', 'image')->where('is_cover', true)->first()
-            ?? $this->media->where('file_type', 'image')->first();
-        
-        return $cover ? $cover->url : asset('images/placeholder.jpg');
+        try {
+            // Obtener medios (eagerly loaded si está disponible, sino carga lazy)
+            $medios = $this->relationLoaded('medios') ? $this->medios : $this->medios()->get();
+            
+            // Buscar primera imagen que sea portada, sino la primera imagen
+            $cover = $medios->where('tipo_archivo', 'imagen')->where('es_portada', true)->first()
+                ?? $medios->where('tipo_archivo', 'imagen')->first();
+            
+            return $cover ? $cover->url : 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
+        } catch (\Exception $e) {
+            return 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
+        }
     }
 
     // Listados de opciones fijas para el sistema

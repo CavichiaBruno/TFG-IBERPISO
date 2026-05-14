@@ -7,6 +7,7 @@ use App\Models\Property;
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Controlador de Administración para la gestión de Propiedades (CRUD)
@@ -19,26 +20,26 @@ class AdminPropertyController extends Controller
     public function index(Request $request)
     {
         // Cargamos propiedades incluyendo las borradas lógicamente para gestión
-        $query = Property::with(['media', 'user'])->withTrashed();
+        $query = Property::with(['medios', 'usuario'])->withTrashed();
 
         // Búsqueda por texto (título, ciudad o dirección)
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($sub) use ($q) {
-                $sub->where('title', 'like', "%{$q}%")
-                    ->orWhere('city', 'like', "%{$q}%")
-                    ->orWhere('address', 'like', "%{$q}%");
+                $sub->where('titulo', 'like', "%{$q}%")
+                    ->orWhere('ciudad', 'like', "%{$q}%")
+                    ->orWhere('direccion', 'like', "%{$q}%");
             });
         }
 
         // Sistema de pestañas de filtrado (Activas, Inactivas, Destacadas, etc.)
         $filter = $request->get('filtro', 'all');
         match ($filter) {
-            'activas'    => $query->where('is_active', true)->whereNull('deleted_at'),
-            'inactivas'  => $query->where('is_active', false)->whereNull('deleted_at'),
-            'destacadas' => $query->where('is_featured', true)->whereNull('deleted_at'),
-            'venta'      => $query->where('operation_type', 'venta')->whereNull('deleted_at'),
-            'alquiler'   => $query->where('operation_type', 'alquiler')->whereNull('deleted_at'),
+            'activas'    => $query->where('activa', true)->whereNull('deleted_at'),
+            'inactivas'  => $query->where('activa', false)->whereNull('deleted_at'),
+            'destacadas' => $query->where('destacada', true)->whereNull('deleted_at'),
+            'venta'      => $query->where('tipo_operacion', 'venta')->whereNull('deleted_at'),
+            'alquiler'   => $query->where('tipo_operacion', 'alquiler')->whereNull('deleted_at'),
             default      => $query->whereNull('deleted_at'),
         };
 
@@ -71,9 +72,9 @@ class AdminPropertyController extends Controller
     public function store(StorePropertyRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = auth()->id(); // Asignamos el autor (agente actual)
-        $data['is_active'] = $request->has('is_active');
-        $data['is_featured'] = $request->has('is_featured');
+        $data['usuario_id'] = auth()->id(); // Asignamos el autor (agente actual)
+        $data['activa'] = $request->has('activa');
+        $data['destacada'] = $request->has('destacada');
 
         $property = Property::create($data);
 
@@ -87,7 +88,7 @@ class AdminPropertyController extends Controller
      */
     public function edit(int $id)
     {
-        $property = Property::with(['media'])->findOrFail($id);
+        $property = Property::with(['medios'])->findOrFail($id);
         $unreadCount = \App\Models\Inquiry::unread()->count();
         return view('admin.properties.edit', compact('property', 'unreadCount'));
     }
@@ -99,9 +100,26 @@ class AdminPropertyController extends Controller
     {
         $property = Property::findOrFail($id);
         $data = $request->validated();
-        $data['is_active']   = $request->has('is_active');
-        $data['is_featured'] = $request->has('is_featured');
+        $data['activa']   = $request->has('activa');
+        $data['destacada'] = $request->has('destacada');
 
+        // Gestión del certificado energético (PDF) — modo god admin
+        if ($request->boolean('eliminar_certificado')) {
+            if ($property->certificado_energetico_archivo) {
+                Storage::disk('public')->delete($property->certificado_energetico_archivo);
+            }
+            $data['certificado_energetico_archivo'] = null;
+        } elseif ($request->hasFile('certificado_energetico_archivo')) {
+            if ($property->certificado_energetico_archivo) {
+                Storage::disk('public')->delete($property->certificado_energetico_archivo);
+            }
+            $data['certificado_energetico_archivo'] = $request->file('certificado_energetico_archivo')
+                ->store('certificates', 'public');
+        } else {
+            unset($data['certificado_energetico_archivo']);
+        }
+
+        unset($data['eliminar_certificado']);
         $property->update($data);
 
         return redirect()
@@ -126,7 +144,7 @@ class AdminPropertyController extends Controller
     public function toggleActive(int $id)
     {
         $property = Property::findOrFail($id);
-        $property->update(['is_active' => !$property->is_active]);
-        return response()->json(['success' => true, 'is_active' => $property->is_active]);
+        $property->update(['activa' => !$property->activa]);
+        return response()->json(['success' => true, 'activa' => $property->activa]);
     }
 }

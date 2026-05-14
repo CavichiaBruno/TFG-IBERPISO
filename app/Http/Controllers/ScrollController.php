@@ -21,7 +21,7 @@ class ScrollController extends Controller
 
         if ($user) {
             // Evitamos mostrar propiedades con las que el usuario ya ha interactuado
-            $interactedIds = PropertyInteraction::where('user_id', $user->id)->pluck('property_id');
+            $interactedIds = PropertyInteraction::where('usuario_id', $user->id)->pluck('propiedad_id');
         } else {
             // Para invitados, usamos la sesión
             $guestInteractions = session('guest_interactions', []);
@@ -31,19 +31,19 @@ class ScrollController extends Controller
         // Obtenemos propiedades aleatorias que el usuario aún no ha visto
         $properties = Property::active()
             ->whereNotIn('id', $interactedIds)
-            ->with(['media'])
+            ->with(['medios'])
             ->inRandomOrder()
             ->limit(10) 
             ->get()
             ->map(fn($p) => [
                 'id' => $p->id,
-                'title' => $p->title,
-                'price' => $p->formatted_price,
-                'location' => $p->city . ', ' . $p->province,
-                'surface' => $p->surface_m2,
-                'rooms' => $p->rooms,
-                'bathrooms' => $p->bathrooms,
-                'image' => $p->cover_url,
+                'titulo' => $p->titulo,
+                'precio' => $p->formatted_price,
+                'ubicacion' => $p->ciudad . ', ' . $p->provincia,
+                'superficie' => $p->superficie_m2,
+                'habitaciones' => $p->habitaciones,
+                'banos' => $p->banos,
+                'imagen' => $p->cover_url,
                 'url' => route('properties.show', [$p->id, $p->slug])
             ]);
 
@@ -57,20 +57,20 @@ class ScrollController extends Controller
     public function interact(Request $request)
     {
         $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'type' => 'required|in:like,dislike'
+            'propiedad_id' => 'required|exists:propiedades,id',
+            'tipo' => 'required|in:like,dislike'
         ]);
 
         if (Auth::check()) {
             // Guardamos o actualizamos la interacción del usuario registrado
             PropertyInteraction::updateOrCreate(
-                ['user_id' => Auth::id(), 'property_id' => $request->property_id],
-                ['type' => $request->type]
+                ['usuario_id' => Auth::id(), 'propiedad_id' => $request->propiedad_id],
+                ['tipo' => $request->tipo]
             );
         } else {
             // Guardamos en la sesión para invitados
             $guestInteractions = session('guest_interactions', []);
-            $guestInteractions[$request->property_id] = $request->type;
+            $guestInteractions[$request->propiedad_id] = $request->tipo;
             session(['guest_interactions' => $guestInteractions]);
         }
 
@@ -85,8 +85,8 @@ class ScrollController extends Controller
     {
         if (Auth::check()) {
             $properties = Auth::user()->favoriteProperties()
-                ->with(['media'])
-                ->orderBy('property_interactions.created_at', 'desc')
+                ->with(['medios'])
+                ->orderBy('interacciones_propiedades.created_at', 'desc')
                 ->paginate(12);
         } else {
             // Para invitados, obtenemos los IDs con 'like' de la sesión
@@ -94,7 +94,7 @@ class ScrollController extends Controller
             $likedIds = array_keys(array_filter($guestInteractions, fn($type) => $type === 'like'));
             
             $properties = Property::whereIn('id', $likedIds)
-                ->with(['media'])
+                ->with(['medios'])
                 ->paginate(12);
         }
 
@@ -108,9 +108,9 @@ class ScrollController extends Controller
     public function removeFavorite($propertyId)
     {
         if (Auth::check()) {
-            PropertyInteraction::where('user_id', Auth::id())
-                ->where('property_id', $propertyId)
-                ->where('type', 'like')
+            PropertyInteraction::where('usuario_id', Auth::id())
+                ->where('propiedad_id', $propertyId)
+                ->where('tipo', 'like')
                 ->delete();
         } else {
             $guestInteractions = session('guest_interactions', []);

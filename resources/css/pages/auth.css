@@ -1,8 +1,8 @@
-/* ─── IberPiso — Auth (Apple-Inspired) ─────────────────────────── */
+/* ─── IberPiso — Autenticación (Inspirado en Apple) ─────────────────────────── */
  
 .auth-split-container {
   display: flex;
-  min-height: calc(100vh - 48px); /* Height minus nav */
+  min-height: calc(100vh - 48px); /* Altura menos la navegación */
   background: var(--white);
 }
 
@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--sp-12); /* 80px on all sides */
+  padding: var(--sp-12); /* 80px en todos los lados */
 }
 
 .auth-right {

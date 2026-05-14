@@ -29,35 +29,35 @@
                         @foreach($properties as $index => $p)
                             <div class="swipe-card" data-id="{{ $p['id'] }}" style="z-index: {{ 100 - $index }}">
                                 <div class="card-img-wrapper">
-                                    <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}" class="card-img" draggable="false"
+                                    <img src="{{ $p['imagen'] }}" alt="{{ $p['titulo'] }}" class="card-img" draggable="false"
                                          onerror="this.style.display='none'; this.parentElement.classList.add('img-error')">
                                     <div class="card-badge badge-like">LIKE</div>
                                     <div class="card-badge badge-nope">NOPE</div>
                                 </div>
                                 <div class="card-info">
-                                    <div class="card-price">{{ $p['price'] }} €</div>
-                                    <h3 class="card-title">{{ $p['title'] }}</h3>
+                                    <div class="card-price">{{ $p['precio'] }} €</div>
+                                    <h3 class="card-title">{{ $p['titulo'] }}</h3>
                                     <p class="card-location">
                                         <svg viewBox="0 0 24 24" width="13" height="13" fill="none"
                                              stroke="currentColor" stroke-width="2" style="flex-shrink:0">
                                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                             <circle cx="12" cy="10" r="3" />
                                         </svg>
-                                        {{ $p['location'] }}
+                                        {{ $p['ubicacion'] }}
                                     </p>
                                     <div class="card-meta">
                                         <div class="meta-item">
-                                            <span class="meta-value">{{ (int) $p['surface'] }}</span>
+                                            <span class="meta-value">{{ (int) $p['superficie'] }}</span>
                                             <span class="meta-label">m²</span>
                                         </div>
                                         <div class="meta-sep"></div>
                                         <div class="meta-item">
-                                            <span class="meta-value">{{ $p['rooms'] }}</span>
+                                            <span class="meta-value">{{ $p['habitaciones'] }}</span>
                                             <span class="meta-label">hab.</span>
                                         </div>
                                         <div class="meta-sep"></div>
                                         <div class="meta-item">
-                                            <span class="meta-value">{{ $p['bathrooms'] }}</span>
+                                            <span class="meta-value">{{ $p['banos'] }}</span>
                                             <span class="meta-label">baños</span>
                                         </div>
                                     </div>

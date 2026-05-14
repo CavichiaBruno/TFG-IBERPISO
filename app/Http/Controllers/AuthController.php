@@ -17,23 +17,23 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('correo', 'password');
         $remember    = $request->boolean('remember');
 
         if (!Auth::attempt($credentials, $remember)) {
-            return back()->withErrors(['email' => 'Las credenciales no son correctas.'])->withInput();
+            return back()->withErrors(['correo' => 'Las credenciales no son correctas.'])->withInput();
         }
 
         $user = Auth::user();
 
-        if (!$user->is_active) {
+        if (!$user->activo) {
             Auth::logout();
-            return back()->withErrors(['email' => 'Tu cuenta est\u00e1 desactivada.']);
+            return back()->withErrors(['correo' => 'Tu cuenta está desactivada.']);
         }
 
         $request->session()->regenerate();
 
-        if ($user->hasAdminAccess()) {
+        if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
 
@@ -48,18 +48,26 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'                  => 'required|string|max:100',
-            'email'                 => 'required|email|max:150|unique:users',
-            'phone'                 => 'nullable|string|max:20',
-            'password'              => 'required|string|min:8|confirmed',
+            'nombre'     => 'required|string|max:100',
+            'correo'     => 'required|email|max:150|unique:usuarios',
+            'telefono'   => 'nullable|string|max:20',
+            'contrasena' => 'required|string|min:8|confirmed',
+        ], [
+            'nombre.required'     => 'El nombre es obligatorio.',
+            'correo.required'     => 'El correo electrónico es obligatorio.',
+            'correo.email'        => 'El formato del correo no es válido.',
+            'correo.unique'       => 'Este correo ya está registrado.',
+            'contrasena.required' => 'La contraseña es obligatoria.',
+            'contrasena.min'      => 'La contraseña debe tener al menos 8 caracteres.',
+            'contrasena.confirmed'=> 'Las contraseñas no coinciden.',
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'phone'    => $request->phone,
-            'password' => Hash::make($request->password),
-            'role'     => 'user',
+            'nombre'     => $request->nombre,
+            'correo'    => $request->correo,
+            'telefono'    => $request->telefono,
+            'contrasena' => Hash::make($request->contrasena),
+            'rol'     => 'usuario',
         ]);
 
         Auth::login($user);

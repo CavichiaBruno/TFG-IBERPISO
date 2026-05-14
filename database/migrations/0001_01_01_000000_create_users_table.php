@@ -1,53 +1,78 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     /**
-     * Run the migrations.
+     * Ejecutar las migraciones.
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 100);
-            $table->string('email', 150)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('role')->default('user'); // admin, agent, user
-            $table->string('phone', 20)->nullable();
-            $table->string('avatar')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        $driver = DB::connection()->getDriverName();
+        
+        if ($driver === 'sqlite') {
+            DB::statement("
+                CREATE TABLE usuarios (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre VARCHAR(100) NOT NULL,
+                    correo VARCHAR(255) NOT NULL UNIQUE,
+                    correo_verificado_en TIMESTAMP NULL,
+                    contrasena VARCHAR(255) NOT NULL,
+                    rol VARCHAR(50) NOT NULL DEFAULT 'usuario',
+                    telefono VARCHAR(20) NULL,
+                    avatar VARCHAR(255) NULL,
+                    activo BOOLEAN NOT NULL DEFAULT TRUE,
+                    remember_token VARCHAR(100) NULL,
+                    created_at TIMESTAMP NULL,
+                    updated_at TIMESTAMP NULL
+                )
+            ");
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
+            DB::statement("
+                CREATE TABLE password_reset_tokens (
+                    email VARCHAR(255) PRIMARY KEY,
+                    token VARCHAR(255) NOT NULL,
+                    created_at TIMESTAMP NULL
+                )
+            ");
+        } else {
+            DB::statement("
+                CREATE TABLE usuarios (
+                    id BIGSERIAL PRIMARY KEY,
+                    nombre VARCHAR(100) NOT NULL,
+                    correo VARCHAR(255) NOT NULL UNIQUE,
+                    correo_verificado_en TIMESTAMP NULL,
+                    contrasena VARCHAR(255) NOT NULL,
+                    rol VARCHAR(50) NOT NULL DEFAULT 'usuario',
+                    telefono VARCHAR(20) NULL,
+                    avatar VARCHAR(255) NULL,
+                    activo BOOLEAN NOT NULL DEFAULT TRUE,
+                    remember_token VARCHAR(100) NULL,
+                    created_at TIMESTAMP NULL,
+                    updated_at TIMESTAMP NULL
+                )
+            ");
 
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
+            DB::statement("
+                CREATE TABLE password_reset_tokens (
+                    email VARCHAR(255) PRIMARY KEY,
+                    token VARCHAR(255) NOT NULL,
+                    created_at TIMESTAMP NULL
+                )
+            ");
+        }
     }
 
     /**
-     * Reverse the migrations.
+     * Revertir las migraciones.
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');
+        DB::statement("DROP TABLE IF EXISTS password_reset_tokens CASCADE");
+        DB::statement("DROP TABLE IF EXISTS usuarios CASCADE");
     }
 };

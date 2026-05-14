@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             PropertiesSeeder::class,
             PropertyMediaSeeder::class,
+            ArticlesSeeder::class,
         ]);
     }
 }

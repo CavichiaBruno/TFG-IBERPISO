@@ -14,13 +14,13 @@ class StoreInquiryRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'message' => 'required|string|min:10|max:2000',
+            'mensaje' => 'required|string|min:10|max:2000',
         ];
 
         if (!auth()->check()) {
-            $rules['guest_name']  = 'required|string|max:100';
-            $rules['guest_email'] = 'required|email|max:150';
-            $rules['guest_phone'] = 'nullable|string|max:20';
+            $rules['nombre_visitante']  = 'required|string|max:100';
+            $rules['correo_visitante'] = 'required|email|max:150';
+            $rules['telefono_visitante'] = 'nullable|string|max:20';
         }
 
         return $rules;
@@ -29,11 +29,11 @@ class StoreInquiryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'guest_name.required'  => 'Tu nombre es obligatorio.',
-            'guest_email.required' => 'Tu email es obligatorio.',
-            'guest_email.email'    => 'Introduce un email válido.',
-            'message.required'     => 'El mensaje es obligatorio.',
-            'message.min'          => 'El mensaje debe tener al menos 10 caracteres.',
+            'nombre_visitante.required'  => 'Tu nombre es obligatorio.',
+            'correo_visitante.required' => 'Tu email es obligatorio.',
+            'correo_visitante.email'    => 'Introduce un email válido.',
+            'mensaje.required'     => 'El mensaje es obligatorio.',
+            'mensaje.min'          => 'El mensaje debe tener al menos 10 caracteres.',
         ];
     }
 }

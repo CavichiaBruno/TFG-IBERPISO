@@ -6,11 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Panel') — IberPiso Admin</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/css/admin/admin.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -75,12 +70,26 @@
                         Usuarios
                     </a>
                 @endif
+                <a href="{{ route('admin.interactions.index') }}"
+                    class="sidebar-link {{ request()->routeIs('admin.interactions.*') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" fill="none" stroke-width="2" />
+                    </svg>
+                    Interacciones
+                </a>
+                <a href="{{ route('admin.articles.index') }}"
+                    class="sidebar-link {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v18zm10-18.5V8h5.5M8 12h8M8 16h8" stroke="currentColor" fill="none" stroke-width="2" />
+                    </svg>
+                    Noticias
+                </a>
             </nav>
 
             <div class="sidebar-user">
-                <div class="sidebar-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                <div class="sidebar-avatar">{{ strtoupper(substr(auth()->user()->nombre, 0, 1)) }}</div>
                 <div class="sidebar-user-info">
-                    <span class="sidebar-user-name">{{ auth()->user()->name }}</span>
+                    <span class="sidebar-user-name">{{ auth()->user()->nombre }}</span>
                     <span class="sidebar-user-role">{{ ucfirst(auth()->user()->role) }}</span>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
@@ -105,11 +114,18 @@
                         <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" />
                     </svg>
                 </button>
-                <h1 class="topbar-title">@yield('page-title', 'Panel de Administración')</h1>
-                <div class="topbar-actions">@yield('topbar-actions')</div>
+                <h1 class="topbar-title">IberPiso</h1>
+                <div class="topbar-actions"></div>
             </header>
 
             <div class="admin-content">
+                <div class="page-header">
+                    <h1>@yield('page-title', 'Panel de Administración')</h1>
+                    <div class="header-actions">
+                        @yield('topbar-actions')
+                    </div>
+                </div>
+
                 @if(session('success'))
                     <x-alert type="success" :message="session('success')" />
                 @endif
