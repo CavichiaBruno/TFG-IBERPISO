@@ -18,6 +18,7 @@ class UserPropertyController extends Controller
 
     public function store(Request $request)
     {
+        // 1. Validación de los datos recibidos del formulario
         $validated = $request->validate([
             'titulo' => 'required|string|max:200',
             'descripcion' => 'required|string|min:100',
@@ -35,7 +36,8 @@ class UserPropertyController extends Controller
             'certificado_energetico_archivo' => 'nullable|file|mimes:pdf|max:5120'
         ]);
 
-        // Generar slug automáticamente
+        // 2. Generación automática del "Slug" (URL amigable)
+        // Si el título es "Piso en Madrid", el slug será "piso-en-madrid"
         $baseSlug = Str::slug($validated['titulo']);
         $slug = $baseSlug;
         $counter = 1;
@@ -44,53 +46,65 @@ class UserPropertyController extends Controller
             $counter++;
         }
 
+        // 3. Creación de la instancia del modelo y asignación de datos básicos
         $property = new Property();
         $property->fill($validated);
         $property->slug = $slug;
-        $property->usuario_id = Auth::id(); // Asignar al usuario autenticado
-        // Las propiedades de los usuarios están activas por defecto
-        $property->activa = \DB::raw('true');
+        $property->usuario_id = Auth::id(); // Vinculamos la propiedad al usuario logueado
+        $property->activa = \DB::raw('true'); // Por defecto, se publica activa
         
-        // Asegurar que el precio se guarda como número decimal
+        // Conversión explícita de tipos numéricos
         $property->precio = (float) $validated['precio'];
         $property->superficie_m2 = (float) $validated['superficie_m2']; 
         
-        // Valores por defecto para campos booleanos si no están presentes
+        // 4. Procesamiento de campos booleanos (Checkboxes)
+        // Si el checkbox no viene en el request, se marca como false
         $booleanFields = ['destacada', 'tiene_ascensor', 'tiene_parking', 'tiene_terraza', 'tiene_jardin', 'tiene_piscina', 'aire_acondicionado'];
         foreach ($booleanFields as $field) {
             $property->$field = $request->has($field) ? \DB::raw('true') : \DB::raw('false');
         }
 
-        // Gestión del certificado energético (PDF)
+        // 5. Gestión del Certificado Energético (PDF)
         if ($request->hasFile('certificado_energetico_archivo')) {
             $property->certificado_energetico_archivo = $request->file('certificado_energetico_archivo')->store('certificates', 'public');
         }
 
+        // Guardamos la propiedad en la base de datos
         $property->save();
 
-        // Gestión de la subida de imágenes
+        // 6. Procesamiento de la Galería de Imágenes
         if ($request->hasFile('images')) {
-            $isFirst = true;
-            foreach ($request->file('images') as $image) {
-                // Guardar la imagen en storage/public/properties
-                $path = $image->store('properties', 'public');
-
-                PropertyMedia::create([
-                    'propiedad_id' => $property->id,
-                    'ruta_archivo' => $path,
-                    'tipo_archivo' => 'imagen',
-                    'tipo_mime' => $image->getMimeType(),
-                    'tamano_archivo_kb' => (int) ceil($image->getSize() / 1024),
-                    'nombre_original' => $image->getClientOriginalName(),
-                    'es_portada' => $isFirst ? \DB::raw('true') : \DB::raw('false'),
-                ]);
-
-                $isFirst = false;
-            }
+            $this->uploadPropertyImages($property, $request->file('images'));
         }
 
         return redirect()->route('properties.show', [$property->id, $property->slug])
                          ->with('success', '¡Publicación creada exitosamente!');
+    }
+
+    /**
+     * Procesa y guarda las imágenes de una propiedad.
+     * Separado en un método privado para reducir la complejidad del controlador principal.
+     */
+    private function uploadPropertyImages($property, array $images)
+    {
+        $isFirst = true;
+        foreach ($images as $image) {
+            // Guardar el archivo físico en storage/app/public/properties
+            $path = $image->store('properties', 'public');
+
+            // Crear el registro en la tabla medios_propiedades
+            PropertyMedia::create([
+                'propiedad_id' => $property->id,
+                'ruta_archivo' => $path,
+                'tipo_archivo' => 'imagen',
+                'tipo_mime' => $image->getMimeType(),
+                'tamano_archivo_kb' => (int) ceil($image->getSize() / 1024),
+                'nombre_original' => $image->getClientOriginalName(),
+                'es_portada' => $isFirst ? \DB::raw('true') : \DB::raw('false'),
+            ]);
+
+            $isFirst = false;
+        }
     }
     public function index()
     {
@@ -131,8 +145,10 @@ class UserPropertyController extends Controller
 
     public function update(Request $request, $id)
     {
+        // 1. Buscar la propiedad asegurando que pertenece al usuario autenticado
         $property = Property::where('usuario_id', Auth::id())->findOrFail($id);
         
+        // 2. Validación de datos (similares al store)
         $validated = $request->validate([
             'titulo' => 'required|string|max:200',
             'descripcion' => 'required|string|min:100',
@@ -149,16 +165,18 @@ class UserPropertyController extends Controller
             'certificado_energetico_archivo' => 'nullable|file|mimes:pdf|max:5120'
         ]);
 
+        // 3. Actualización de datos básicos
         $property->fill($validated);
         
-        // Valores booleanos
+        // 4. Actualización de campos booleanos
         $booleanFields = ['tiene_ascensor', 'tiene_parking', 'tiene_terraza', 'tiene_jardin', 'tiene_piscina', 'aire_acondicionado'];
         foreach ($booleanFields as $field) {
             $property->$field = $request->has($field) ? \DB::raw('true') : \DB::raw('false');
         }
 
-        // Gestión del certificado energético
+        // 5. Gestión del Certificado Energético (Reemplazo)
         if ($request->hasFile('certificado_energetico_archivo')) {
+            // Eliminar archivo antiguo si existe
             if ($property->certificado_energetico_archivo) {
                 Storage::disk('public')->delete($property->certificado_energetico_archivo);
             }
@@ -167,20 +185,9 @@ class UserPropertyController extends Controller
 
         $property->save();
 
-        // Gestión de nuevas imágenes si se suben en el edit
+        // 6. Gestión de nuevas imágenes (si se añaden en la edición)
         if ($request->hasFile('new_images')) {
-            foreach ($request->file('new_images') as $image) {
-                $path = $image->store('properties', 'public');
-                PropertyMedia::create([
-                    'propiedad_id' => $property->id,
-                    'ruta_archivo' => $path,
-                    'tipo_archivo' => 'imagen',
-                    'tipo_mime' => $image->getMimeType(),
-                    'tamano_archivo_kb' => (int) ceil($image->getSize() / 1024),
-                    'nombre_original' => $image->getClientOriginalName(),
-                    'es_portada' => \DB::raw('false'),
-                ]);
-            }
+            $this->uploadPropertyImages($property, $request->file('new_images'));
         }
 
         return redirect()->route('user.properties.index')->with('success', 'Propiedad actualizada correctamente.');

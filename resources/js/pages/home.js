@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Función para calcular cuánto desplazar (un tercio del ancho o una tarjeta)
         const getScrollAmount = () => {
             const firstCard = carousel.querySelector('.property-card');
-            return firstCard ? firstCard.offsetWidth + 32 : 400; // 32 is the gap (var--sp-8)
+            return firstCard ? firstCard.offsetWidth + 32 : 400; 
         };
 
         nextBtn.addEventListener('click', () => {

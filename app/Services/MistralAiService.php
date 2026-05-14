@@ -12,19 +12,19 @@ class MistralAiService
 
     public function __construct()
     {
-        $this->apiKey = env('MISTRAL_API_KEY', '');
+        $this->apiKey = config('services.mistral.key', '');
     }
 
     /**
-     * Analyze a property image to generate a suggested title, description, and recommendations.
+     * Analiza la imagen de una propiedad para generar un título sugerido, una descripción y recomendaciones.
      *
-     * @param string $base64Image The base64 representation of the image.
-     * @return array|null An array containing 'title', 'description', and 'recommendations' or null on failure.
+     * @param string $base64Image La representación en base64 de la imagen.
+     * @return array|null Un array que contiene 'title', 'description' y 'recommendations', o null si falla.
      */
     public function analyzePropertyImage(string $base64Image): ?array
     {
         if (empty($this->apiKey)) {
-            Log::error('Mistral API Key is not set.');
+            Log::error('La API Key de Mistral no está configurada.');
             return [
                 'title' => 'API Key faltante',
                 'description' => 'La API Key de Mistral no está configurada.',
@@ -83,10 +83,10 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
     }
 
     /**
-     * Send a basic chat message to Mistral API.
+     * Envía un mensaje de chat básico a la API de Mistral.
      *
-     * @param string $message The user's message.
-     * @return string The assistant's response.
+     * @param string $message El mensaje del usuario.
+     * @return string La respuesta del asistente.
      */
     public function chat(string $message): string
     {
@@ -94,7 +94,7 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
             return 'La API Key de Mistral no está configurada.';
         }
 
-        // Fetch a simple list of available properties to use as context
+        // Obtiene una lista simple de propiedades disponibles para usar como contexto
         $properties = \Illuminate\Support\Facades\DB::table('propiedades')
             ->leftJoin('medios_propiedades', function($join) {
                 $join->on('propiedades.id', '=', 'medios_propiedades.propiedad_id')
@@ -178,7 +178,7 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
                 // Limpieza de caracteres que puedan romper el JSON o la codificación
                 $content = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
                 
-                Log::info('Mistral Response Content: ' . $content);
+                // Registro del contenido de la respuesta para depuración
                 if (empty($content)) {
                     Log::warning('Mistral devolvió un contenido vacío.');
                     return 'El asistente no pudo generar una respuesta. Por favor, intenta de nuevo.';

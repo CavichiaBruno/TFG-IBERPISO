@@ -10,7 +10,7 @@ abstract class TestCase extends BaseTestCase
     use RefreshDatabase;
 
     /**
-     * Indicates whether the default seeder should run before each test.
+     * Indica si el seeder predeterminado debe ejecutarse antes de cada prueba.
      *
      * @var bool
      */

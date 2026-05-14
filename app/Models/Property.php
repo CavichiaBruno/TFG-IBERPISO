@@ -69,26 +69,27 @@ class Property extends Model
     // Formatea el precio con separador de miles
     public function getFormattedPriceAttribute(): string { return number_format((float) $this->precio, 0, ',', '.'); }
 
-    // Obtiene la URL de la imagen de portada o un placeholder si no hay
+    // Obtiene la URL de la imagen de portada con lógica de fallback (respaldo)
     public function getCoverUrlAttribute(): ?string
     {
         try {
-            // Si ya cargamos la relación coverImage, la usamos (óptimo)
+            // Prioridad 1: Si ya cargamos la relación coverImage mediante Eager Loading, la usamos
             if ($this->relationLoaded('coverImage') && $this->coverImage) {
                 return $this->coverImage->url;
             }
 
-            // Fallback: buscar en la colección de medios si ya está cargada
+            // Prioridad 2: Buscar en la colección de medios si ya está cargada (evita queries extra)
             if ($this->relationLoaded('medios')) {
                 $cover = $this->medios->where('tipo_archivo', 'imagen')->where('es_portada', true)->first()
                     ?? $this->medios->where('tipo_archivo', 'imagen')->first();
                 return $cover ? $cover->url : 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
             }
 
-            // Si nada está cargado, buscamos directamente el cover (lazy)
+            // Prioridad 3: Si nada está cargado, buscamos directamente el cover (Lazy Loading)
             $cover = $this->coverImage()->first();
             return $cover ? $cover->url : 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
         } catch (\Exception $e) {
+            // Si hay cualquier error, devolvemos una imagen por defecto para no romper la UI
             return 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200';
         }
     }

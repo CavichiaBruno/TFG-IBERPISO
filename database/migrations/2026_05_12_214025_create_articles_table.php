@@ -9,7 +9,7 @@ return new class extends Migration
     public $withinTransaction = false;
 
     /**
-     * Run the migrations.
+     * Ejecutar las migraciones.
      */
     public function up(): void
     {
@@ -28,7 +28,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revertir las migraciones.
      */
     public function down(): void
     {

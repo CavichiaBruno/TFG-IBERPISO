@@ -14,17 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     try {
                         lottie.play();
                     } catch (e) {
-                        console.warn('Error playing lottie:', e);
+                        console.warn('Error al reproducir Lottie:', e);
                     }
                 } else {
-                    // Fallback para cuando el componente no se ha cargado completamente todavía
+                    // Alternativa para cuando el componente no se ha cargado completamente todavía
                     lottie.addEventListener('ready', () => {
                         try {
                             if (typeof lottie.play === 'function') {
                                 lottie.play();
                             }
                         } catch (e) {
-                            console.warn('Error playing lottie on ready:', e);
+                            console.warn('Error al reproducir Lottie al estar listo:', e);
                         }
                     }, { once: true });
                 }
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Retry logic for when custom elements might not be ready
+    // Lógica de reintento para cuando los elementos personalizados pueden no estar listos
     let retryCount = 0;
     const maxRetries = 50;
     
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             customElements.whenDefined('dotlottie-wc').then(() => {
                 initLottieOptimization();
             }).catch(err => {
-                console.warn('Error waiting for dotlottie-wc:', err);
-                initLottieOptimization(); // Try anyway
+                console.warn('Error esperando a dotlottie-wc:', err);
+                initLottieOptimization(); // Intentar de todos modos
             });
         } else if (document.querySelectorAll('dotlottie-wc').length > 0) {
             initLottieOptimization();
@@ -106,14 +106,14 @@ window.changeCardImage = function(event, btn, direction) {
     if (nextIndex >= images.length) nextIndex = 0;
     if (nextIndex < 0) nextIndex = images.length - 1;
     
-    // Update Images
+    // Actualizar imágenes
     images[currentIndex].classList.remove('active');
     images[currentIndex].style.display = 'none';
     
     images[nextIndex].classList.add('active');
     images[nextIndex].style.display = 'block';
     
-    // Update Dots
+    // Actualizar puntos (indicadores)
     if (dots.length > 0) {
         dots[currentIndex].classList.remove('active');
         dots[nextIndex].classList.add('active');

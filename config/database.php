@@ -7,13 +7,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Database Connection Name
+    | Nombre de la Conexión de Base de Datos Predeterminada
     |--------------------------------------------------------------------------
     |
-    | Here you may specify which of the database connections below you wish
-    | to use as your default connection for database operations. This is
-    | the connection which will be utilized unless another connection
-    | is explicitly specified when you execute a query / statement.
+    | Aquí puedes especificar cuál de las siguientes conexiones de base de datos
+    | deseas utilizar como tu conexión predeterminada para las operaciones.
     |
     */
 
@@ -21,12 +19,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Database Connections
+    | Conexiones de Base de Datos
     |--------------------------------------------------------------------------
     |
-    | Below are all of the database connections defined for your application.
-    | An example configuration is provided for each database system which
-    | is supported by Laravel. You're free to add / remove connections.
+    | A continuación se definen todas las conexiones de base de datos para tu
+    | aplicación. Se proporciona una configuración de ejemplo para cada sistema.
     |
     */
 
@@ -121,12 +118,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Migration Repository Table
+    | Tabla del Repositorio de Migraciones
     |--------------------------------------------------------------------------
     |
-    | This table keeps track of all the migrations that have already run for
-    | your application. Using this information, we can determine which of
-    | the migrations on disk haven't actually been run on the database.
+    | Esta tabla mantiene un registro de todas las migraciones que ya se han
+    | ejecutado para tu aplicación.
     |
     */
 

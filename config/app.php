@@ -4,12 +4,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Name
+    | Nombre de la Aplicación
     |--------------------------------------------------------------------------
     |
-    | This value is the name of your application, which will be used when the
-    | framework needs to place the application's name in a notification or
-    | other UI elements where an application name needs to be displayed.
+    | Este valor es el nombre de tu aplicación, que se utilizará cuando el
+    | framework necesite colocar el nombre de la aplicación en una notificación
+    | u otros elementos de la interfaz de usuario.
     |
     */
 
@@ -17,12 +17,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Environment
+    | Entorno de la Aplicación
     |--------------------------------------------------------------------------
     |
-    | This value determines the "environment" your application is currently
-    | running in. This may determine how you prefer to configure various
-    | services the application utilizes. Set this in your ".env" file.
+    | Este valor determina el "entorno" en el que se ejecuta actualmente tu
+    | aplicación. Esto puede determinar cómo prefieres configurar varios
+    | servicios que utiliza la aplicación. Configúralo en tu archivo ".env".
     |
     */
 
@@ -30,12 +30,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Debug Mode
+    | Modo de Depuración de la Aplicación
     |--------------------------------------------------------------------------
     |
-    | When your application is in debug mode, detailed error messages with
-    | stack traces will be shown on every error that occurs within your
-    | application. If disabled, a simple generic error page is shown.
+    | Cuando tu aplicación está en modo de depuración, se mostrarán mensajes
+    | de error detallados con seguimientos de pila en cada error que ocurra.
+    | Si está desactivado, se muestra una página de error genérica simple.
     |
     */
 
@@ -43,12 +43,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application URL
+    | URL de la Aplicación
     |--------------------------------------------------------------------------
     |
-    | This URL is used by the console to properly generate URLs when using
-    | the Artisan command line tool. You should set this to the root of
-    | the application so that it's available within Artisan commands.
+    | Esta URL es utilizada por la consola para generar URLs correctamente
+    | cuando se utiliza la herramienta de línea de comandos Artisan. Debes
+    | establecer esto a la raíz de tu aplicación.
     |
     */
 
@@ -69,12 +69,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Application Locale Configuration
+    | Configuración de Idioma de la Aplicación
     |--------------------------------------------------------------------------
     |
-    | The application locale determines the default locale that will be used
-    | by Laravel's translation / localization methods. This option can be
-    | set to any locale for which you plan to have translation strings.
+    | El idioma de la aplicación determina el idioma predeterminado que se
+    | utilizará en los métodos de traducción / localización de Laravel.
     |
     */
 

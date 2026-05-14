@@ -4,12 +4,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Filesystem Disk
+    | Disco de Sistema de Archivos Predeterminado
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default filesystem disk that should be used
-    | by the framework. The "local" disk, as well as a variety of cloud
-    | based disks are available to your application for file storage.
+    | Aquí puedes especificar el disco de sistema de archivos predeterminado
+    | que debe utilizar el framework.
     |
     */
 
@@ -17,14 +16,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Filesystem Disks
+    | Discos de Sistema de Archivos
     |--------------------------------------------------------------------------
     |
-    | Below you may configure as many filesystem disks as necessary, and you
-    | may even configure multiple disks for the same driver. Examples for
-    | most supported storage drivers are configured here for reference.
-    |
-    | Supported drivers: "local", "ftp", "sftp", "s3"
+    | Aquí puedes configurar tantos "discos" de sistema de archivos como desees.
     |
     */
 
