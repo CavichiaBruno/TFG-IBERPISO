@@ -33,7 +33,8 @@ class MistralAiService
         }
 
         try {
-            $response = Http::withToken($this->apiKey)
+            $response = Http::withoutVerifying()
+                ->withToken($this->apiKey)
                 ->timeout(30)
                 ->post($this->apiUrl, [
                     'model' => 'pixtral-12b-2409',
@@ -78,6 +79,118 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
         } catch (\Exception $e) {
             Log::error('Mistral API Exception: ' . $e->getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Send a basic chat message to Mistral API.
+     *
+     * @param string $message The user's message.
+     * @return string The assistant's response.
+     */
+    public function chat(string $message): string
+    {
+        if (empty($this->apiKey)) {
+            return 'La API Key de Mistral no está configurada.';
+        }
+
+        // Fetch a simple list of available properties to use as context
+        $properties = \Illuminate\Support\Facades\DB::table('propiedades')
+            ->leftJoin('medios_propiedades', function($join) {
+                $join->on('propiedades.id', '=', 'medios_propiedades.propiedad_id')
+                    ->where('medios_propiedades.tipo_archivo', '=', 'imagen')
+                    ->where('medios_propiedades.es_portada', '=', \Illuminate\Support\Facades\DB::raw('true'));
+            })
+            ->whereNull('propiedades.deleted_at')
+            ->where('propiedades.activa', \Illuminate\Support\Facades\DB::raw('true'))
+            ->select(
+                'propiedades.id', 
+                'propiedades.slug', 
+                'propiedades.titulo', 
+                'propiedades.precio', 
+                'propiedades.ciudad', 
+                'propiedades.habitaciones', 
+                'propiedades.banos', 
+                'propiedades.tipo_operacion', 
+                'propiedades.tipo_propiedad',
+                'medios_propiedades.ruta_archivo as imagen'
+            )
+            ->limit(50)
+            ->get();
+
+        $context = "Lista de propiedades disponibles:\n";
+        foreach ($properties as $prop) {
+            $slug = $prop->slug ?: 'detalle';
+            $url = url("/propiedades/{$prop->id}-{$slug}");
+            
+            $imgUrl = 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=100';
+            if ($prop->imagen) {
+                if (str_starts_with($prop->imagen, 'http')) {
+                    $imgUrl = $prop->imagen;
+                } else {
+                    // Usamos asset() para generar la URL correcta según el host actual
+                    $imgUrl = asset(ltrim($prop->imagen, '/'));
+                }
+            }
+            
+            $context .= "ID: {$prop->id} | {$prop->titulo} | {$prop->precio}€ | Enlace: $url | Imagen: $imgUrl\n";
+        }
+
+        $systemPrompt = 'Eres un asistente virtual de IberPiso. RESPONDE SIEMPRE EN FORMATO JSON ESTRICTO.
+        Estructura JSON requerida:
+        {
+          "message": "Tu respuesta amigable en texto aquí",
+          "properties": [
+            {
+              "title": "Título comercial corto",
+              "price": "Precio formateado (ej: 125.000€)",
+              "image": "URL de la imagen proporcionada",
+              "url": "URL de la propiedad proporcionada",
+              "details": "Breve resumen (ej: 3 hab, 2 baños, Barcelona)"
+            }
+          ]
+        }
+        Si no encuentras una propiedad que encaje perfectamente, responde amigablemente en "message" y deja el array "properties" vacío. NUNCA inventes datos.';
+
+        try {
+            $response = Http::withoutVerifying()
+                ->withToken($this->apiKey)
+                ->timeout(30)
+                ->post($this->apiUrl, [
+                    'model' => 'mistral-small-latest',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => $systemPrompt . "\n\n" . $context
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $message
+                        ]
+                    ],
+                    'response_format' => ['type' => 'json_object'],
+                    'temperature' => 0.2,
+                ]);
+
+            if ($response->successful()) {
+                $content = $response->json('choices.0.message.content');
+                
+                // Limpieza de caracteres que puedan romper el JSON o la codificación
+                $content = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
+                
+                Log::info('Mistral Response Content: ' . $content);
+                if (empty($content)) {
+                    Log::warning('Mistral devolvió un contenido vacío.');
+                    return 'El asistente no pudo generar una respuesta. Por favor, intenta de nuevo.';
+                }
+                return $content;
+            } else {
+                Log::error('Mistral Chat Error: ' . $response->body());
+                return 'Hubo un error al comunicarse con el asistente. Inténtelo más tarde.';
+            }
+        } catch (\Exception $e) {
+            Log::error('Mistral Chat Exception: ' . $e->getMessage());
+            return 'Ocurrió un problema inesperado. Inténtelo más tarde.';
         }
     }
 }

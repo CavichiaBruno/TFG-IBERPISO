@@ -250,6 +250,8 @@
         }
     </style>
 
+    @include('components.chatbot-popup')
+    
     @stack('scripts')
 </body>
 </html>

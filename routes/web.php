@@ -19,6 +19,10 @@ Route::get('/propiedades', [PropertyController::class, 'index'])->name('properti
 Route::get('/propiedades/{id}-{slug}', [PropertyController::class, 'show'])->name('properties.show');
 Route::post('/propiedades/{id}/contactar', [InquiryController::class, 'store'])->name('inquiries.store');
 
+// --- Chatbot ---
+Route::get('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'index'])->name('chatbot.index');
+Route::post('/chatbot/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
+
 // --- Rutas de Autenticación ---
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
