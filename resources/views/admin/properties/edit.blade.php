@@ -8,6 +8,17 @@
 @endsection
 
 @section('content')
+@if($errors->any())
+    <div class="alert alert-danger" style="margin-bottom: 24px; padding: 16px; background: #fff0f0; border-radius: 12px; font-family: var(--font-body); font-size: 14px; letter-spacing: -0.224px; color: #ff453a; border: none;">
+        <p><strong>Por favor, corrige los siguientes errores:</strong></p>
+        <ul style="margin: 8px 0 0; padding-left: 20px;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 {{-- Loading Overlay con Lottie --}}
 <div id="property-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(245, 245, 247, 0.8); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s;">
     <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 150px; height: 150px;" autoplay loop></dotlottie-wc>
@@ -79,42 +90,11 @@ window.addEventListener('load', function() {
                 </div>
             </div>
 
-            {{-- PDF UPLOADER --}}
-            <div class="media-section">
-                <h4>Documentos (PDF)</h4>
-                <div class="upload-zone upload-zone-sm" id="pdf-upload-zone" data-type="pdf"
-                    data-property="{{ $property->id }}">
-                    <svg viewBox="0 0 24 24" width="32" height="32">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor"
-                            fill="none" stroke-width="1.5" />
-                        <polyline points="14 2 14 8 20 8" stroke="currentColor" fill="none" stroke-width="1.5" />
-                    </svg>
-                    <p><label for="pdf-input" class="upload-link">Subir PDF</label></p>
-                    <small>PDF, DOCX — máx. 10 MB</small>
-                    <input type="file" id="pdf-input" accept=".pdf,.docx,application/pdf" class="upload-input"
-                        style="display:none">
-                </div>
-                <div id="docs-list">
-                    @foreach($property->medios->where('tipo_archivo', 'pdf') as $doc)
-                        <div class="doc-item-admin" data-id="{{ $doc->id }}">
-                            <svg viewBox="0 0 24 24" width="18" height="18">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor"
-                                    fill="none" stroke-width="2" />
-                            </svg>
-                            <span>{{ $doc->original_name }}</span>
-                            <small>({{ $doc->file_size_kb }} KB)</small>
-                            <button type="button" class="delete-media-btn" data-id="{{ $doc->id }}">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
         </div>
 
         <div class="form-actions">
-            <a href="{{ route('admin.properties.index') }}" class="btn btn-outline">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a href="{{ route('admin.properties.index') }}" class="btn-admin btn-admin-outline">Cancelar</a>
+            <button type="submit" class="btn-admin btn-admin-primary">Guardar cambios</button>
         </div>
     </form>
 @endsection

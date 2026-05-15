@@ -36,8 +36,8 @@ window.addEventListener('load', function() {
     @include('admin.properties._form', ['property' => null])
 
     <div class="form-actions">
-        <button type="submit" name="is_active" value="0" class="btn btn-outline">Guardar borrador</button>
-        <button type="submit" name="is_active" value="1" class="btn btn-primary">Publicar</button>
+        <button type="submit" name="is_active" value="0" class="btn-admin btn-admin-outline">Guardar borrador</button>
+        <button type="submit" name="is_active" value="1" class="btn-admin btn-admin-primary">Publicar</button>
     </div>
 </form>
 @endsection

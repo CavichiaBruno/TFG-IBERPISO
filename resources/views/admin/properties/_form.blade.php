@@ -12,7 +12,7 @@
     
     <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
         <input type="file" id="ai-image-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
-        <button type="button" class="btn btn-outline" onclick="document.getElementById('ai-image-input').click()" style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" class="btn-admin btn-admin-outline" onclick="document.getElementById('ai-image-input').click()" style="display: flex; align-items: center; gap: 8px;">
             <svg viewBox="0 0 24 24" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" fill="none" stroke-width="1.5"/><polyline points="17 8 12 3 7 8" stroke="currentColor" fill="none" stroke-width="1.5"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="1.5"/></svg>
             Seleccionar foto para análisis
         </button>
@@ -108,10 +108,13 @@
                 @endforeach
             </select>
         </div>
+        {{-- Tour virtual ocultado para futura feature --}}
+        {{-- 
         <div class="form-group">
             <label class="form-label">URL Tour virtual</label>
             <input type="url" name="url_tour_virtual" class="form-input" value="{{ old('url_tour_virtual', $property?->url_tour_virtual) }}" placeholder="https://...">
         </div>
+        --}}
     </div>
     <div class="amenities-checkboxes">
         @foreach([
@@ -166,7 +169,7 @@
     <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
         <input type="file" name="certificado_energetico_archivo" id="admin-cert-input"
                accept="application/pdf" style="display: none;">
-        <button type="button" class="btn btn-outline"
+        <button type="button" class="btn-admin btn-admin-outline"
                 onclick="document.getElementById('admin-cert-input').click()"
                 id="admin-cert-btn"
                 style="display: flex; align-items: center; gap: 8px;">

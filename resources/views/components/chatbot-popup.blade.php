@@ -62,6 +62,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let isOpen = false;
 
+    // Check for 'chat' parameter in URL to open automatically
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('chat')) {
+        setTimeout(() => {
+            if (!isOpen) toggleChat();
+        }, 500);
+    }
+
     function toggleChat() {
         isOpen = !isOpen;
         if (isOpen) {

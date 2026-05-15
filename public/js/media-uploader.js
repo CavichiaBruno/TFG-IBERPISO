@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
             Array.from(files).forEach(function (file) {
                 var formData = new FormData();
                 formData.append('file', file);
-                formData.append('file_type', fileType);
+                formData.append('tipo_archivo', fileType === 'image' ? 'imagen' : fileType);
 
                 fetch(uploadUrl, {
                     method: 'POST',
@@ -50,7 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (fileType === 'image') addImagePreview(res.media);
                         else addDocPreview(res.media);
                     } else {
-                        alert(res.error || 'Error al subir archivo.');
+                        var errorMsg = res.error || res.message || 'Error al subir archivo.';
+                        if (res.errors) {
+                            errorMsg += '\n' + Object.values(res.errors).flat().join('\n');
+                        }
+                        alert(errorMsg);
                     }
                 })
                 .catch(function () { alert('Error de conexión.'); });
@@ -66,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         div.dataset.id = media.id;
         div.innerHTML =
             '<img src="' + media.url + '" alt="Imagen" loading="lazy">' +
-            (media.is_cover ? '<span class="cover-badge">Portada</span>' : '') +
+            (media.es_portada ? '<span class="cover-badge">Portada</span>' : '') +
             '<div class="media-actions">' +
             '<button type="button" class="set-cover-btn" data-id="' + media.id + '" title="Portada">★</button>' +
             '<button type="button" class="delete-media-btn" data-id="' + media.id + '" title="Eliminar">✕</button>' +
@@ -83,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
         div.dataset.id = media.id;
         div.innerHTML =
             '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" fill="none" stroke-width="2"/></svg>' +
-            '<span>' + media.name + '</span>' +
+            '<span>' + media.nombre_original + '</span>' +
             '<button type="button" class="delete-media-btn" data-id="' + media.id + '">✕</button>';
         list.appendChild(div);
         bindMediaActions(div);

@@ -38,9 +38,9 @@ class AdminPropertyController extends Controller
         // Sistema de pestañas de filtrado (Activas, Inactivas, Destacadas, etc.)
         $filter = $request->get('filtro', 'all');
         match ($filter) {
-            'activas'    => $query->where('activa', \DB::raw('true'))->whereNull('deleted_at'),
-            'inactivas'  => $query->where('activa', \DB::raw('false'))->whereNull('deleted_at'),
-            'destacadas' => $query->where('destacada', \DB::raw('true'))->whereNull('deleted_at'),
+            'activas'    => $query->where('activa', true)->whereNull('deleted_at'),
+            'inactivas'  => $query->where('activa', false)->whereNull('deleted_at'),
+            'destacadas' => $query->where('destacada', true)->whereNull('deleted_at'),
             'venta'      => $query->where('tipo_operacion', 'venta')->whereNull('deleted_at'),
             'alquiler'   => $query->where('tipo_operacion', 'alquiler')->whereNull('deleted_at'),
             default      => $query->whereNull('deleted_at'),
@@ -76,8 +76,8 @@ class AdminPropertyController extends Controller
     {
         $data = $request->validated();
         $data['usuario_id'] = auth()->id(); // Asignamos el autor (agente actual)
-        $data['activa'] = $request->has('activa') ? \DB::raw('true') : \DB::raw('false');
-        $data['destacada'] = $request->has('destacada') ? \DB::raw('true') : \DB::raw('false');
+        $data['activa'] = $request->has('activa');
+        $data['destacada'] = $request->has('destacada');
 
         $property = Property::create($data);
 
@@ -103,8 +103,8 @@ class AdminPropertyController extends Controller
     {
         $property = Property::findOrFail($id);
         $data = $request->validated();
-        $data['activa']   = $request->has('activa') ? \DB::raw('true') : \DB::raw('false');
-        $data['destacada'] = $request->has('destacada') ? \DB::raw('true') : \DB::raw('false');
+        $data['activa']   = $request->has('activa');
+        $data['destacada'] = $request->has('destacada');
 
         // Gestión del certificado energético (PDF) — modo god admin
         if ($request->boolean('eliminar_certificado')) {

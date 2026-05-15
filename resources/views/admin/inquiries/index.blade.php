@@ -39,8 +39,8 @@
                     </td>
                     <td>
                         <div class="prop-info">
-                            <span class="prop-title">{{ $inq->nombre_visitante }}</span>
-                            <span class="prop-meta">{{ $inq->correo_visitante }}</span>
+                            <span class="prop-title">{{ $inq->sender_name }}</span>
+                            <span class="prop-meta">{{ $inq->sender_email }}</span>
                             @if($inq->telefono_visitante)<span class="prop-meta">{{ $inq->telefono_visitante }}</span>@endif
                         </div>
                     </td>
@@ -77,4 +77,71 @@
 <div style="margin-top: 24px;">
     {{ $inquiries->links('components.pagination') }}
 </div>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelects = document.querySelectorAll('.status-select');
+    const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    statusSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            const id = this.dataset.id;
+            const newStatus = this.value;
+            const row = this.closest('tr');
+
+            // Feedback visual simple
+            this.style.opacity = '0.5';
+            
+            fetch(`/admin/consultas/${id}/estado`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': csrf,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    estado: newStatus
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                this.style.opacity = '1';
+                if (res.success) {
+                    // Si se marcó como leída, quitar el estilo de "negrita" de la fila
+                    if (newStatus !== 'pendiente') {
+                        row.style.background = 'transparent';
+                        row.style.fontWeight = 'normal';
+                    }
+                } else {
+                    alert('Error al actualizar el estado');
+                }
+            })
+            .catch(() => {
+                this.style.opacity = '1';
+                alert('Error de conexión');
+            });
+        });
+    });
+
+    // Lógica para borrar consulta
+    const deleteBtns = document.querySelectorAll('.delete-inquiry-btn');
+    deleteBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (!confirm('¿Seguro que querés eliminar esta consulta?')) return;
+            const id = this.dataset.id;
+            const row = this.closest('tr');
+
+            fetch(`/admin/consultas/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) row.remove();
+            });
+        });
+    });
+});
+</script>
+@endpush
 @endsection

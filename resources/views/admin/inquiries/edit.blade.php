@@ -27,12 +27,16 @@
                 <input type="number" name="usuario_id" class="form-input" value="{{ old('usuario_id', $inquiry->usuario_id) }}">
             </div>
             <div class="form-group">
-                <label class="form-label">Nombre Visitante</label>
-                <input type="text" name="nombre_visitante" class="form-input" value="{{ old('nombre_visitante', $inquiry->nombre_visitante) }}">
+                <label class="form-label">Nombre {{ $inquiry->usuario_id ? '(Sincronizado con Perfil)' : 'Visitante' }}</label>
+                <input type="text" name="nombre_visitante" class="form-input" 
+                       value="{{ old('nombre_visitante', $inquiry->sender_name) }}" 
+                       {{ $inquiry->usuario_id ? 'readonly style=background:#f5f5f7;' : '' }}>
             </div>
             <div class="form-group">
-                <label class="form-label">Correo Visitante</label>
-                <input type="email" name="correo_visitante" class="form-input" value="{{ old('correo_visitante', $inquiry->correo_visitante) }}">
+                <label class="form-label">Correo {{ $inquiry->usuario_id ? '(Sincronizado con Perfil)' : 'Visitante' }}</label>
+                <input type="email" name="correo_visitante" class="form-input" 
+                       value="{{ old('correo_visitante', $inquiry->sender_email) }}"
+                       {{ $inquiry->usuario_id ? 'readonly style=background:#f5f5f7;' : '' }}>
             </div>
             <div class="form-group">
                 <label class="form-label">Teléfono Visitante</label>

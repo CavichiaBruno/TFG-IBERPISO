@@ -20,7 +20,9 @@ Route::get('/propiedades/{id}-{slug}', [PropertyController::class, 'show'])->nam
 Route::post('/propiedades/{id}/contactar', [InquiryController::class, 'store'])->name('inquiries.store');
 
 // --- Chatbot ---
-Route::get('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'index'])->name('chatbot.index');
+Route::get('/chatbot', function() {
+    return redirect()->route('home', ['chat' => 1]);
+})->name('chatbot.index');
 Route::post('/chatbot/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
 
 // --- Rutas de Autenticación ---
@@ -54,7 +56,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/mis-publicaciones/{id}', [\App\Http\Controllers\UserPropertyController::class, 'destroy'])->name('user.properties.destroy');
 
     // Integración con IA
-    Route::post('/ai/analyze-image', [AiController::class, 'analyzeImage'])->name('ai.analyzeImage');
+    Route::post('/ai/analyze-image', [AiController::class, 'analyzeImage'])->name('user.ai.analyzeImage');
+
+    // --- Rutas de Scroll y Favoritos ---
+    Route::get('/scroll', [\App\Http\Controllers\ScrollController::class, 'index'])->name('scroll');
+    Route::post('/scroll/interact', [\App\Http\Controllers\ScrollController::class, 'interact'])->name('scroll.interact');
+    Route::get('/guardados', [\App\Http\Controllers\ScrollController::class, 'saved'])->name('saved');
+    Route::delete('/guardados/{property_id}', [\App\Http\Controllers\ScrollController::class, 'removeFavorite'])->name('favorites.remove');
 });
 
 // --- Rutas de Administración ---
@@ -81,8 +89,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/consultas', [AdminInquiryController::class, 'store'])->name('inquiries.store');
     Route::get('/consultas/{id}/editar', [AdminInquiryController::class, 'edit'])->name('inquiries.edit');
     Route::put('/consultas/{id}', [AdminInquiryController::class, 'update'])->name('inquiries.update');
-    Route::patch('/consultas/{id}/estado', [AdminInquiryController::class, 'updateStatus'])->name('inquiries.updateStatus');
-    Route::delete('/consultas/{id}', [AdminInquiryController::class, 'destroy'])->name('inquiries.destroy');
+    Route::patch('/inquiries/{id}/status', [AdminInquiryController::class, 'updateStatus'])->name('inquiries.status');
+    Route::delete('/inquiries/{id}', [AdminInquiryController::class, 'destroy'])->name('inquiries.destroy');
 
     // Interacciones (Interactions)
     Route::resource('interacciones', \App\Http\Controllers\Admin\AdminInteractionController::class)->names([
@@ -119,9 +127,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/ai/analyze-image', [AiController::class, 'analyzeImage'])->name('ai.analyzeImage');
 });
 
-// --- Rutas de Scroll y Favoritos ---
-Route::get('/scroll', [\App\Http\Controllers\ScrollController::class, 'index'])->name('scroll');
-Route::post('/scroll/interact', [\App\Http\Controllers\ScrollController::class, 'interact'])->name('scroll.interact');
-Route::get('/guardados', [\App\Http\Controllers\ScrollController::class, 'saved'])->name('saved');
-Route::delete('/guardados/{property_id}', [\App\Http\Controllers\ScrollController::class, 'removeFavorite'])->name('favorites.remove');
+
 
