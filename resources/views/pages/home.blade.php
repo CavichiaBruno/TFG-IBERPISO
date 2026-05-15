@@ -48,21 +48,6 @@
                                 </div>
                             </form>
                         </div>
-
-                        <div class="hero-trust fade-in" style="animation-delay: 0.2s;">
-                            <div class="trust-chip" style="background: rgba(255,255,255,0.1); color: white;">
-                                <svg viewBox="0 0 24 24" width="13" height="13"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="currentColor" fill="none" stroke-width="2.2" /><polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" fill="none" stroke-width="2.2" /></svg>
-                                <span>Propiedades verificadas</span>
-                            </div>
-                            <div class="trust-chip" style="background: rgba(255,255,255,0.1); color: white;">
-                                <svg viewBox="0 0 24 24" width="13" height="13"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" fill="none" stroke-width="2.2" /><circle cx="9" cy="7" r="4" stroke="currentColor" fill="none" stroke-width="2.2" /></svg>
-                                <span>Agentes certificados</span>
-                            </div>
-                            <div class="trust-chip" style="background: rgba(255,255,255,0.1); color: white;">
-                                <svg viewBox="0 0 24 24" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" fill="none" stroke-width="2.2" /><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" fill="none" stroke-width="2.2" /></svg>
-                                <span>Sin comisiones ocultas</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>

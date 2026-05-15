@@ -5,21 +5,40 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Servicio que gestiona la comunicación con la API de Mistral AI.
+ *
+ * Encapsula toda la lógica de conexión con la IA para mantener
+ * los controladores limpios. Ofrece dos funcionalidades:
+ * - Analizar imágenes de propiedades para generar títulos y descripciones.
+ * - Responder preguntas del chatbot recomendando propiedades del catálogo.
+ */
 class MistralAiService
 {
+    /** @var string Clave de autenticación de la API de Mistral (desde .env) */
     protected string $apiKey;
+
+    /** @var string URL del endpoint de la API de Mistral AI */
     protected string $apiUrl = 'https://api.mistral.ai/v1/chat/completions';
 
+    /**
+     * Carga la clave de la API desde la configuración del proyecto.
+     * La clave se define en el archivo .env como MISTRAL_API_KEY.
+     */
     public function __construct()
     {
         $this->apiKey = config('services.mistral.key', '');
     }
 
     /**
-     * Analiza la imagen de una propiedad para generar un título sugerido, una descripción y recomendaciones.
+     * Analiza una imagen de propiedad y genera sugerencias de texto.
      *
-     * @param string $base64Image La representación en base64 de la imagen.
-     * @return array|null Un array que contiene 'title', 'description' y 'recommendations', o null si falla.
+     * Envía la imagen (en formato base64) al modelo de visión Pixtral de Mistral.
+     * La IA devuelve un título comercial, una descripción publicitaria y
+     * recomendaciones para mejorar la fotografía.
+     *
+     * @param  string $base64Image La imagen codificada en base64
+     * @return array|null Array con 'title', 'description' y 'recommendations', o null si falla
      */
     public function analyzePropertyImage(string $base64Image): ?array
     {
@@ -83,10 +102,14 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
     }
 
     /**
-     * Envía un mensaje de chat básico a la API de Mistral.
+     * Envía un mensaje del usuario al chatbot y devuelve la respuesta de la IA.
      *
-     * @param string $message El mensaje del usuario.
-     * @return string La respuesta del asistente.
+     * Antes de llamar a la API, construye un contexto con las primeras 50 propiedades
+     * activas del catálogo para que la IA pueda recomendar inmuebles reales.
+     * La respuesta siempre viene en formato JSON con un mensaje y una lista de propiedades.
+     *
+     * @param  string $message El mensaje escrito por el usuario en el chat
+     * @return string La respuesta en formato JSON con "message" y "properties"
      */
     public function chat(string $message): string
     {
@@ -104,14 +127,14 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
             ->whereNull('propiedades.deleted_at')
             ->where('propiedades.activa', \Illuminate\Support\Facades\DB::raw('true'))
             ->select(
-                'propiedades.id', 
-                'propiedades.slug', 
-                'propiedades.titulo', 
-                'propiedades.precio', 
-                'propiedades.ciudad', 
-                'propiedades.habitaciones', 
-                'propiedades.banos', 
-                'propiedades.tipo_operacion', 
+                'propiedades.id',
+                'propiedades.slug',
+                'propiedades.titulo',
+                'propiedades.precio',
+                'propiedades.ciudad',
+                'propiedades.habitaciones',
+                'propiedades.banos',
+                'propiedades.tipo_operacion',
                 'propiedades.tipo_propiedad',
                 'medios_propiedades.ruta_archivo as imagen'
             )
@@ -122,7 +145,7 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
         foreach ($properties as $prop) {
             $slug = $prop->slug ?: 'detalle';
             $url = url("/propiedades/{$prop->id}-{$slug}");
-            
+
             $imgUrl = 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=100';
             if ($prop->imagen) {
                 if (str_starts_with($prop->imagen, 'http')) {
@@ -132,7 +155,7 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
                     $imgUrl = asset(ltrim($prop->imagen, '/'));
                 }
             }
-            
+
             $context .= "ID: {$prop->id} | {$prop->titulo} | {$prop->precio}€ | Enlace: $url | Imagen: $imgUrl\n";
         }
 
@@ -174,10 +197,10 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
 
             if ($response->successful()) {
                 $content = $response->json('choices.0.message.content');
-                
+
                 // Limpieza de caracteres que puedan romper el JSON o la codificación
                 $content = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
-                
+
                 // Registro del contenido de la respuesta para depuración
                 if (empty($content)) {
                     Log::warning('Mistral devolvió un contenido vacío.');

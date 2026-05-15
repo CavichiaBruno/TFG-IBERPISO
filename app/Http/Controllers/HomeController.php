@@ -5,11 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\User;
 
+/**
+ * Controlador de la página de inicio (Landing Page) de IberPiso.
+ *
+ * Se encarga de mostrar la portada de la web con estadísticas generales
+ * y las propiedades destacadas. Usa caché para evitar consultas repetidas
+ * a la base de datos en cada visita.
+ */
 class HomeController extends Controller
 {
     /**
-     * Muestra la página de inicio (Landing Page).
-     * Recupera los inmuebles destacados y algunas estadísticas generales.
+     * Muestra la página de inicio.
+     *
+     * Carga las estadísticas generales (propiedades, ciudades, usuarios)
+     * usando caché de 15 minutos para mejorar el rendimiento.
+     * Las propiedades destacadas se cargan después vía AJAX.
+     *
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -29,7 +41,13 @@ class HomeController extends Controller
     }
 
     /**
-     * Carga las propiedades destacadas (endpoint AJAX específico)
+     * Devuelve las propiedades destacadas para cargarlas de forma asíncrona (AJAX).
+     *
+     * Solo responde a peticiones AJAX o que esperen JSON.
+     * Los resultados se almacenan en caché 15 minutos para no sobrecargar la base de datos.
+     * Devuelve el HTML renderizado del bloque de tarjetas más el conteo total.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function loadFeatured()
     {
@@ -46,7 +64,7 @@ class HomeController extends Controller
                 ->orderByDesc('created_at')
                 ->take(12)
                 ->pluck('id');
-            
+
             return Property::with(['medios'])
                 ->whereIn('id', $featuredIds)
                 ->get();

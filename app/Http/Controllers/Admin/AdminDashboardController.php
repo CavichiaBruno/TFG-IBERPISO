@@ -7,8 +7,23 @@ use App\Models\Property;
 use App\Models\Inquiry;
 use App\Models\User;
 
+/**
+ * Controlador del Panel de Control del administrador (Dashboard).
+ *
+ * Muestra un resumen con las estadísticas clave de la plataforma:
+ * total de propiedades, consultas pendientes, usuarios activos
+ * y las últimas actividades registradas.
+ */
 class AdminDashboardController extends Controller
 {
+    /**
+     * Muestra la página principal del panel de administración.
+     *
+     * Recopila estadísticas generales y los registros más recientes
+     * de propiedades y consultas para mostrar un resumen rápido al admin.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $stats = [
