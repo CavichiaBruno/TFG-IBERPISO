@@ -1,131 +1,184 @@
-# IberPiso
+# IberPiso - Guía Completa de Instalación y Ejecución
 
-Guía de instalación y ejecución para el proyecto `iberpiso`.
+## 📋 Requisitos
 
-## Requisitos
+- **PHP 8.3** o superior
+- **Composer**
+- **Node.js** y **npm**
+- **Git** (opcional)
+- **PowerShell** (en Windows)
 
-- PHP 8.3 o superior
-- Composer
-- Node.js y npm
-- Git (opcional)
+Verifica que tengas todo instalado:
+```powershell
+php --version
+composer --version
+node --version
+npm --version
+```
 
-## Qué hace este proyecto
+## 🚀 Pasos de Instalación (SQLite Local)
 
-Este repositorio es una aplicación Laravel 13 con backend en PHP + SQLite local por defecto y frontend gestionado por Vite.
+Este proyecto usa **SQLite por defecto**, sin necesidad de base de datos externa.
 
-## Configuración del entorno
-
-1. Copia el archivo de ejemplo:
-
-```bash
+### 1. Copiar archivo de configuración
+```powershell
 cp .env.example .env
 ```
 
-2. Genera el `APP_KEY` de Laravel:
-
-```bash
+### 2. Generar APP_KEY de Laravel
+```powershell
 php artisan key:generate
 ```
 
-3. Si estás usando SQLite local, crea el archivo de base de datos (si aún no existe):
-
-```bash
-touch database/database.sqlite
+### 3. Crear archivo de base de datos SQLite
+```powershell
+New-Item -Path database/database.sqlite -ItemType File -Force
 ```
 
-4. Revisa el `.env`:
+### 4. Instalar dependencias PHP
+```powershell
+composer install
+```
 
-- `DB_CONNECTION=sqlite` indica que la app usa SQLite local.
-- No necesitas Neon DB a menos que cambies esta configuración.
-- `APP_KEY` deberá quedar con un valor `base64:...` después de ejecutar `php artisan key:generate`.
+### 5. Instalar dependencias Node.js
+```powershell
+npm install
+```
 
-### Ejemplo mínimo de `.env`
+### 6. Ejecutar migraciones (crear tablas)
+```powershell
+php artisan migrate
+```
+
+### 7. (Opcional) Cargar datos de ejemplo
+```powershell
+php artisan db:seed
+```
+
+## 💻 Ejecutar la Aplicación
+
+Necesitas **2 terminales** abiertas simultáneamente:
+
+### Terminal 1 - Dev Server de Vite (Hot Reload)
+```powershell
+npm start
+```
+
+### Terminal 2 - Servidor Laravel
+```powershell
+php artisan serve
+```
+
+Luego abre en el navegador:
+```
+http://localhost:8000
+```
+
+## 📦 Compilar para Producción
+
+```powershell
+npm run build
+```
+
+## ⚙️ Configuración `.env` (Valores por defecto)
 
 ```env
 APP_NAME=IberPiso
 APP_ENV=local
-APP_KEY=base64:XXXXXXXXXXXXX
+APP_KEY=base64:XXXXXXXXXXXXX (se genera automáticamente)
 APP_DEBUG=true
 APP_URL=http://localhost
 
 DB_CONNECTION=sqlite
 DB_DATABASE=database/database.sqlite
+
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+
+MAIL_MAILER=log
 ```
 
-## Instalación
+##  Verificar que Todo Funciona
 
-Desde la raíz del proyecto ejecuta:
+1.  `npm install` - Sin errores
+2.  `composer install` - Sin errores
+3.  `php artisan migrate` - Migraciones completadas
+4.  `npm start` - Dev server activo
+5.  `php artisan serve` - Servidor Laravel activo
+6.  Abre `http://localhost:8000` en el navegador - Sin errores en consola
 
-```bash
-composer install
-npm install
+## 🔧 Troubleshooting
+
+| Problema | Solución |
+|----------|----------|
+| "database.sqlite no existe" | Ejecutar: `New-Item -Path database/database.sqlite -ItemType File -Force` |
+| "APP_KEY no definido" | Ejecutar: `php artisan key:generate` |
+| "Composer no instaló dependencias" | Ejecutar: `composer install` |
+| "npm no instaló dependencias" | Ejecutar: `npm install` |
+| "Puerto 8000 en uso" | Especificar otro: `php artisan serve --port=8001` |
+
+## 📁 Estructura del Proyecto
+
+```
+├── app/                      # Código PHP (Modelos, Controladores, Servicios)
+├── config/                   # Configuración de la app
+├── database/
+│   ├── migrations/           # Migraciones SQL
+│   ├── seeders/             # Datos de ejemplo
+│   └── database.sqlite      # BD (creada en el paso 3)
+├── public/                   # Archivos públicos (CSS, JS compilado)
+├── resources/
+│   ├── css/                 # Estilos CSS
+│   ├── js/                  # JavaScript
+│   └── views/               # Vistas Blade
+├── routes/                   # Rutas de la aplicación
+├── storage/                  # Archivos generados (logs, caché)
+├── tests/                    # Tests unitarios y funcionales
+├── .env                      # Variables de entorno (creado en paso 1)
+├── composer.json             # Dependencias PHP
+├── package.json              # Dependencias Node.js
+├── vite.config.js            # Configuración de Vite
+└── README.md                 # Este archivo
 ```
 
-## Preparar la base de datos
+## 🔗 Comandos Útiles
 
-Ejecuta migraciones para crear las tablas necesarias:
+```powershell
+# Crear nuevo modelo con migración
+php artisan make:model NombreModelo -m
 
-```bash
-php artisan migrate
+# Crear controlador
+php artisan make:controller NombreControlador
+
+# Ver todas las rutas
+php artisan route:list
+
+# Vaciar caché
+php artisan cache:clear
+
+# Ejecutar tests
+php artisan test
+
+# Ver logs en tiempo real
+php artisan pail
+
+# Reiniciar base de datos (borra todo)
+php artisan migrate:fresh --seed
 ```
 
-Si el proyecto incluye seeders y quieres cargar datos de ejemplo:
+---
 
-```bash
-php artisan db:seed
-```
+**Última actualización:** 15 de Mayo de 2026
 
-## Compilar activos
-
-Para desarrollo con recarga en caliente:
-
-```bash
-npm start
-```
-
-Para compilar los activos para producción:
-
-```bash
-npm run build
-```
-
-## Ejecutar la aplicación
-
-Para levantar el servidor local de Laravel:
-
-```bash
-php artisan serve
-```
-
-Luego abre en el navegador:
-
-```text
-http://127.0.0.1:8000
-```
-
-## Comandos útiles
-
-- `php artisan migrate`: ejecutar migraciones
-- `php artisan migrate:rollback`: deshacer la última migración
-- `php artisan db:seed`: ejecutar seeders
-- `php artisan key:generate`: generar clave de aplicación
-- `npm run dev`: levantar Vite para desarrollo
-- `npm run build`: compilar los assets
-
-## Notas importantes
-
-- El `APP_KEY` es obligatorio para encriptar cookies, sesiones y otros datos internos de Laravel.
-- Si no quieres usar SQLite, cambia `DB_CONNECTION` a `mysql`, `pgsql` o lo que necesites y configura `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD` en el `.env`.
-- No compartas tu `.env` con claves sensibles en repositorios públicos.
-
-## Estructura básica
-
-- `app/`: lógica principal de Laravel
-- `database/`: migraciones, seeders y fixtures
-- `public/`: entrada pública y assets compilados
-- `resources/`: vistas, CSS y JavaScript fuente
-- `routes/`: rutas de la aplicación
-
-## Licencia
-
-Este proyecto usa la licencia MIT.
+**Versiones utilizadas:**
+- Laravel 11.0
+- PHP 8.2+
+- Node.js LTS
+- Vite
+- SQLite 3
+- PostgreSQL
