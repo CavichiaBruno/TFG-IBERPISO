@@ -90,8 +90,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/consultas', [AdminInquiryController::class, 'store'])->name('inquiries.store');
     Route::get('/consultas/{id}/editar', [AdminInquiryController::class, 'edit'])->name('inquiries.edit');
     Route::put('/consultas/{id}', [AdminInquiryController::class, 'update'])->name('inquiries.update');
-    Route::patch('/inquiries/{id}/status', [AdminInquiryController::class, 'updateStatus'])->name('inquiries.status');
-    Route::delete('/inquiries/{id}', [AdminInquiryController::class, 'destroy'])->name('inquiries.destroy');
+    Route::patch('/consultas/{id}/estado', [AdminInquiryController::class, 'updateStatus'])->name('inquiries.status');
+    Route::delete('/consultas/{id}', [AdminInquiryController::class, 'destroy'])->name('inquiries.destroy');
 
     // Interacciones (Interactions)
     Route::resource('interacciones', \App\Http\Controllers\Admin\AdminInteractionController::class)->names([

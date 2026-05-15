@@ -541,11 +541,11 @@
 
 @push('scripts')
 <script>
-    // --- SELECTION LOGIC ---
+    
     function selectOption(field, value, element) {
         document.getElementById('input-' + field).value = value;
         
-        // Update UI
+        
         const grid = element.parentElement;
         grid.querySelectorAll('.selection-card').forEach(card => card.classList.remove('active'));
         element.classList.add('active');
@@ -553,7 +553,7 @@
         updatePreview();
     }
 
-    // --- PREVIEW LOGIC ---
+    
     function updatePreview() {
         const title = document.getElementById('input-title').value || 'Título de tu anuncio';
         const price = document.getElementById('input-precio').value || '0';
@@ -565,16 +565,16 @@
         document.getElementById('preview-location-text').innerText = city;
     }
 
-    // --- MULTI-STEP LOGIC ---
+    
     let currentStepIndex = 1;
     const totalSteps = 4;
     
     function goToStep(step) {
         if (step > currentStepIndex) {
-            // Validate current step before moving forward
+            
             const currentStepEl = document.getElementById('step-' + currentStepIndex);
             
-            // Check required inputs
+            
             const inputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
             let valid = true;
             
@@ -588,7 +588,7 @@
             if (!valid) return;
         }
         
-        // Update Steps Nav
+        
         for(let i=1; i<=totalSteps; i++) {
             const indicator = document.getElementById('dot-' + i);
             indicator.classList.remove('active', 'completed');
@@ -596,7 +596,7 @@
             else if (i < step) indicator.classList.add('completed');
         }
         
-        // Show target step
+        
         document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
         document.getElementById('step-' + step).classList.add('active');
         
@@ -604,7 +604,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // --- IMAGES LOGIC ---
+   
     const imageInput = document.getElementById('images-input');
     const previewContainer = document.getElementById('preview-container');
     const previewImageBox = document.getElementById('preview-image-box');
@@ -629,7 +629,7 @@
         }
     });
 
-    // --- CERTIFICATE LOGIC ---
+    
     document.getElementById('cert-input').addEventListener('change', function() {
         const filename = this.files.length > 0 ? this.files[0].name : 'Ningún archivo seleccionado';
         document.getElementById('cert-filename').innerText = filename;
@@ -639,7 +639,7 @@
         }
     });
 
-    // --- AI LOGIC ---
+    
     const btnAnalyzeAi = document.getElementById('btn-analyze-ai');
     btnAnalyzeAi.addEventListener('click', async function() {
         if (!imageInput.files || imageInput.files.length === 0) {
@@ -678,7 +678,7 @@
         }
     });
 
-    // Submit form protection with loading overlay
+   
     document.getElementById('property-form').addEventListener('submit', function(e) {
         const form = this;
         const overlay = document.getElementById('submit-loading-overlay');
@@ -712,7 +712,7 @@
         }, 4000);
     });
 
-    // --- DESCRIPTION VALIDATION ---
+   
     function validateDescription() {
         const textarea = document.getElementById('input-description');
         const charCount = document.getElementById('char-count');
@@ -739,14 +739,14 @@
         }
     }
 
-    // Initialize description validation
+    
     const descriptionField = document.getElementById('input-description');
     if (descriptionField) {
         validateDescription();
         descriptionField.addEventListener('input', validateDescription);
     }
 
-    // --- RESTORE PREVIOUS VALUES ON ERROR ---
+    
     @if(old('tipo_operacion'))
     (function() {
         const oldType = '{{ old("tipo_operacion") }}';
@@ -771,31 +771,31 @@
     })();
     @endif
 
-    // --- IF THERE ARE ERRORS, GO TO THE CORRECT STEP ---
+    
     @if($errors->any())
     (function() {
-        // Check which field has errors and go to corresponding step
+        
         const errorMessages = @json($errors->keys());
         let targetStep = 1;
         
         if (errorMessages.includes('titulo') || errorMessages.includes('descripcion')) {
-            targetStep = 4; // Title and description are in step 4
+            targetStep = 4; 
         } else if (errorMessages.includes('habitaciones') || errorMessages.includes('banos') || 
                    errorMessages.includes('ciudad') || errorMessages.includes('provincia') || 
                    errorMessages.includes('codigo_postal') || errorMessages.includes('direccion')) {
-            targetStep = 2; // Location fields are in step 2
+            targetStep = 2; 
         } else if (errorMessages.includes('images')) {
-            targetStep = 3; // Images are in step 3
+            targetStep = 3; 
         } else if (errorMessages.includes('precio') || errorMessages.includes('superficie_m2') || 
                    errorMessages.includes('tipo_operacion') || errorMessages.includes('tipo_propiedad')) {
-            targetStep = 1; // Basic info is in step 1
+            targetStep = 1; 
         }
         
         setTimeout(() => goToStep(targetStep), 100);
     })();
     @endif
 
-    // --- INITIALIZATION ---
+   
     updatePreview();
 </script>
 @endpush

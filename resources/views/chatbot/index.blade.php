@@ -11,7 +11,7 @@
         </div>
         
         <div id="chat-box" class="p-6 h-96 overflow-y-auto bg-neutral-50 flex flex-col gap-4">
-            <!-- Initial message -->
+           
             <div class="flex gap-3">
                 <div class="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center shrink-0">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -44,7 +44,7 @@
         
         const chatBox = document.getElementById('chat-box');
         
-        // Append user message
+        
         const userMsgHtml = `
             <div class="flex gap-3 justify-end">
                 <div class="bg-neutral-900 text-white rounded-2xl rounded-tr-none px-4 py-2 shadow-sm text-sm">
@@ -54,11 +54,11 @@
         `;
         chatBox.insertAdjacentHTML('beforeend', userMsgHtml);
         
-        // Clear input and scroll down
+        
         input.value = '';
         chatBox.scrollTop = chatBox.scrollHeight;
         
-        // Append loading
+       
         const loadingId = 'loading-' + Date.now();
         const loadingHtml = `
             <div id="${loadingId}" class="flex gap-3">
@@ -88,7 +88,7 @@
             const data = await response.json();
             console.log('Chatbot response data:', data);
 
-            // Remove loading indicator safely
+            
             document.getElementById(loadingId)?.remove();
 
             // Añadimos el mensaje de texto del bot
@@ -104,7 +104,7 @@
             `;
             chatBox.insertAdjacentHTML('beforeend', botMsgHtml);
 
-            // Si hay propiedades, las renderizamos con createElement (100% seguro)
+            
             const props = Array.isArray(data.properties) ? data.properties : [];
             console.log('Propiedades recibidas del servidor:', props.length, props);
 
@@ -113,7 +113,7 @@
                 grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-left:44px;margin-bottom:20px;';
 
                 props.forEach(function(prop) {
-                    // Card wrapper (enlace)
+                   
                     const card = document.createElement('a');
                     card.href   = prop.url || '#';
                     card.target = '_blank';
