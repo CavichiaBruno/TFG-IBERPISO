@@ -86,7 +86,7 @@ class ScrollController extends Controller
         if (Auth::check()) {
             $properties = Auth::user()->favoriteProperties()
                 ->with(['medios'])
-                ->orderBy('interacciones_propiedades.created_at', 'desc')
+                ->orderByPivot('created_at', 'desc')
                 ->paginate(12);
         } else {
             // Para invitados, obtenemos los IDs con 'like' de la sesión

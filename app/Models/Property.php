@@ -62,20 +62,23 @@ class Property extends Model
         'certificado_energetico', 'url_tour_virtual', 'slug', 'certificado_energetico_archivo',
     ];
 
-    protected $casts = [
-        'precio' => 'decimal:2',
-        'superficie_m2' => 'decimal:2',
-        'latitud' => 'decimal:7',
-        'longitud' => 'decimal:7',
-        'tiene_ascensor' => 'boolean',
-        'tiene_parking' => 'boolean',
-        'tiene_terraza' => 'boolean',
-        'tiene_jardin' => 'boolean',
-        'tiene_piscina' => 'boolean',
-        'aire_acondicionado' => 'boolean',
-        'destacada' => 'boolean',
-        'activa' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'precio' => 'decimal:2',
+            'superficie_m2' => 'decimal:2',
+            'latitud' => 'decimal:7',
+            'longitud' => 'decimal:7',
+            'tiene_ascensor' => 'boolean',
+            'tiene_parking' => 'boolean',
+            'tiene_terraza' => 'boolean',
+            'tiene_jardin' => 'boolean',
+            'tiene_piscina' => 'boolean',
+            'aire_acondicionado' => 'boolean',
+            'destacada' => 'boolean',
+            'activa' => 'boolean',
+        ];
+    }
 
     // --- Relaciones ---
 

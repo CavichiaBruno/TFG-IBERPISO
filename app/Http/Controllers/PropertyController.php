@@ -115,4 +115,22 @@ class PropertyController extends Controller
 
         return view('pages.properties.show', compact('property', 'related'));
     }
+
+    /**
+     * Fuerza la descarga del certificado energético.
+     * Esto evita problemas de rutas hardcodeadas o bloqueos CORS al desplegar en la nube.
+     */
+    public function downloadCertificate(int $id)
+    {
+        $property = Property::findOrFail($id);
+
+        if (!$property->certificado_energetico_archivo) {
+            abort(404, 'El certificado energético no está disponible.');
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->download(
+            $property->certificado_energetico_archivo, 
+            'certificado_energetico_' . $property->slug . '.pdf'
+        );
+    }
 }

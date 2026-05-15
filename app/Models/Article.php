@@ -32,8 +32,11 @@ class Article extends Model
         'categoria', 'publicado', 'fecha_publicacion'
     ];
 
-    protected $casts = [
-        'publicado' => 'boolean',
-        'fecha_publicacion' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'publicado' => 'boolean',
+            'fecha_publicacion' => 'datetime',
+        ];
+    }
 }

@@ -26,6 +26,9 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER  = 'usuario';
+
     protected $table = 'usuarios';
 
     protected $fillable = [
@@ -59,7 +62,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->rol === 'admin';
+        return $this->rol === self::ROLE_ADMIN;
     }
 
     /**
@@ -113,7 +116,12 @@ class User extends Authenticatable
      */
     public function favoriteProperties()
     {
-        return $this->belongsToMany(Property::class, 'interacciones_propiedades')
+        return $this->belongsToMany(
+                Property::class,
+                'interacciones_propiedades',
+                'usuario_id',   // FK que apunta a la tabla usuarios
+                'propiedad_id'  // FK que apunta a la tabla propiedades
+            )
             ->wherePivot('tipo', '=', 'like')
             ->withTimestamps();
     }

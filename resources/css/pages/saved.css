@@ -2,6 +2,10 @@
 
 /* ─── IberPiso — Saved Properties Page (Apple Design) ─────────────────────────── */
 
+.saved-container {
+    padding-top: var(--sp-14) !important;
+}
+
 .saved-page-header {
     margin-bottom: var(--sp-12);
     text-align: center;

@@ -118,45 +118,26 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
         }
 
         // Obtiene una lista simple de propiedades disponibles para usar como contexto
-        $properties = \Illuminate\Support\Facades\DB::table('propiedades')
-            ->leftJoin('medios_propiedades', function($join) {
-                $join->on('propiedades.id', '=', 'medios_propiedades.propiedad_id')
-                    ->where('medios_propiedades.tipo_archivo', '=', 'imagen')
-                    ->where('medios_propiedades.es_portada', '=', \Illuminate\Support\Facades\DB::raw('true'));
-            })
-            ->whereNull('propiedades.deleted_at')
-            ->where('propiedades.activa', \Illuminate\Support\Facades\DB::raw('true'))
-            ->select(
-                'propiedades.id',
-                'propiedades.slug',
-                'propiedades.titulo',
-                'propiedades.precio',
-                'propiedades.ciudad',
-                'propiedades.habitaciones',
-                'propiedades.banos',
-                'propiedades.tipo_operacion',
-                'propiedades.tipo_propiedad',
-                'medios_propiedades.ruta_archivo as imagen'
-            )
-            ->limit(50)
-            ->get();
+        try {
+            \Log::info('Mistral: Consultando propiedades para contexto...');
+            $properties = \App\Models\Property::active()
+                ->with(['medios'])
+                ->latest()
+                ->limit(50)
+                ->get();
+            \Log::info('Mistral: Propiedades encontradas: ' . $properties->count());
+        } catch (\Exception $e) {
+            \Log::error('Mistral: Error al consultar propiedades: ' . $e->getMessage());
+            $properties = collect(); // Evitar que rompa si falla la query
+        }
 
         $context = "Lista de propiedades disponibles:\n";
         foreach ($properties as $prop) {
-            $slug = $prop->slug ?: 'detalle';
-            $url = url("/propiedades/{$prop->id}-{$slug}");
+            // Generamos la URL manualmente para asegurar compatibilidad total
+            $url = url("/propiedades/{$prop->id}-{$prop->slug}");
+            $imgUrl = $prop->cover_url;
 
-            $imgUrl = 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=100';
-            if ($prop->imagen) {
-                if (str_starts_with($prop->imagen, 'http')) {
-                    $imgUrl = $prop->imagen;
-                } else {
-                    // Usamos asset() para generar la URL correcta según el host actual
-                    $imgUrl = asset(ltrim($prop->imagen, '/'));
-                }
-            }
-
-            $context .= "ID: {$prop->id} | {$prop->titulo} | {$prop->precio}€ | Enlace: $url | Imagen: $imgUrl\n";
+            $context .= "ID: {$prop->id} | {$prop->titulo} | {$prop->formatted_price}€ | Enlace: $url | Imagen: $imgUrl\n";
         }
 
         $systemPrompt = 'Eres un asistente virtual de IberPiso. RESPONDE SIEMPRE EN FORMATO JSON ESTRICTO.
@@ -176,11 +157,12 @@ IMPORTANTE: 'title' y 'description' deben ser cadenas de texto simples (strings)
         Si no encuentras una propiedad que encaje perfectamente, responde amigablemente en "message" y deja el array "properties" vacío. NUNCA inventes datos.';
 
         try {
+            \Log::info('Mistral: Enviando petición a la API de Mistral...');
             $response = Http::withoutVerifying()
                 ->withToken($this->apiKey)
                 ->timeout(30)
                 ->post($this->apiUrl, [
-                    'model' => 'mistral-small-latest',
+                    'model' => 'mistral-large-latest',
                     'messages' => [
                         [
                             'role' => 'system',

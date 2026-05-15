@@ -17,6 +17,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/load-featured', [HomeController::class, 'loadFeatured'])->name('home.loadFeatured');
 Route::get('/propiedades', [PropertyController::class, 'index'])->name('properties.index');
 Route::get('/propiedades/{id}-{slug}', [PropertyController::class, 'show'])->name('properties.show');
+Route::get('/propiedades/{id}/certificado', [PropertyController::class, 'downloadCertificate'])->name('properties.download_certificate');
 Route::post('/propiedades/{id}/contactar', [InquiryController::class, 'store'])->name('inquiries.store');
 
 // --- Chatbot ---

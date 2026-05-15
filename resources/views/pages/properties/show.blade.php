@@ -9,10 +9,10 @@
 @section('content')
 <div class="detail-layout">
 
-    {{-- LEFT COLUMN --}}
+    
     <div class="detail-main">
 
-        {{-- GALLERY --}}
+        
         @php $images = $property->medios->where('tipo_archivo', 'imagen'); @endphp
         <div class="gallery-section">
             @if($images->count())
@@ -38,7 +38,7 @@
             @endif
         </div>
 
-        {{-- PRICE & TYPE BAR --}}
+        
         <div class="detail-header">
             <div class="detail-price">€{{ $property->formatted_price }}{{ $property->tipo_operacion === 'alquiler' ? '/mes' : '' }}</div>
             <div class="detail-badges">
@@ -54,7 +54,7 @@
             {{ $property->direccion }}, {{ $property->ciudad }}, {{ $property->provincia }}
         </p>
 
-        {{-- KEY FEATURES --}}
+       
         <div class="key-features">
             <div class="key-feature"><span class="kf-value">{{ $property->habitaciones }}</span><span class="kf-label">Habitaciones</span></div>
             <div class="key-feature"><span class="kf-value">{{ $property->banos }}</span><span class="kf-label">Baños</span></div>
@@ -68,7 +68,6 @@
             @endif
         </div>
 
-        {{-- DESCRIPTION --}}
         <div class="detail-section">
             <h2 class="detail-section-title">Descripción</h2>
             <div class="detail-description">{{ $property->descripcion }}</div>
@@ -78,9 +77,7 @@
         @if($property->certificado_energetico_archivo)
         <div class="detail-section">
             <h2 class="detail-section-title">Documentación</h2>
-            <a href="{{ Storage::disk('public')->url($property->certificado_energetico_archivo) }}"
-               target="_blank"
-               download
+            <a href="{{ route('properties.download_certificate', $property->id) }}"
                class="cert-download-btn"
                style="display: inline-flex; align-items: center; gap: 12px; padding: 16px 24px; background: #f5f5f7; border-radius: 12px; text-decoration: none; color: #1d1d1f; font-size: 15px; font-weight: 500; transition: all 0.2s; border: 1px solid #e5e5ea;"
                onmouseover="this.style.background='#ededf2'; this.style.borderColor='#0071e3';"
@@ -106,7 +103,7 @@
         </div>
         @endif
 
-        {{-- AMENITIES --}}
+        
         <div class="detail-section">
             <h2 class="detail-section-title">Características</h2>
             <div class="amenities-grid">
@@ -129,7 +126,7 @@
             </div>
         </div>
 
-        {{-- DOCUMENTS --}}
+        
         @php $docs = $property->medios->where('tipo_archivo', 'pdf'); @endphp
         @if($docs->count())
         <div class="detail-section">
@@ -146,7 +143,7 @@
         </div>
         @endif
 
-        {{-- MAP --}}
+       
         @if($property->latitud && $property->longitud)
         <div class="detail-section">
             <h2 class="detail-section-title">Ubicación</h2>
@@ -157,7 +154,7 @@
         </div>
         @endif
 
-        {{-- RELATED --}}
+        
         @if($related->count())
         <div class="detail-section">
             <h2 class="detail-section-title">Propiedades similares en {{ $property->ciudad }}</h2>
@@ -170,7 +167,7 @@
         @endif
     </div>
 
-    {{-- RIGHT STICKY PANEL --}}
+    
     <aside class="detail-contact">
         <div class="contact-card">
             @auth
@@ -252,7 +249,7 @@
     </aside>
 </div>
 
-{{-- LIGHTBOX --}}
+
 <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog">
     <div class="lightbox-overlay" id="close-lightbox"></div>
     <div class="lightbox-content">
@@ -263,7 +260,7 @@
     </div>
 </div>
 
-{{-- MOBILE STICKY CONTACT --}}
+
 <div class="mobile-contact-bar">
     <a href="tel:+34900000000" class="btn btn-primary">Llamar</a>
     <button id="mobile-contact-btn" class="btn btn-outline">Contactar</button>

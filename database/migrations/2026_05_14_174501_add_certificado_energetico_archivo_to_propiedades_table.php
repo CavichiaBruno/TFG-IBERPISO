@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('propiedades', function (Blueprint $table) {
-            $table->string('certificado_energetico_archivo')->nullable()->after('activa');
-        });
+        if (!Schema::hasColumn('propiedades', 'certificado_energetico_archivo')) {
+            Schema::table('propiedades', function (Blueprint $table) {
+                $table->string('certificado_energetico_archivo')->nullable()->after('activa');
+            });
+        }
     }
 
     /**

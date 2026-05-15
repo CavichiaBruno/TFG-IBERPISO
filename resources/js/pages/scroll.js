@@ -1,5 +1,5 @@
 /**
- * IberScroll — Lógica para el descubrimiento de viviendas tipo "swipe" (Tinder)
+ * IberScroll — Lógica para el descubrimiento de viviendas tipo "swipe" 
  * Gestiona el arrastre de cartas, animaciones y guardado de datos.
  */
 
@@ -88,14 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
-                body: JSON.stringify({ property_id: propertyId, type: type })
+                body: JSON.stringify({ propiedad_id: propertyId, tipo: type })
             });
         } catch (error) {
             console.error('Error al guardar interacción:', error);
         }
     }
 
-    // ─── Lógica de Arrastre (Touch & Drag) ───────────────────────────────────────────
+    
     let startX = 0;
     let currentX = 0;
     let isDragging = false;

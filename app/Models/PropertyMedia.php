@@ -30,10 +30,13 @@ class PropertyMedia extends Model
         'tamano_archivo_kb', 'nombre_original', 'es_portada', 'orden',
     ];
 
-    protected $casts = [
-        'es_portada'  => 'boolean',
-        'orden'       => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'es_portada'  => 'boolean',
+            'orden'       => 'integer',
+        ];
+    }
 
     /**
      * Devuelve la propiedad a la que pertenece este archivo multimedia.

@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-<div class="container section-pad">
+<div class="container section-pad saved-container">
     <div class="saved-page-header">
         <h1 class="section-title">Mis <span class="marker-white">Guardados</span></h1>
         <p class="section-subtitle">Tus hogares favoritos, en un solo lugar.</p>

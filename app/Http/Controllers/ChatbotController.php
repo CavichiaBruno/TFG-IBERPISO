@@ -56,11 +56,55 @@ class ChatbotController extends Controller
         ]);
 
         $userMessage = $request->input('message');
+        \Log::info('Chatbot: Mensaje recibido: ' . $userMessage);
 
         $response = $this->mistralService->chat($userMessage);
+        \Log::info('Chatbot: Respuesta de Mistral completa: ' . $response);
+
+        // Limpieza agresiva de caracteres que puedan romper el JSON
+        $response = preg_replace('/[\x00-\x1F\x7F]/', '', $response); // Elimina caracteres de control
+        $response = trim($response);
+
+        // Intentamos decodificar
+        $decoded = json_decode($response, true);
+
+        // Si falla el primer decode, intentamos limpiar posibles marcas de markdown
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            \Log::warning('Chatbot: Error al decodificar JSON inicial: ' . json_last_error_msg());
+            $cleanResponse = preg_replace('/^```json\s*|```$/m', '', $response);
+            $decoded = json_decode($cleanResponse, true);
+        }
+
+        $finalMessage = is_array($decoded) && isset($decoded['message']) 
+            ? $decoded['message'] 
+            : $response;
+
+        // Buscamos propiedades en inglés o español
+        $props = [];
+        if (is_array($decoded)) {
+            if (isset($decoded['properties'])) $props = $decoded['properties'];
+            elseif (isset($decoded['propiedades'])) $props = $decoded['propiedades'];
+        }
+
+        // Normalizamos el texto a UTF-8 limpio para evitar errores de codificación en la respuesta JSON
+        $toUtf8 = fn($s) => mb_convert_encoding((string)($s ?? ''), 'UTF-8', 'UTF-8');
+
+        $cleanProps = [];
+        foreach ($props as $p) {
+            $cleanProps[] = [
+                'title'   => $toUtf8($p['title'] ?? ''),
+                'price'   => $toUtf8($p['price'] ?? ''),
+                'image'   => $toUtf8($p['image'] ?? ''),
+                'url'     => $toUtf8($p['url'] ?? ''),
+                'details' => $toUtf8($p['details'] ?? ''),
+            ];
+        }
+
+        \Log::info('Chatbot: Propiedades enviadas al front: ' . count($cleanProps));
 
         return response()->json([
-            'response' => $response
+            'response'   => $toUtf8($finalMessage),
+            'properties' => $cleanProps,
         ]);
     }
 }

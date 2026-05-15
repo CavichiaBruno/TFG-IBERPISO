@@ -531,6 +531,7 @@
     </div>
 </div>
 
+{{-- Overlay de análisis IA --}}
 <div id="ai-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.5s;">
     <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 200px; height: 200px;" autoplay loop></dotlottie-wc>
     <h3 style="margin-top: 20px; font-weight: 600;" id="ai-loading-text">Analizando tu propiedad...</h3>
@@ -654,7 +655,7 @@
         formData.append('image', imageInput.files[0]);
         
         try {
-            const response = await fetch('{{ route("ai.analyzeImage") }}', {
+            const response = await fetch('{{ route("user.ai.analyzeImage") }}', {
                 method: 'POST',
                 body: formData,
                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
@@ -679,28 +680,33 @@
 
     // Submit form protection with loading overlay
     document.getElementById('property-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Detener envío inmediato
-        
         const form = this;
         const overlay = document.getElementById('submit-loading-overlay');
         const spinnerContainer = document.getElementById('spinner-container');
         const successContainer = document.getElementById('success-container');
-        
+
+        // Si el overlay no está en el DOM por cualquier razón, dejar el submit pasar
+        if (!overlay || !spinnerContainer || !successContainer) {
+            return; // envío normal
+        }
+
+        e.preventDefault(); // Detener envío inmediato solo si tenemos el overlay
+
         // Resetear containers
         spinnerContainer.style.display = 'flex';
         successContainer.style.display = 'none';
-        
+
         // Mostrar el overlay
-        overlay.style.opacity = 1;
+        overlay.style.opacity = '1';
         overlay.style.pointerEvents = 'all';
-        
-        // Esperar un poco para simular procesamiento y mostrar check
+
+        // Mostrar el check de éxito tras 2.5s
         setTimeout(() => {
             spinnerContainer.style.display = 'none';
-            successContainer.style.display = 'block';
+            successContainer.style.display = 'flex';
         }, 2500);
-        
-        // Después de 4 segundos, enviar el formulario
+
+        // Enviar el formulario real tras 4s
         setTimeout(() => {
             form.submit();
         }, 4000);

@@ -296,6 +296,42 @@
             </div>
 
             <div class="form-card">
+                <h2 class="form-section-title">Certificado Energético</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Calificación Energética</label>
+                        <select name="certificado_energetico" class="form-select">
+                            <option value="">Seleccione una calificación...</option>
+                            @foreach(['A', 'B', 'C', 'D', 'E', 'F', 'G'] as $letra)
+                                <option value="{{ $letra }}" {{ $property->certificado_energetico == $letra ? 'selected' : '' }}>Letra {{ $letra }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Archivo PDF</label>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="file" name="certificado_energetico_archivo" id="cert-input" accept="application/pdf" style="display: none;" onchange="document.getElementById('cert-filename').innerText = this.files[0] ? this.files[0].name : 'Ningún archivo seleccionado'">
+                            <button type="button" class="btn-apple btn-apple-secondary" onclick="document.getElementById('cert-input').click()" style="padding: 10px 20px; font-size: 14px;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                Subir PDF
+                            </button>
+                            <span id="cert-filename" style="font-size: 14px; color: #86868b;">{{ $property->certificado_energetico_archivo ? 'Certificado actual guardado' : 'Ningún archivo seleccionado' }}</span>
+                        </div>
+                        
+                        @if($property->certificado_energetico_archivo)
+                            <div style="margin-top: 16px;">
+                                <label class="feature-checkbox" style="display: inline-flex; width: auto; padding: 8px 12px; background: #fff0f0; color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.2);">
+                                    <input type="checkbox" name="eliminar_certificado" value="1" style="accent-color: #ff3b30;">
+                                    <span style="font-size: 14px; font-weight: 500;">Eliminar certificado actual</span>
+                                </label>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
                 <h2 class="form-section-title">Descripción</h2>
                 <textarea name="descripcion" class="form-textarea" rows="8" required minlength="100">{{ old('descripcion', $property->descripcion) }}</textarea>
                 <p style="font-size: 13px; color: #86868b; margin-top: 8px;">Mínimo 100 caracteres. Una buena descripción ayuda a vender más rápido.</p>
@@ -355,7 +391,7 @@
 <script>
     // --- MEDIA MANAGEMENT ---
     function setCover(id) {
-        fetch(`/admin/media/${id}/cover`, {
+        fetch(`/mis-media/${id}/cover`, {
             method: 'PATCH',
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
         })
@@ -372,7 +408,7 @@
     function deleteMedia(id) {
         if (!confirm('¿Seguro que quieres eliminar esta imagen?')) return;
         
-        fetch(`/admin/media/${id}`, {
+        fetch(`/mis-media/${id}`, {
             method: 'DELETE',
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
         })

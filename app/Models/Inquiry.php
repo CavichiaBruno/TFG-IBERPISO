@@ -30,9 +30,12 @@ class Inquiry extends Model
         'telefono_visitante', 'mensaje', 'estado', 'leida',
     ];
 
-    protected $casts = [
-        'leida' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'leida' => 'boolean',
+        ];
+    }
 
     /**
      * Devuelve la propiedad a la que pertenece esta consulta.

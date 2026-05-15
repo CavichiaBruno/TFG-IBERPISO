@@ -218,18 +218,19 @@
     </div>
 
     <!-- Global Submit Loading Overlay -->
-    <div id="submit-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.5s; margin: 0; padding: 0;">
-        <div id="spinner-container" style="display: flex; flex-direction: column; align-items: center;">
-            <div style="width: 80px; height: 80px; border: 4px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-            <h3 style="margin-top: 30px; font-weight: 600; color: white; font-size: 20px;" id="submit-loading-text">Publicando tu propiedad...</h3>
-            <p style="font-size: 16px; color: rgba(255,255,255,0.7); margin: 12px 0 0; font-weight: 400;">Por favor espera mientras procesamos tu anuncio</p>
+    <div id="submit-loading-overlay" style="opacity: 0; pointer-events: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.5s; margin: 0; padding: 0;">
+        <div id="spinner-container" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <dotlottie-wc src="https://lottie.host/d469d6b2-6e5e-4df9-99e2-e45973cd59c4/61j44lYP6T.lottie" style="width: 160px; height: 160px;" autoplay loop></dotlottie-wc>
+            <h3 style="font-size: 22px; font-weight: 600; color: #1d1d1f;">Publicando...</h3>
+            <p style="color: #86868b; font-size: 16px;">Esto solo tardará un momento</p>
         </div>
-        <div id="success-container" style="display: none; text-align: center; animation: slideUp 0.5s ease-out forwards;">
-            <svg style="width: 80px; height: 80px; color: #10b981; margin-bottom: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="20 6 9 17 4 12"></polyline>
+        <div id="success-container" style="display: none; flex-direction: column; align-items: center; gap: 16px; text-align: center;">
+            <svg viewBox="0 0 52 52" width="80" height="80" style="color: #22c55e;">
+                <circle cx="26" cy="26" r="25" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14 27 l8 8 l16-16"/>
             </svg>
-            <h3 style="font-weight: 600; color: white; font-size: 20px;">¡Publicación creada!</h3>
-            <p style="font-size: 16px; color: rgba(255,255,255,0.7); margin-top: 12px;">Te redirigimos a tu anuncio...</p>
+            <h3 style="font-size: 22px; font-weight: 600; color: #1d1d1f;">¡Completado!</h3>
+            <p style="color: #86868b; font-size: 16px;">Redirigiendo...</p>
         </div>
     </div>
 

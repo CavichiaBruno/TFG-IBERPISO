@@ -145,10 +145,8 @@
             </svg>
             <div style="flex: 1;">
                 <div style="font-weight: 600; color: #1d1d1f; font-size: 14px;">Certificado adjunto</div>
-                <a href="{{ Storage::disk('public')->url($property->certificado_energetico_archivo) }}"
-                   target="_blank"
-                   style="font-size: 13px; color: #0066cc; text-decoration: none;"
-                   download>
+                <a href="{{ route('properties.download_certificate', $property->id) }}"
+                   style="font-size: 13px; color: #0066cc; text-decoration: none;">
                    Ver / Descargar PDF
                 </a>
             </div>
